@@ -45,6 +45,12 @@ void blink_morse_str( char* str, uint16_t dot_length_ms )
     // having to know its length explicitly (that's the whole point).
     // Specifically: char* foo = "hi yo!"; gets stored as: [ 'h', 'i', ' ', 'y', 'o', '!', 0x00 ]
 
+    int i=0;
+    while( str[i] != 0 ) {
+       blink_morse_char( str[i], dot_length_ms );
+       i++;
+    }
+
     // BEGIN FUNCTION blink_string
     // Define a counter variable of type uint8_t
     // DO:
@@ -62,12 +68,12 @@ int main()
 
     while( 1 ) {
         // blink message!
-        blink_morse_char( 'S', dot_length_ms );
-        blink_morse_char( 'O', dot_length_ms );
-        blink_morse_char( 'S', dot_length_ms );
-        blink_morse_char( ' ', dot_length_ms );
-
-        // Using your blink_morse_str function this would be called as:
-        // blink_morse_str("SOS ", dot_length_ms);
+        // blink_morse_char( 'S', dot_length_ms );
+        // blink_morse_char( 'O', dot_length_ms );
+        // blink_morse_char( 'S', dot_length_ms );
+        // blink_morse_char( ' ', dot_length_ms );
+        // string message = "Hello world"
+        
+        blink_morse_str( "HELLO WORLD", dot_length_ms );
     }
 }
