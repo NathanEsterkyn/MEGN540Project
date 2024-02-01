@@ -54,7 +54,17 @@ void morse_dash( uint32_t unit_length )
 {
     led_on_block( 3 * unit_length );
     led_off_block( unit_length );
-}< DDC7 
+}
+void morse_letter_end( uint32_t unit_length )
+{
+    led_off_block( 2 * unit_length );
+}
+
+void dot_dash_blink( char* c_str, uint32_t unit_length )
+{
+    uint8_t ind = 0;
+    while( c_str[ind] != 0 && ind < 8 )  // morse patterns are less than 5 dots and dashes with 7 for long pauses
+    {
         if( c_str[ind] == '.' )
             morse_dot( unit_length );
         else
@@ -111,7 +121,9 @@ void blink_morse_char( char value, uint32_t unit_length )
             //.-..
             dot_dash_blink( ".-..", unit_length );
             break;
-            dot_dash_blink( "-.-.--", unit_length );
+        case 'm':
+            //--
+            dot_dash_blink( "--", unit_length );
             break;
         case 'n':
             //-.
