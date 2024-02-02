@@ -73,11 +73,16 @@ static void _USB_Read_Data()
 
     if( USB_DeviceState != DEVICE_STATE_Configured )
         return;
+    if(Endpoint_IsOUTReceived() && Endpoint_BytesInEndpoint()) { // If there is data in ready to be read
 
-    Endpoint_SelectEndpoint( CDC_RX_EPADDR ); // Select the Serial Rx Endpoint
-    uint16_t DataLength = rb_length_B(&_usb_receive_buffer); // Get how large the incoming packet is
-    Endpoint_Read_Stream_LE( &_usb_receive_buffer, DataLength, NULL ); // Read in the incoming packet into the buffer
-    Endpoint_ClearOUT(); // Finalize the stream transfer to send the last packet
+        Endpoint_SelectEndpoint( CDC_RX_EPADDR ); // Select the Serial Rx Endpoint
+        uint16_t DataLength = rb_length_B(&_usb_receive_buffer); // Get how large the incoming packet is
+        for( uint8_t i = 0; i < DataLength; ++i ) {
+            uint8_t DataIn = Endpoint_Read_8(); // For each byte in the receive buffer, read the byte
+            rb_push_back_B(&_usb_receive_buffer,DataIn); // Record the byte into the ring buffer
+        }
+        Endpoint_ClearOUT(); // Finalize the stream transfer to send the last packet
+    }
 
     // *** MEGN540  ***
     // YOUR CODE HERE!  You'll need to take inspiration from the Task_USB_Echo above but
@@ -92,19 +97,26 @@ static void _USB_Read_Data()
  */
 static void _USB_Write_Data()
 {
+    uint8_t txLen = CDC_TXRX_EPSIZE; // Find the transmission size
+
     if( USB_DeviceState != DEVICE_STATE_Configured ) // if the device is not configured - return
         return;
 
     uint16_t DataLength = rb_length_B(&_usb_send_buffer); // find the size of ring buffer
     Endpoint_SelectEndpoint( CDC_TX_EPADDR ); // Select the Serial Tx Endpoint
 
-    for( uint8_t i = 0; i < DataLength; ++i ) {
-        Endpoint_Write_8( rb_get_B(&_usb_send_buffer,i) ); // for each byte, write the byte
+    while (DataLength && txLen) {
+        Endpoint_Write_8( rb_pop_front_B(&_usb_send_buffer) ); // for each byte, write the byte
+        DataLength --;
+        txLen --;
     }
 
     Endpoint_ClearIN(); // Finalize the stream transfer to send the last packet
-    Endpoint_WaitUntilReady(); // Wait until the endpoint is ready for the next packet
-    Endpoint_ClearIN(); // Send an empty packet to prevent host buffering
+
+    if(txLen == 0) {
+        Endpoint_WaitUntilReady(); // Wait until the endpoint is ready for the next packet
+        Endpoint_ClearIN(); // Send an empty packet to prevent host buffering
+    }
 
     // *** MEGN540  ***
     // YOUR CODE HERE!  You'll need to take inspiration from the Task_USB_Echo above but
