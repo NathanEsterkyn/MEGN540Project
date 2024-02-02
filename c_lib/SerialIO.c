@@ -77,20 +77,18 @@ static void _USB_Read_Data()
     /* Select the Serial Rx Endpoint */
     Endpoint_SelectEndpoint( CDC_RX_EPADDR );
 
-    /* Check to see if any data has been received */
-    if( Endpoint_IsOUTReceived() ) {
-        /* Create a temp buffer big enough to hold the incoming endpoint packet */
-        uint8_t Buffer[Endpoint_BytesInEndpoint()];
+    /* Create a temp buffer big enough to hold the incoming endpoint packet */
+    uint8_t Buffer[Endpoint_BytesInEndpoint()];
 
-        /* Remember how large the incoming packet is */
-        uint16_t DataLength = Endpoint_BytesInEndpoint();
+    /* Remember how large the incoming packet is */
+    uint16_t DataLength = Endpoint_BytesInEndpoint();
 
-        /* Read in the incoming packet into the buffer */
-        Endpoint_Read_Stream_LE( &Buffer, DataLength, NULL );
+    /* Read in the incoming packet into the buffer */
+    Endpoint_Read_Stream_LE( &Buffer, DataLength, NULL );
 
-        /* Finalize the stream transfer to send the last packet */
-        Endpoint_ClearOUT();
-    }
+    /* Finalize the stream transfer to send the last packet */
+    Endpoint_ClearOUT();
+
     // *** MEGN540  ***
     // YOUR CODE HERE!  You'll need to take inspiration from the Task_USB_Echo above but
     // will need to adjust to make it non blocking. You'll need to dig into the library to understand
@@ -106,6 +104,9 @@ static void _USB_Write_Data()
 {
     if( USB_DeviceState != DEVICE_STATE_Configured )
         return;
+
+    /* Create a temp buffer big enough to hold the incoming endpoint packet */
+    uint8_t Buffer[Endpoint_BytesInEndpoint()];
 
     /* Select the Serial Tx Endpoint */
     Endpoint_SelectEndpoint( CDC_TX_EPADDR );
