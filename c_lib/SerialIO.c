@@ -101,7 +101,7 @@ static void _USB_Read_Data()
 static void _USB_Write_Data()
 {
     if( USB_DeviceState != DEVICE_STATE_Configured ) {
-        return // if the device is not configured - return
+        return; // if the device is not configured - return
     }
     else {
         Endpoint_SelectEndpoint( CDC_TX_EPADDR ); // Select the Serial Tx Endpoint
@@ -113,11 +113,10 @@ static void _USB_Write_Data()
             txLen --;
         }
         Endpoint_ClearIN(); // Finalize the stream transfer to send the last packet
-    }
-
-    if(txLen == 0) {
-        Endpoint_WaitUntilReady(); // Wait until the endpoint is ready for the next packet
-        Endpoint_ClearIN(); // Send an empty packet to prevent host buffering
+        if(txLen == 0) {
+            Endpoint_WaitUntilReady(); // Wait until the endpoint is ready for the next packet
+            Endpoint_ClearIN(); // Send an empty packet to prevent host buffering
+        }
     }
 
     // *** MEGN540  ***
