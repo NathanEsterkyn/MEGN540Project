@@ -79,12 +79,17 @@ static void _USB_Read_Data()
 
             Endpoint_SelectEndpoint( CDC_RX_EPADDR ); // Select the Serial Rx Endpoint
             uint16_t DataLength = rb_length_B(&_usb_receive_buffer); // Get how large the incoming packet is
+
             for( uint8_t i = 0; i < DataLength; ++i ) {
                 uint8_t DataIn = Endpoint_Read_8(); // For each byte in the receive buffer, read the byte
                 rb_push_back_B(&_usb_receive_buffer,DataIn); // Record the byte into the ring buffer
             }
             Endpoint_ClearOUT(); // Finalize the stream transfer to send the last packet
+        }else
+        {
+            return ; 
         }
+        
     }
 
     // *** MEGN540  ***
@@ -105,14 +110,19 @@ static void _USB_Write_Data()
     }
     else {
         Endpoint_SelectEndpoint( CDC_TX_EPADDR ); // Select the Serial Tx Endpoint
+
         uint8_t txLen = CDC_TXRX_EPSIZE; // Find the transmission size
         uint16_t DataLength = rb_length_B(&_usb_send_buffer); // find the size of ring buffer
-        while (DataLength && txLen) {
+
+        while (DataLength !=0 && txLen != 0) {
             Endpoint_Write_8( rb_pop_front_B(&_usb_send_buffer) ); // for each byte, write the byte
             DataLength --;
             txLen --;
         }
+
         Endpoint_ClearIN(); // Finalize the stream transfer to send the last packet
+        txLen = 0 ;
+        
         if(txLen == 0) {
             Endpoint_WaitUntilReady(); // Wait until the endpoint is ready for the next packet
             Endpoint_ClearIN(); // Send an empty packet to prevent host buffering
