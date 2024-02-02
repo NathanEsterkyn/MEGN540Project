@@ -70,7 +70,7 @@ static Ring_Buffer_Byte_t _usb_send_buffer;
  */
 static void _USB_Read_Data()
 {
-         Endpoint_SelectEndpoint( CDC_RX_EPADDR ); // Select the Serial Rx Endpoint
+    Endpoint_SelectEndpoint( CDC_RX_EPADDR ); // Select the Serial Rx Endpoint
     if( USB_DeviceState != DEVICE_STATE_Configured ) {
         return;
     }
@@ -114,7 +114,7 @@ static void _USB_Write_Data()
         uint8_t txLen = CDC_TXRX_EPSIZE; // Find the transmission size
         uint16_t DataLength = rb_length_B(&_usb_send_buffer); // find the size of ring buffer
 
-        while (DataLength !=0 && txLen != 0) {
+        while (DataLength && txLen) {
             Endpoint_Write_8( rb_pop_front_B(&_usb_send_buffer) ); // for each byte, write the byte
             DataLength --;
             txLen --;
@@ -196,8 +196,9 @@ void Task_USB_Echo( void )
     if( rb_length_B( &_usb_receive_buffer ) != 0 )
         rb_push_back_B( &_usb_send_buffer, rb_pop_front_B( &_usb_receive_buffer ) );
     //
-    // if( usb_msg_length() != 0 )
-    //    usb_send_byte(usb_msg_get());
+    if( usb_msg_length() != 0 )
+    //    usb_send_byte(usb_msg_get()); //Changed the name to the name of the function below
+    //    USB_Send_Byte(usb_msg_get());
     //
 }
 
