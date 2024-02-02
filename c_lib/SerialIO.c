@@ -99,7 +99,7 @@ static void _USB_Write_Data()
     Endpoint_SelectEndpoint( CDC_TX_EPADDR ); // Select the Serial Tx Endpoint
 
     for( uint8_t i = 0; i < DataLength; ++i ) {
-        Endpoint_Write_8( uint8 rb_get_B(&_usb_send_buffer,i) ) // for each byte, write the byte
+        Endpoint_Write_8( rb_get_B(&_usb_send_buffer,i) ); // for each byte, write the byte
     }
 
     Endpoint_ClearIN(); // Finalize the stream transfer to send the last packet
