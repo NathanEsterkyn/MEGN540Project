@@ -70,14 +70,14 @@ static Ring_Buffer_Byte_t _usb_send_buffer;
  */
 static void _USB_Read_Data()
 {
-
+         Endpoint_SelectEndpoint( CDC_RX_EPADDR ); // Select the Serial Rx Endpoint
     if( USB_DeviceState != DEVICE_STATE_Configured ) {
         return;
     }
     else {
         if(Endpoint_IsOUTReceived() && Endpoint_BytesInEndpoint()) { // If there is data in ready to be read
 
-            Endpoint_SelectEndpoint( CDC_RX_EPADDR ); // Select the Serial Rx Endpoint
+            
             uint16_t DataLength = rb_length_B(&_usb_receive_buffer); // Get how large the incoming packet is
 
             for( uint8_t i = 0; i < DataLength; ++i ) {
@@ -121,7 +121,6 @@ static void _USB_Write_Data()
         }
 
         Endpoint_ClearIN(); // Finalize the stream transfer to send the last packet
-        txLen = 0 ;
         
         if(txLen == 0) {
             Endpoint_WaitUntilReady(); // Wait until the endpoint is ready for the next packet
