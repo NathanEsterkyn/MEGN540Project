@@ -232,10 +232,10 @@ void USB_Send_Data( void* p_data, uint8_t data_len )
     // *** MEGN540  ***
     // YOUR CODE HERE
     // This should only interface with the ring buffers and use your ring buffer functions.
-    for( uint8_t i = 0; i < data_len; ++i ) {
+    // for( uint8_t i = 0; i < data_len; ++i ) {
               
-        rb_push_back_B(&_usb_receive_buffer, p_data[i]); // Record the byte into the ring buffer
-    }
+        rb_push_back_B(&_usb_receive_buffer, *(char*) p_data); // Record the byte into the ring buffer
+    // }
 }
 
 /**
@@ -294,7 +294,7 @@ void USB_Send_Msg( char* format, char cmd, void* p_data, uint8_t data_len )
     //      usb_send_byte <-- cmd
     USB_Send_Byte(cmd) ; 
     //      usb_send_data <-- p_data
-    USB_Send_Data(p_data) ; 
+    USB_Send_Data(p_data, mss_len) ; 
     // FUNCTION END
 }
 
@@ -320,11 +320,11 @@ uint8_t USB_Msg_Peek()
     // YOUR CODE HERE
     // This should only interface with the ring buffers and use your ring buffer functions.
     uint8_t peek = rb_get_B(&_usb_receive_buffer, 0) ; 
-    if (peek != NULL){
+    if (peek != '\0'){
         return peek ; 
     } else
     {
-        return NULL ; 
+        return '\0' ; 
     }
     
 }
@@ -339,10 +339,10 @@ uint8_t USB_Msg_Get()
     // YOUR CODE HERE
     // This should only interface with the ring buffers and use your ring buffer functions.
     uint8_t get = rb_pop_front_B(&_usb_receive_buffer) ; 
-    if (get != NULL){
+    if (get != '\0'){
         return get ; 
     } else {
-        return NULL ; 
+        return '\0' ; 
     }
     
 }
@@ -367,7 +367,8 @@ bool USB_Msg_Read_Into( void* p_obj, uint8_t data_len )
 
     for (uint8_t i = 0; i < data_len; i++)
     {
-        p_obj[i] = rb_pop_front_B(&_usb_receive_buffer) ;     
+      // *(char*) p_obj[i] = rb_pop_front_B(&_usb_receive_buffer) ;     
+       rb_push_back_B(p_obj, rb_pop_front_B(&_usb_receive_buffer) );
     }
     
     return true ; 
@@ -382,7 +383,7 @@ void USB_Flush_Input_Buffer()
     // *** MEGN540  ***
     // YOUR CODE HERE
     // This should only interface with the ring buffers and use your ring buffer functions.
-    for (uint8_t i = 0 ; i < rb_length_B(_usb_receive_buffer) ; i ++){
+    for (uint8_t i = 0 ; i < rb_length_B(&_usb_receive_buffer) ; i ++){
         rb_pop_front_B(&_usb_receive_buffer) ; 
     }
 }
