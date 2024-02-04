@@ -75,23 +75,28 @@ static void _USB_Read_Data()
         return;
     }
     else {
-        if(Endpoint_IsOUTReceived() && Endpoint_BytesInEndpoint()) { // If there is data in ready to be read
+        // rb_push_back_B(&_usb_send_buffer, 'Y'); //This prints all Ys
+        // rb_push_back_B(&_usb_receive_buffer, 'R'); 
+        // rb_push_back_B(Endpoint_IsOUTReceived()) ; 
+        // rb_push_back_B(Endpoint_BytesInEndpoint()) ; 
+        
+        if(Endpoint_IsOUTReceived() || Endpoint_BytesInEndpoint()) { // If there is data in ready to be read
 
-            
-            uint16_t DataLength = rb_length_B(&_usb_receive_buffer); // Get how large the incoming packet is
-
+            // uint16_t DataLength = rb_length_B(&_usb_receive_buffer); // Get how large the incoming packet is
+            uint16_t DataLength = Endpoint_BytesInEndpoint() ;
+            // uint16_t DataLength = 1 ; 
+            // Endpoint_Write_8(DataLength) ;
             for( uint8_t i = 0; i < DataLength; ++i ) {
                 uint8_t DataIn = Endpoint_Read_8(); // For each byte in the receive buffer, read the byte
-                rb_push_back_B(&_usb_receive_buffer,DataIn); // Record the byte into the ring buffer
+              
+                rb_push_back_B(&_usb_receive_buffer, DataIn); // Record the byte into the ring buffer
+                // rb_push_back_B(&_usb_send_buffer,DataIn);
             }
             Endpoint_ClearOUT(); // Finalize the stream transfer to send the last packet
-        }else
-        {
-            return ; 
-        }
         
-    }
+        }
 
+    }
     // *** MEGN540  ***
     // YOUR CODE HERE!  You'll need to take inspiration from the Task_USB_Echo above but
     // will need to adjust to make it non blocking. You'll need to dig into the library to understand
@@ -105,25 +110,29 @@ static void _USB_Read_Data()
  */
 static void _USB_Write_Data()
 {
+
     Endpoint_SelectEndpoint( CDC_TX_EPADDR ); // Select the Serial Tx Endpoint
     if( USB_DeviceState != DEVICE_STATE_Configured ) {
         return; // if the device is not configured - return
     }
-    
+    // rb_push_back_B(&_usb_send_buffer, 'x') ;
         
 
         uint8_t txLen = CDC_TXRX_EPSIZE; // Find the transmission size
         uint16_t DataLength = rb_length_B(&_usb_send_buffer); // find the size of ring buffer
 
-        Endpoint_Write_8('f') ; 
 
+        // Endpoint_Write_8('f') ; 
+        // Endpoint_Write_8(txLen) ; 
+        // Endpoint_Write_8(DataLength) ; //This is 0 and it should not be 
         while (DataLength && txLen) {
             Endpoint_Write_8( rb_pop_front_B(&_usb_send_buffer) ); // for each byte, write the byte
             DataLength --;
             txLen --;
+            // Endpoint_Write_8('g');
         }
 
-        Endpoint_Write_8(2) ; 
+        // Endpoint_Write_8(2) ; 
 
         Endpoint_ClearIN(); // Finalize the stream transfer to send the last packet
         
