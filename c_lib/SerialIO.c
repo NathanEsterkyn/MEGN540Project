@@ -105,14 +105,17 @@ static void _USB_Read_Data()
  */
 static void _USB_Write_Data()
 {
+    Endpoint_SelectEndpoint( CDC_TX_EPADDR ); // Select the Serial Tx Endpoint
     if( USB_DeviceState != DEVICE_STATE_Configured ) {
         return; // if the device is not configured - return
     }
-    else {
-        Endpoint_SelectEndpoint( CDC_TX_EPADDR ); // Select the Serial Tx Endpoint
+    
+        
 
         uint8_t txLen = CDC_TXRX_EPSIZE; // Find the transmission size
         uint16_t DataLength = rb_length_B(&_usb_send_buffer); // find the size of ring buffer
+
+        Endpoint_Write_8('f') ; 
 
         while (DataLength && txLen) {
             Endpoint_Write_8( rb_pop_front_B(&_usb_send_buffer) ); // for each byte, write the byte
@@ -120,13 +123,15 @@ static void _USB_Write_Data()
             txLen --;
         }
 
+        Endpoint_Write_8(2) ; 
+
         Endpoint_ClearIN(); // Finalize the stream transfer to send the last packet
         
         if(txLen == 0) {
             Endpoint_WaitUntilReady(); // Wait until the endpoint is ready for the next packet
             Endpoint_ClearIN(); // Send an empty packet to prevent host buffering
         }
-    }
+    
 
     // *** MEGN540  ***
     // YOUR CODE HERE!  You'll need to take inspiration from the Task_USB_Echo above but
@@ -196,7 +201,7 @@ void Task_USB_Echo( void )
     if( rb_length_B( &_usb_receive_buffer ) != 0 )
         rb_push_back_B( &_usb_send_buffer, rb_pop_front_B( &_usb_receive_buffer ) );
     //
-    if( usb_msg_length() != 0 )
+    // if( usb_msg_length() != 0 )
     //    usb_send_byte(usb_msg_get()); //Changed the name to the name of the function below
     //    USB_Send_Byte(usb_msg_get());
     //
