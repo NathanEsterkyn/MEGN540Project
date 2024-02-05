@@ -61,7 +61,7 @@ void Task_Message_Handling( float _time_since_last )
     char command = USB_Msg_Peek();
 
     // /* MEGN540 -- LAB 2 */ bool command_processed = false;
-
+    USB_Send_Byte(command) ; 
     // process command
     switch( command ) {
         case '*':
@@ -169,6 +169,12 @@ void Task_Message_Handling( float _time_since_last )
             if( USB_Msg_Length() >= _Message_Length( '~' ) ) {
                 // then process your reset by setting the task_restart flag defined in Lab1_Tasks.h
                 // task_restart = true ; 
+                USB_Msg_Get() ; 
+                USB_Send_Byte(0) ; 
+                Task_Activate(&task_restart, -1) ; 
+
+                USB_Send_Byte('h') ;
+
                 return ; 
                 //I don't know that this section is for 
                 // /* MEGN540 -- LAB 2 */ command_processed = true;

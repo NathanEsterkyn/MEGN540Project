@@ -232,10 +232,10 @@ void USB_Send_Data( void* p_data, uint8_t data_len )
     // *** MEGN540  ***
     // YOUR CODE HERE
     // This should only interface with the ring buffers and use your ring buffer functions.
-    // for( uint8_t i = 0; i < data_len; ++i ) {
-              
-        rb_push_back_B(&_usb_receive_buffer, *(char*) p_data); // Record the byte into the ring buffer
-    // }
+    uint8_t* data = (uint8_t* p_data);                                                         
+    for( uint8_t i = 0; i < data_len; ++i ) {
+        rb_push_back_B(&_usb_send_buffer, data[i]); // Record the byte into the ring buffer
+    }
 }
 
 /**
@@ -247,14 +247,19 @@ void USB_Send_Str( char* p_str )
     // *** MEGN540  ***
     // YOUR CODE HERE. Remember c-srtings are null terminated, so make sure to send that zero!
     // This should only interface with the ring buffers and use your ring buffer functions.
-    uint8_t str_len = strlen(p_str) ; 
-    for (uint8_t i = 0; i < str_len; i++)
-    {
-        rb_push_back_B(&_usb_receive_buffer, p_str[i]); // Record the byte into the ring buffer
-    }
+    //uint8_t str_len = strlen(p_str) ; 
+    //for (uint8_t i = 0; i < str_len; i++)
+    //{
+        //rb_push_back_B(&_usb_receive_buffer, p_str[i]); // Record the byte into the ring buffer
+    //}
 
-    rb_push_back_B(&_usb_receive_buffer, '\0'); // Record the byte into the ring buffer
-    
+    //rb_push_back_B(&_usb_receive_buffer, '\0'); // Record the byte into the ring buffer
+    uint8_t index = 0;
+    while (p_str[index] != '\0') {
+        rb_push_back_B(&_usb_send_buffer,p_str[index]);
+        index++;
+    }
+    USB_Send_Byte(0);
 }
 
 /**
@@ -282,19 +287,19 @@ void USB_Send_Msg( char* format, char cmd, void* p_data, uint8_t data_len )
 
     // FUNCTION BEGIN
     //  Calculate the length of the format string taking advantage of the null-termination (+1 for null termination)
-    uint8_t str_len = strlen(format); 
+    uint8_t str_len = strlen(format) + 1; 
     //  Calculate the total message length:  1 + format_length + data_len
     uint8_t mss_len = 1 + str_len + data_len ; 
 
     //  Send data:
     //      usb_send_byte <-- length
-    USB_Send_Byte(data_len) ; 
+    USB_Send_Byte(mss_len) ; 
     //      usb_send_str  <-- format (with trailing zero)
     USB_Send_Str(format) ; 
     //      usb_send_byte <-- cmd
     USB_Send_Byte(cmd) ; 
     //      usb_send_data <-- p_data
-    USB_Send_Data(p_data, mss_len) ; 
+    USB_Send_Data(p_data, data_len) ; 
     // FUNCTION END
 }
 
@@ -319,12 +324,11 @@ uint8_t USB_Msg_Peek()
     // *** MEGN540  ***
     // YOUR CODE HERE
     // This should only interface with the ring buffers and use your ring buffer functions.
-    uint8_t peek = rb_get_B(&_usb_receive_buffer, 0) ; 
-    if (peek != '\0'){
-        return peek ; 
+    if (USB_Msg_Length != '\0'){
+        return rb_get_B(&_usb_receive_buffer, 0); 
     } else
     {
-        return '\0' ; 
+        return 0; 
     }
     
 }
@@ -338,11 +342,10 @@ uint8_t USB_Msg_Get()
     // *** MEGN540  ***
     // YOUR CODE HERE
     // This should only interface with the ring buffers and use your ring buffer functions.
-    uint8_t get = rb_pop_front_B(&_usb_receive_buffer) ; 
     if (get != '\0'){
-        return get ; 
+        return rb_pop_front_B(&_usb_receive_buffer); 
     } else {
-        return '\0' ; 
+        return 0 ; 
     }
     
 }
@@ -361,16 +364,18 @@ bool USB_Msg_Read_Into( void* p_obj, uint8_t data_len )
     // *** MEGN540  ***
     // YOUR CODE HERE
     // This should only interface with the ring buffers and use your ring buffer functions.
-    if (rb_length_B(&_usb_receive_buffer) < data_len){
-        return false ;
-    }
+    uint8_t* data = (uint8_t*) p_obj;
 
-    for (uint8_t i = 0; i <= data_len; i++)
-    {
+    //if (rb_length_B(&_usb_receive_buffer) < data_len){
+      //  return false ;
+    //}
+
+    //for (uint8_t i = 0; i <= data_len; i++)
+    //{
        //*(char*) p_obj[i] = rb_pop_front_B(&_usb_receive_buffer) ; 
-        uint8_t byteToCopy = rb_pop_front_B(&_usb_receive_buffer);
-        rb_push_back_B(p_obj, byteToCopy);
-    }
+      //  uint8_t byteToCopy = rb_pop_front_B(&_usb_receive_buffer);
+        //rb_push_back_B(p_obj, byteToCopy);
+    //}
     return true; 
 }
 
