@@ -20,10 +20,8 @@ void Task_Activate( Task_t* task, float run_period )
 {
     //****** MEGN540 --  START IN LAB 1, UPDATE IN Lab 2 ******//
     // Here you should change the state of the is_active member and set the time to now (lab 2)
-    // to identify the task is active
-    // set the run_period as proscribed
-    task->is_active = true ; 
-    task->run_period = run_period;
+    task->is_active = true; // set the task to active
+    task->run_period = run_period; // add the run period as prescribed
 }
 
 /**
@@ -36,8 +34,7 @@ void Task_ReActivate( Task_t* task )
 {
     //****** MEGN540 --  START IN LAB 1, UPDATE IN Lab 2 ******//
     // Here you should change the state of the is_active member and set the time to now (lab 2)
-    // to identify the task is active
-    task->is_active = true ; //This didn't have anything about it in the handout
+    task->is_active = true; // resets the task state to active
 }
 
 /** Function Task_Cancel changes the internal state to disable the task **/
@@ -45,8 +42,7 @@ void Task_Cancel( Task_t* task )
 {
     //****** MEGN540 -- Lab 1 ******//
     // Here you should change the state of the is_active member
-    // to identify the task is inactive
-    task->is_active = false ; 
+    task->is_active = false; // sets the task is inactive
 }
 
 /** Function Task_Is_Ready indicates if the task should be run. It checks both
@@ -56,8 +52,7 @@ bool Task_Is_Ready( Task_t* task )
 {
     //****** MEGN540 --  START IN LAB 1, UPDATE IN Lab 2 ******//
     // Note a run_period of 0 indicates the task should be run every time if it is active.
-    return task->is_active ; 
-    // MEGN540 Update to set the return statement based on is_active and time_last_ran.
+    return task->is_active; // returns whether the task is active or not
 
 }
 
@@ -94,7 +89,6 @@ bool Task_Run_If_Ready( Task_t* task )
     //****** MEGN540 --  START IN LAB 1, UPDATE IN Lab 2   ******//
     // use the prior functions to help with this.
     // Check to see if the task is ready to run.
-    //
     // Run it if it is ready
 
     if (Task_Is_Ready(task)) {

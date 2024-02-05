@@ -47,7 +47,7 @@ void Initialize_Modules( float _not_used_ )
     // Initialize Tasks and their associated funciton connections
     Initialize_Task( &task_restart, Initialize_Modules );
 
-    // once you have everythign else working  you can setup the message handling task to be managed by our task management
+    // once you have everything else working  you can set up the message handling task to be managed by our task management
     // Initialize_Task( &task_message_handling, 0, Task_Message_Handling );
 }
 
@@ -58,8 +58,6 @@ int main( void )
 {
     Initialize_USB();
     Initialize_Modules( 0.0 );
-
-    //
 
     while( true ) {
         Task_USB_Upkeep();  // This we need to run Always and fast, so no need to wrap it with task management
