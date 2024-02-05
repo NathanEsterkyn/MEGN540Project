@@ -64,8 +64,8 @@ int main( void )
     while( true ) {
         Task_USB_Upkeep();  // This we need to run Always and fast, so no need to wrap it with task management
 
-        Task_USB_Echo();  // you'll want to remove this once you get your serial sorted
-        // Task_Message_Handling(0.0); // you'll want to uncomment once you get your serial sorted.
+        // Task_USB_Echo();  // you'll want to remove this once you get your serial sorted
+        Task_Message_Handling(0.0); // you'll want to uncomment once you get your serial sorted.
         // Instead of above, once you have Task_Message_Handling working, you can setup the message handling task to be managed by our task management
         // Task_Run_If_Ready( &task_message_handling);
 

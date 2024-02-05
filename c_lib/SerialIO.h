@@ -91,7 +91,7 @@ void Task_USB_Upkeep( void );  // You'll need to add in USB buffer interaction h
  * Function Task_USB_Echo provides a functioning example to help you build your code. This should be removed
  * in the final implementaion.
  */
-void Task_USB_Echo( void );
+// void Task_USB_Echo( void );
 
 /**
  * (non-blocking) Function USB_Send_Byte Adds a character to the output buffer

@@ -29,6 +29,7 @@
 */
 
 #include "Message_Handling.h"
+#include <stdio.h> 
 
 /**
  * Function _Message_Length returns the number of bytes associated with a command string per the
@@ -45,14 +46,15 @@ static uint8_t _Message_Length( char cmd );
 void Task_Message_Handling( float _time_since_last )
 {
     // *** MEGN540  ***
-    // YOUR CODE HERE. I suggest you use your peak function and a switch interface
+    // YOUR CODE HERE. I suggest you use your peek function and a switch interface
     // Either do the simple stuff strait up, set flags to have it done later.
     // If it just is a USB thing, do it here, if it requires other hardware, do it
     // in the main and set a flag to have it done here.
-
     // Check to see if their is data in waiting
-    if( !USB_Msg_Length() )
+
+    if( !USB_Msg_Length() ) {
         return;  // nothing to process...
+    }
 
     // Get Your command designator without removal so if their are not enough
     // bytes yet, the command persists
@@ -65,7 +67,6 @@ void Task_Message_Handling( float _time_since_last )
         case '*':
             if( USB_Msg_Length() >= _Message_Length( '*' ) ) {
                 // then process your multiplication...
-
                 // remove the command from the usb recieved buffer using the
                 // usb_msg_get() function
                 USB_Msg_Get();  // removes the first character from the received buffer,
@@ -95,7 +96,7 @@ void Task_Message_Handling( float _time_since_last )
                                 // remove the command from the usb recieved buffer using the
                 // usb_msg_get() function
                 USB_Msg_Get();  // removes the first character from the received buffer,
-                                // we already know it was a * so no need to save it as a
+                                // we already know it was a / so no need to save it as a
                                 // variable
 
                 // Build a meaningful structure to put your data in. Here we want two
@@ -175,7 +176,8 @@ void Task_Message_Handling( float _time_since_last )
             break;
         default:
             // What to do if you dont recognize the command character
-            //TODO: I think that this should send back a '?' char
+            
+            USB_Send_Byte(command) ; 
             break;
     }
 
