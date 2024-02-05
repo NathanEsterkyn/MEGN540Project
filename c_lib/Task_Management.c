@@ -23,6 +23,7 @@ void Task_Activate( Task_t* task, float run_period )
     // to identify the task is active
     // set the run_period as proscribed
     task->is_active = true ; 
+    task->run_period = run_period;
 }
 
 /**
@@ -73,7 +74,15 @@ void Task_Run( Task_t* task )
     // Update time_last_ran and is_active as appropriate.
     // Note that a negative run_period indicates the task should only be performed once, while
     // a run_period of 0 indicates the task should be run every time if it is active.
-    ;
+    task->task_fcn_ptr(0);
+    if(task->task_fcn_ptr < 0){
+        Task_Cancel(task);
+    }
+    else {
+        task->time_last_ran.microsec = 0;
+        task->time_last_ran.millisec = 0;
+        task->is_active = true;
+    }
 }
 
 /** Function Task_Run_If_Ready Function Task_Run_If_Ready checks to see if the given task is ready for execution, executes the task,
@@ -88,9 +97,10 @@ bool Task_Run_If_Ready( Task_t* task )
     //
     // Run it if it is ready
 
-    if (task->is_active == true) {
+    if (Task_Is_Ready(task)) {
         //If this isn't neede then we can replace the whole thing with return task->is_active
         // Task_Run(task) ; // I don't know if this is supposed to be here for lab 1
+        Task_Run(task);
         return true ; 
     } else {
         return false;  // true if it ran, false if it did not run
