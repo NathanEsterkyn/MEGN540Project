@@ -68,7 +68,7 @@ void Task_Message_Handling( float _time_since_last )
 
                 Multiply_And_Send( data.v1, data.v2 ); // does the multiplication, sends the usb message
 
-                // /* MEGN540 -- LAB 2 */ command_processed = true; (future dev)
+                command_processed = true; // for timing functionality
             }
             break;
         case '/':
@@ -86,7 +86,7 @@ void Task_Message_Handling( float _time_since_last )
 
                 Divide_And_Send( data.v1, data.v2 ); // does the division, sends the usb message
 
-                // /* MEGN540 -- LAB 2 */ command_processed = true; (future dev)
+                command_processed = true; // for timing functionality
             }
             break;
         case '+':
@@ -104,7 +104,7 @@ void Task_Message_Handling( float _time_since_last )
 
                 Add_And_Send( data.v1, data.v2 ); // does the addition, sends the usb message
 
-                // /* MEGN540 -- LAB 2 */ command_processed = true; (future dev)
+                command_processed = true; // for timing functionality
             }
             break;
         case '-':
@@ -122,7 +122,7 @@ void Task_Message_Handling( float _time_since_last )
 
                 Subtract_And_Send( data.v1, data.v2 ); // does the subtraction, sends the usb message
 
-                // /* MEGN540 -- LAB 2 */ command_processed = true; (future dev)
+                command_processed = true; // for timing functionality
             }
             break;
         case '~':
@@ -136,7 +136,7 @@ void Task_Message_Handling( float _time_since_last )
 
                 return;
 
-                // /* MEGN540 -- LAB 2 */ command_processed = true; (future dev)
+                command_processed = true; // for timing functionality
             }
             break;
         default: // case for unknown command character (unknown operator)
@@ -146,10 +146,10 @@ void Task_Message_Handling( float _time_since_last )
     }
 
     //********* MEGN540 -- LAB 2 ************//
-    // if( command_processed ) {
-    //     // RESET the WATCHDOG TIMER
-    //     Task_Activate( &task_message_handling_watchdog );
-    // }
+    if( command_processed ) {
+        // RESET the WATCHDOG TIMER
+        Task_Activate( &task_message_handling_watchdog );
+    }
 }
 
 /**
@@ -161,6 +161,16 @@ void Task_Message_Handling( float _time_since_last )
 void Task_Message_Handling_Watchdog( float _unused_ )
 {
     USB_Flush_Input_Buffer();
+}
+/**
+ * @brief Function MSG_FLAG_Execute indicates if the action associated with the message flag should be executed in the main loop both because its active
+ * and because its time.
+ * @param p_flag
+ * @return true or false
+ */
+bool MSG_FLAG_Execute( MSG_FLAG_t* p_flag)
+{
+
 }
 
 /**

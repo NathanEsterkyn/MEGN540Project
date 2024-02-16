@@ -121,7 +121,6 @@ float Timing_Seconds_Since( const Time_t* time_start_p )
     // YOUR CODE HERE
     float current_time = Timing_Get_Time_Sec();
     float start_time = ((*time_start_p).millisec + ((*time_start_p).microsec * 0.001)) * 0.001;
-
     float delta_time = current_time - start_time;
     return delta_time;
 }

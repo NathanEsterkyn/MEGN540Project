@@ -1,5 +1,4 @@
 #include "Task_Management.h"
-
 #include "Timing.h"
 
 /** Function Initialize_Task initializes the task to a default state that is inactive.
@@ -22,6 +21,7 @@ void Task_Activate( Task_t* task, float run_period )
     // Here you should change the state of the is_active member and set the time to now (lab 2)
     task->is_active = true; // set the task to active
     task->run_period = run_period; // add the run period as prescribed
+    task->time_last_ran = Timing_Get_Time(); // set the time to now
 }
 
 /**
@@ -35,6 +35,7 @@ void Task_ReActivate( Task_t* task )
     //****** MEGN540 --  START IN LAB 1, UPDATE IN Lab 2 ******//
     // Here you should change the state of the is_active member and set the time to now (lab 2)
     task->is_active = true; // resets the task state to active
+    task->time_last_ran = Timing_Get_Time(); // set the time to now
 }
 
 /** Function Task_Cancel changes the internal state to disable the task **/
@@ -52,6 +53,9 @@ bool Task_Is_Ready( Task_t* task )
 {
     //****** MEGN540 --  START IN LAB 1, UPDATE IN Lab 2 ******//
     // Note a run_period of 0 indicates the task should be run every time if it is active.
+    if (task->run_period == 0) {
+        Task_Run(task);
+    }
     return task->is_active; // returns whether the task is active or not
 
 }
@@ -64,14 +68,14 @@ bool Task_Is_Ready( Task_t* task )
  */
 void Task_Run( Task_t* task )
 {
-    // If the function pointer is not NULL (0), run task.
     // To call a void functor (function pointer):  functor_variable();
-    // Update time_last_ran and is_active as appropriate.
     // Note that a negative run_period indicates the task should only be performed once, while
     // a run_period of 0 indicates the task should be run every time if it is active.
     task->task_fcn_ptr(0);
-    if(task->task_fcn_ptr < 0){
+    if(task->task_fcn_ptr < 0){  // If the function pointer is not NULL (0), run task.
         Task_Cancel(task);
+        task->time_last_ran = Timing_Get_Time(); // Update time_last_ran and is_active as appropriate.
+        task->is_active = true;
     }
     else {
         task->time_last_ran.microsec = 0;
@@ -92,8 +96,6 @@ bool Task_Run_If_Ready( Task_t* task )
     // Run it if it is ready
 
     if (Task_Is_Ready(task)) {
-        //If this isn't neede then we can replace the whole thing with return task->is_active
-        // Task_Run(task) ; // I don't know if this is supposed to be here for lab 1
         Task_Run(task);
         return true ; 
     } else {
