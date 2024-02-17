@@ -175,7 +175,6 @@ case 't':
        // Build a meaningful structure to put your data in. Here we want two
        // floats.
        char cmd = USB_Msg_Get();
-       float timing_data=0.0;
        switch(cmd){
            case '0':
 
