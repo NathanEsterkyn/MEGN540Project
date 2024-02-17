@@ -61,7 +61,7 @@ bool Task_Is_Ready( Task_t* task )
         if (task->run_period == 0){
             return true;
         }
-        if (Timing_Seconds_Since(&task->time_last_ran) >= task->run_period){
+        if (Timing_Seconds_Since(&task->time_last_ran) >= (task->run_period*0.01)){
             return true;
         }
     }

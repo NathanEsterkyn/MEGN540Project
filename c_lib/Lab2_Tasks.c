@@ -13,13 +13,13 @@ void Send_Loop_Time( float _time_since_last){
 
     if(!loop_completed_flag) { // if the loop hasn't been completed
         loop_completed_flag = true; // indicate the loop has been
-        //task_time_loop.run_period = 0; // has the loop run indefinitely
+        task_time_loop.run_period = 0; // has the loop run indefinitely
     }
     else {
         timing_data.cmd = '1';
         timing_data.time = _time_since_last;
         USB_Send_Msg("ccf", 't' , &timing_data , sizeof(timing_data));
         loop_completed_flag = false; // indicate the loop hasn't been completed
-        //task_time_loop.run_period = -1; // has the loop run once
+        task_time_loop.run_period = -1; // has the loop run once
     }
 }
