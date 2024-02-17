@@ -201,9 +201,9 @@ switch( command ) {
            float X;
            USB_Msg_Read_Into( &X, sizeof(X) ); // reads the float value
            switch(cmd){
-               case '0': // if a '0' is sent after the 't' char
+               case '0': // if a '0' is sent after the 'T' char
                    if (X > 0){
-                       Task_Activate(&task_send_time,X); // activates the task to run one iteration of task_send_time
+                       Task_Activate(&task_send_time, X); // activates the task to run one iteration of task_send_time
                    }
                    else {
                        Task_Cancel(&task_send_time);

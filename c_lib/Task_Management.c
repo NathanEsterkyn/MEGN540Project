@@ -58,7 +58,12 @@ bool Task_Is_Ready( Task_t* task )
     //****** MEGN540 --  START IN LAB 1, UPDATE IN Lab 2 ******//
     // Note a run_period of 0 indicates the task should be run every time if it is active.
     if (task->is_active){
-        return true;
+        if (task->run_period == 0){
+            return true;
+        }
+        if (Timing_Seconds_Since(&task->time_last_ran) >= task->run_period){
+            return true;
+        }
     }
     return false;
 }
