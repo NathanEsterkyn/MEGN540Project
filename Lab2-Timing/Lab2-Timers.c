@@ -53,19 +53,15 @@
 void Initialize_Modules( float _time_not_used_ )
 {
     // Initialize (reinitialize) all global variables
-
     // reset USB input buffers
     USB_Flush_Input_Buffer();
-
     // Initialize all modules except USB (it can only be called once without messing things up)
     Initialize_Timing();
-
     // Setup task handling
     Initialize_Task( &task_restart, Initialize_Modules /*function pointer to call*/ );
-
     // Setup message handling to get processed at some desired rate.
     Initialize_Task( &task_message_handling, Task_Message_Handling );
-
+    // Setup
     Initialize_Task( &task_send_time, Send_Time_Now);
 
     Initialize_Task( &task_time_loop, Send_Loop_Time);

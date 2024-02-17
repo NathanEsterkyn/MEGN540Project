@@ -170,22 +170,54 @@ switch( command ) {
 
     case 't':
        if( USB_Msg_Length() >= _Message_Length( 't' ) ) {
-           // then process your minus...
+           // then process your 't'...
+           USB_Msg_Get();  // removes the first character from the received buffer,
+                           // we already know it was a * so no need to save it as a
+                           // variable
+           char cmd = USB_Msg_Get(); // get the command character given after the 't' to determine behavior
+           switch(cmd){
+               case '0': // if a '0' is sent after the 't' char
+                   Task_Activate(&task_send_time,-1); // activates the task to run one iteration of task_send_time
+                   command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+                   break;
+               case '1': // if a '1' is sent after the 't' char
+                   Task_Activate(&task_time_loop,-1); // activates the task to run one iteration of task_time_loop
+                   command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+                   break;
+               default:
+                   break;
+           }
+       }
+       break;
+
+    case 'T':
+       if(USB_Msg_Length() >= _Message_Length('T')) {
+           // then process your 'T'...
            USB_Msg_Get();  // removes the first character from the received buffer,
                            // we already know it was a * so no need to save it as a
                            // variable
 
-           // Build a meaningful structure to put your data in. Here we want two
-           // floats.
-           char cmd = USB_Msg_Get();
+           char cmd = USB_Msg_Get(); // get the command character given after the 't' to determine behavior
+           float X;
+           USB_Msg_Read_Into( &X, sizeof(X) ); // reads the float value
            switch(cmd){
-               case '0':
-                   Task_Activate(&task_send_time,-1);
-                   command_processed = true;
+               case '0': // if a '0' is sent after the 't' char
+                   if (X > 0){
+                       Task_Activate(&task_send_time,X); // activates the task to run one iteration of task_send_time
+                   }
+                   else {
+                       Task_Cancel(&task_send_time);
+                   }
+                   command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
                    break;
-               case '1':
-                   Task_Activate(&task_time_loop,-1);
-                   command_processed = true;
+               case '1': // if a '1' is sent after the 't' char
+                   if (X > 0){
+                       Task_Activate(&task_time_loop,X); // activates the task to run one iteration of task_time_loop
+                   }
+                   else {
+                       Task_Cancel(&task_time_loop);
+                   }
+                   command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
                    break;
                default:
                    break;
@@ -210,8 +242,7 @@ switch( command ) {
 
 //********* MEGN540 -- LAB 2 ************//
 if( command_processed ) {
-// RESET the WATCHDOG TIMER
-Task_Activate( &task_message_handling_watchdog , -1);
+Task_Activate( &task_message_handling_watchdog , -1); // RESET the WATCHDOG TIMER
 }
 }
 
@@ -223,7 +254,7 @@ Task_Activate( &task_message_handling_watchdog , -1);
 */
 void Task_Message_Handling_Watchdog( float _unused_ )
 {
-USB_Flush_Input_Buffer();
+USB_Flush_Input_Buffer(); // re-initializes the receive ring buffer
 }
 
 /**
@@ -234,28 +265,28 @@ USB_Flush_Input_Buffer();
 */
 static uint8_t _Message_Length( char cmd )
 {
-switch( cmd ) {
-case '~': return 1; break;
-case '*': return 9; break;
-case '/': return 9; break;
-case '+': return 9; break;
-case '-': return 9; break;
-case 't': return 2; break;
-case 'T': return 6; break;
-case 'e': return 1; break;
-case 'E': return 5; break;
-case 'b': return 1; break;
-case 'B': return 5; break;
-case 'p': return 5; break;
-case 'P': return 9; break;
-case 's': return 1; break;
-case 'S': return 1; break;
-case 'q': return 1; break;
-case 'Q': return 5; break;
-case 'd': return 9; break;
-case 'D': return 13; break;
-case 'v': return 9; break;
-case 'V': return 13; break;
-default: return 0; break;
-}
+    switch( cmd ) {
+        case '~': return 1; break;
+        case '*': return 9; break;
+        case '/': return 9; break;
+        case '+': return 9; break;
+        case '-': return 9; break;
+        case 't': return 2; break;
+        case 'T': return 6; break;
+        case 'e': return 1; break;
+        case 'E': return 5; break;
+        case 'b': return 1; break;
+        case 'B': return 5; break;
+        case 'p': return 5; break;
+        case 'P': return 9; break;
+        case 's': return 1; break;
+        case 'S': return 1; break;
+        case 'q': return 1; break;
+        case 'Q': return 5; break;
+        case 'd': return 9; break;
+        case 'D': return 13; break;
+        case 'v': return 9; break;
+        case 'V': return 13; break;
+        default: return 0; break;
+    }
 }

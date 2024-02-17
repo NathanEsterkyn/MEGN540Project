@@ -23,8 +23,8 @@ void Task_Activate( Task_t* task, float run_period )
     // Here you should change the state of the is_active member and set the time to now (lab 2)
     // to identify the task is active
     // set the run_period as proscribed
-    task->is_active  = true;
-    task->run_period = run_period;
+    task->is_active  = true; // sets the status to active - signalling to other functions to run the task
+    task->run_period = run_period; // sets the run period to determine if the task runs once or indefinite
 }
 
 /**
@@ -39,7 +39,6 @@ void Task_ReActivate( Task_t* task )
     // Here you should change the state of the is_active member and set the time to now (lab 2)
     // to identify the task is active
     task->is_active = true;
-
 }
 
 /** Function Task_Cancel changes the internal state to disable the task **/
@@ -61,7 +60,6 @@ bool Task_Is_Ready( Task_t* task )
     if (task->is_active){
         return true;
     }
-
     return false;
 }
 
@@ -82,7 +80,7 @@ void Task_Run( Task_t* task )
     task->task_fcn_ptr( task->time_last_ran.microsec );
     task->time_last_ran = Timing_Get_Time();
 
-    if(task->run_period < 0){
+    if(task->run_period < 0){ // if the task run period is negative, cancel after the task has been run once
         Task_Cancel(task);
     }
 }
@@ -96,13 +94,12 @@ bool Task_Run_If_Ready( Task_t* task )
     //****** MEGN540 --  START IN LAB 1, UPDATE IN Lab 2   ******//
     // use the prior functions to help with this.
     // Check to see if the task is ready to run.
-    //
     // Run it if it is ready
-    if( !task ) {
-        return Task_Is_Ready( task );
+    if(!task) { // if there is no task ready
+        return Task_Is_Ready(task); //
     } else {
-        if( Task_Is_Ready( task ) ) {
-            Task_Run( task );
+        if( Task_Is_Ready(task) ) {
+            Task_Run(task);
             return true;
         } else {
             return false;
