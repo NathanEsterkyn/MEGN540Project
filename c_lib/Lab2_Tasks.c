@@ -4,7 +4,7 @@ void Send_Time_Now( float _time_since_last){
     static float temp_run_period = 0;
     temp_run_period = task_time_loop.run_period;
     char time_cmd;
-    if(temp_run_period<0){
+    if(temp_run_period<=0){
         time_cmd = 't';
     }
     else{
