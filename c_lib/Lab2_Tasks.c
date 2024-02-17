@@ -10,7 +10,7 @@ void Send_Time_Now( float _time_since_last){
     else{
         time_cmd = 'T';
     }
-
+    task_time_loop.run_period = temp_run_period;
     float time = Timing_Get_Time_Sec();
     timing_data.cmd = '0';
     timing_data.time = time;
