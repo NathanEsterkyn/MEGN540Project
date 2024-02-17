@@ -212,7 +212,7 @@ switch( command ) {
                    break;
                case '1': // if a '1' is sent after the 't' char
                    if (X > 0){
-                       Task_Activate(&task_time_loop,X); // activates the task to run one iteration of task_time_loop
+                       Task_Activate(&task_time_loop, X); // activates the task to run one iteration of task_time_loop
                    }
                    else {
                        Task_Cancel(&task_time_loop);
