@@ -62,153 +62,150 @@ bool command_processed = false;
 
 // process command
 switch( command ) {
-case '*':
 
-   if( USB_Msg_Length() >= _Message_Length( '*' ) ) {
+    case '*':
+       if( USB_Msg_Length() >= _Message_Length( '*' ) ) {
 
-       // then process your multiplication...
+           // then process your multiplication...
 
-       // remove the command from the usb recieved buffer using the
-       // usb_msg_get() function
-       USB_Msg_Get();  // removes the first character from the received buffer,
-                       // we already know it was a * so no need to save it as a
-                       // variable
+           // remove the command from the usb recieved buffer using the
+           // usb_msg_get() function
+           USB_Msg_Get();  // removes the first character from the received buffer,
+                           // we already know it was a * so no need to save it as a
+                           // variable
 
-       // Build a meaningful structure to put your data in. Here we want two
-       // floats.
-       struct __attribute__( ( __packed__ ) ) {
-           float v1;
-           float v2;
-       } data;
+           // Build a meaningful structure to put your data in. Here we want two
+           // floats.
+           struct __attribute__( ( __packed__ ) ) {
+               float v1;
+               float v2;
+           } data;
 
-       // Copy the bytes from the usb receive buffer into our structure so we
-       // can use the information
-       USB_Msg_Read_Into( &data, sizeof( data ) );
+           // Copy the bytes from the usb receive buffer into our structure so we
+           // can use the information
+           USB_Msg_Read_Into( &data, sizeof( data ) );
 
-       // Call MEGN540_Lab_Task Function
-       Multiply_And_Send( data.v1, data.v2 );
+           // Call MEGN540_Lab_Task Function
+           Multiply_And_Send( data.v1, data.v2 );
 
-       // /* MEGN540 -- LAB 2 */ command_processed = true;
-       command_processed = true;
-   }
-   break;
-case '/':
-   if( USB_Msg_Length() >= _Message_Length( '/' ) ) {
-       // then process your divide...
-       USB_Msg_Get();  // removes the first character from the received buffer,
-                       // we already know it was a * so no need to save it as a
-                       // variable
-
-       // Build a meaningful structure to put your data in. Here we want two
-       // floats.
-       struct __attribute__( ( __packed__ ) ) {
-           float v1;
-           float v2;
-       } data;
-
-       // Copy the bytes from the usb receive buffer into our structure so we
-       // can use the information
-       USB_Msg_Read_Into( &data, sizeof( data ) );
-
-       // Call MEGN540_Lab_Task Function
-       Divide_And_Send( data.v1, data.v2 );
-       // /* MEGN540 -- LAB 2 */ command_processed = true;
-       command_processed = true;
-   }
-   break;
-case '+':
-   if( USB_Msg_Length() >= _Message_Length( '+' ) ) {
-       // then process your plus...
-       USB_Msg_Get();  // removes the first character from the received buffer,
-                       // we already know it was a * so no need to save it as a
-                       // variable
-
-       // Build a meaningful structure to put your data in. Here we want two
-       // floats.
-       struct __attribute__( ( __packed__ ) ) {
-           float v1;
-           float v2;
-       } data;
-
-       // Copy the bytes from the usb receive buffer into our structure so we
-       // can use the information
-       USB_Msg_Read_Into( &data, sizeof( data ) );
-
-       // Call MEGN540_Lab_Task Function
-       Add_And_Send( data.v1, data.v2 );
-       // /* MEGN540 -- LAB 2 */ command_processed = true;
-       command_processed = true;
-   }
-   break;
-case '-':
-   if( USB_Msg_Length() >= _Message_Length( '-' ) ) {
-       // then process your minus...
-       USB_Msg_Get();  // removes the first character from the received buffer,
-                       // we already know it was a * so no need to save it as a
-                       // variable
-
-       // Build a meaningful structure to put your data in. Here we want two
-       // floats.
-       struct __attribute__( ( __packed__ ) ) {
-           float v1;
-           float v2;
-       } data;
-
-       // Copy the bytes from the usb receive buffer into our structure so we
-       // can use the information
-       USB_Msg_Read_Into( &data, sizeof( data ) );
-
-       // Call MEGN540_Lab_Task Function
-       Subtract_And_Send( data.v1, data.v2 );
-       // /* MEGN540 -- LAB 2 */ command_processed = true;
-       command_processed = true;
-   }
-   break;
-
-case 't':
-   if( USB_Msg_Length() >= _Message_Length( 't' ) ) {
-       // then process your minus...
-       USB_Msg_Get();  // removes the first character from the received buffer,
-                       // we already know it was a * so no need to save it as a
-                       // variable
-
-       // Build a meaningful structure to put your data in. Here we want two
-       // floats.
-       char cmd = USB_Msg_Get();
-       switch(cmd){
-           case '0':
-
-               Task_Activate(&task_send_time,-1);
-               command_processed = true;
-               break;
-           case '1':
-
-               Task_Activate(&task_time_loop,-1);
-               command_processed = true;
-               break;
-
-           default:
-
-               break;
+           // /* MEGN540 -- LAB 2 */ command_processed = true;
+           command_processed = true;
        }
+       break;
 
-   }
-   break;
+    case '/':
+       if( USB_Msg_Length() >= _Message_Length( '/' ) ) {
+           // then process your divide...
+           USB_Msg_Get();  // removes the first character from the received buffer,
+                           // we already know it was a * so no need to save it as a
+                           // variable
 
+           // Build a meaningful structure to put your data in. Here we want two
+           // floats.
+           struct __attribute__( ( __packed__ ) ) {
+               float v1;
+               float v2;
+           } data;
 
+           // Copy the bytes from the usb receive buffer into our structure so we
+           // can use the information
+           USB_Msg_Read_Into( &data, sizeof( data ) );
 
-case '~':
-   if( USB_Msg_Length() >= _Message_Length( '~' ) ) {
-       // /* MEGN540 -- LAB 2 */
+           // Call MEGN540_Lab_Task Function
+           Divide_And_Send( data.v1, data.v2 );
+           // /* MEGN540 -- LAB 2 */ command_processed = true;
+           command_processed = true;
+       }
+       break;
+
+    case '+':
+       if( USB_Msg_Length() >= _Message_Length( '+' ) ) {
+           // then process your plus...
+           USB_Msg_Get();  // removes the first character from the received buffer,
+                           // we already know it was a * so no need to save it as a
+                           // variable
+
+           // Build a meaningful structure to put your data in. Here we want two
+           // floats.
+           struct __attribute__( ( __packed__ ) ) {
+               float v1;
+               float v2;
+           } data;
+
+           // Copy the bytes from the usb receive buffer into our structure so we
+           // can use the information
+           USB_Msg_Read_Into( &data, sizeof( data ) );
+
+           // Call MEGN540_Lab_Task Function
+           Add_And_Send( data.v1, data.v2 );
+           // /* MEGN540 -- LAB 2 */ command_processed = true;
+           command_processed = true;
+       }
+       break;
+
+    case '-':
+       if( USB_Msg_Length() >= _Message_Length( '-' ) ) {
+           // then process your minus...
+           USB_Msg_Get();  // removes the first character from the received buffer,
+                           // we already know it was a * so no need to save it as a
+                           // variable
+
+           // Build a meaningful structure to put your data in. Here we want two
+           // floats.
+           struct __attribute__( ( __packed__ ) ) {
+               float v1;
+               float v2;
+           } data;
+
+           // Copy the bytes from the usb receive buffer into our structure so we
+           // can use the information
+           USB_Msg_Read_Into( &data, sizeof( data ) );
+
+           // Call MEGN540_Lab_Task Function
+           Subtract_And_Send( data.v1, data.v2 );
+           // /* MEGN540 -- LAB 2 */ command_processed = true;
+           command_processed = true;
+       }
+       break;
+
+    case 't':
+       if( USB_Msg_Length() >= _Message_Length( 't' ) ) {
+           // then process your minus...
+           USB_Msg_Get();  // removes the first character from the received buffer,
+                           // we already know it was a * so no need to save it as a
+                           // variable
+
+           // Build a meaningful structure to put your data in. Here we want two
+           // floats.
+           char cmd = USB_Msg_Get();
+           switch(cmd){
+               case '0':
+                   Task_Activate(&task_send_time,-1);
+                   command_processed = true;
+                   break;
+               case '1':
+                   Task_Activate(&task_time_loop,-1);
+                   command_processed = true;
+                   break;
+               default:
+                   break;
+           }
+       }
+       break;
+
+    case '~':
+       if( USB_Msg_Length() >= _Message_Length( '~' ) ) {
+           // /* MEGN540 -- LAB 2 */
+           USB_Flush_Input_Buffer();
+           task_restart.is_active = true;
+           command_processed = true;
+       }
+       break;
+
+    default:
+       // What to do if you dont recognize the command character
        USB_Flush_Input_Buffer();
-       task_restart.is_active = true;
-       command_processed = true;
-   }
-   break;
-default:
-   // What to do if you dont recognize the command character
-   USB_Flush_Input_Buffer();
-   USB_Send_Msg( "cc", '?', &command, sizeof( command ) );
+       USB_Send_Msg( "cc", '?', &command, sizeof( command ) );
 }
 
 //********* MEGN540 -- LAB 2 ************//
