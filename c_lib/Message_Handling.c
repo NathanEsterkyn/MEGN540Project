@@ -48,7 +48,7 @@ void Task_Message_Handling( float _time_since_last )
     if( !USB_Msg_Length() ) { // if there is nothing to process...
         return;
     }
-    float startTime = Timing_Get_Time(); // start time-out timer
+    time_t startTime = Timing_Get_Time(); // start time-out timer
     char command = USB_Msg_Peek(); // use Peek to get the operator without removing it so the process keeps going
     bool command_processed = false; // make sure task_message_handling_watchdog doesnt reset before a command is processed
 
@@ -191,7 +191,7 @@ void Task_Message_Handling( float _time_since_last )
             break;
     }
     //********* MEGN540 -- LAB 2 ************//
-    if( command_processed || (Timing_Seconds_Since(startTime)>=0.100) { //
+    if( command_processed || (Timing_Seconds_Since(startTime)>=0.100)) { //
         // make a timer that activates the task_message_handling_watchdog task if 100ms have passed since the message handling function has been called?
     Task_Activate( &task_message_handling_watchdog ,-1); // RESET the WATCHDOG TIMER
     }
