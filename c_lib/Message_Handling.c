@@ -45,12 +45,22 @@ static uint8_t _Message_Length( char cmd );
 
 void Task_Message_Handling( float _time_since_last )
 {
+    static Time_t startTime;
+    static bool incomplete_command_flag;
+    if ( Timing_Seconds_Since(&startTime)>0.001 && incomplete_command_flag == 1) {
+        float x = 0;
+        USB_Flush_Input_Buffer();
+        USB_Send_Msg("cc", '?', &x, sizeof(x));
+        incomplete_command_flag = 0;
+    }
     if( !USB_Msg_Length() ) { // if there is nothing to process...
         return;
     }
-    Time_t startTime = Timing_Get_Time(); // start time-out timer
-    char command = USB_Msg_Peek(); // use Peek to get the operator without removing it so the process keeps going
     bool command_processed = false; // make sure task_message_handling_watchdog doesnt reset before a command is processed
+    startTime = Timing_Get_Time();
+    incomplete_command_flag = 1;
+
+    char command = USB_Msg_Peek(); // use Peek to get the operator without removing it so the process keeps going
 
     switch( command ) { // process operator using a switch statement
         case '*':
@@ -191,7 +201,7 @@ void Task_Message_Handling( float _time_since_last )
             break;
     }
     //********* MEGN540 -- LAB 2 ************//
-    if( command_processed || (Timing_Seconds_Since(&startTime)>=0.100)) { //
+    if( command_processed ) {
         // make a timer that activates the task_message_handling_watchdog task if 100ms have passed since the message handling function has been called?
     Task_Activate( &task_message_handling_watchdog ,-1); // RESET the WATCHDOG TIMER
     }
