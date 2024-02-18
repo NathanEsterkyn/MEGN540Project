@@ -48,7 +48,7 @@ void Task_Message_Handling( float _time_since_last )
     if( !USB_Msg_Length() ) { // if there is nothing to process...
         return;
     }
-    time_t startTime = Timing_Get_Time(); // start time-out timer
+    user_time_t startTime = Timing_Get_Time(); // start time-out timer
     char command = USB_Msg_Peek(); // use Peek to get the operator without removing it so the process keeps going
     bool command_processed = false; // make sure task_message_handling_watchdog doesnt reset before a command is processed
 
