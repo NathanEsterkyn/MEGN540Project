@@ -42,208 +42,159 @@ static uint8_t _Message_Length( char cmd );
 * Function Task_Message_Handling processes USB messages as necessary and sets
 * status flags to control the flow of the program.
 */
+
 void Task_Message_Handling( float _time_since_last )
 {
-// *** MEGN540  ***
-// YOUR CODE HERE. I suggest you use your peak function and a switch interface
-// Either do the simple stuff strait up, set flags to have it done later.
-// If it just is a USB thing, do it here, if it requires other hardware, do it
-// in the main and set a flag to have it done here.
+    if( !USB_Msg_Length() ) { // if there is nothing to process...
+        return;
+    }
+    float startTime = Timing_Get_Time(); // start time-out timer
+    char command = USB_Msg_Peek(); // use Peek to get the operator without removing it so the process keeps going
+    bool command_processed = false; // make sure task_message_handling_watchdog doesnt reset before a command is processed
 
-// Check to see if their is data in waiting
-if( !USB_Msg_Length() )
-return;  // nothing to process...
+    switch( command ) { // process operator using a switch statement
+        case '*':
+            if( USB_Msg_Length() >= _Message_Length( '*' ) ) { // then process your multiplication...
 
-// Get Your command designator without removal so if their are not enough
-// bytes yet, the command persists
-char command = USB_Msg_Peek();
+                USB_Msg_Get();  // removes the first character from the received buffer,
+                                                                // we know it is '*' so it isn't saved as a variable
 
-bool command_processed = false;
+                struct __attribute__( ( __packed__ ) ) { // makes a struct called data with two floats
+                    float v1;
+                    float v2;
+                } data;
 
-// process command
-switch( command ) {
+                USB_Msg_Read_Into( &data, sizeof( data ) ); // copies bytes from usb receive buffer to struct
 
-    case '*':
-       if( USB_Msg_Length() >= _Message_Length( '*' ) ) {
+                Multiply_And_Send( data.v1, data.v2 ); // does the multiplication, sends the usb message
 
-           // then process your multiplication...
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
+        case '/':
+            if( USB_Msg_Length() >= _Message_Length( '/' ) ) { // then process your divide...
 
-           // remove the command from the usb recieved buffer using the
-           // usb_msg_get() function
-           USB_Msg_Get();  // removes the first character from the received buffer,
-                           // we already know it was a * so no need to save it as a
-                           // variable
+                USB_Msg_Get();  // removes the first character from the received buffer,
+                                // we know it is '/' so it isn't saved as a variable
 
-           // Build a meaningful structure to put your data in. Here we want two
-           // floats.
-           struct __attribute__( ( __packed__ ) ) {
-               float v1;
-               float v2;
-           } data;
+                struct __attribute__( ( __packed__ ) ) { // makes a struct called data with two floats
+                    float v1;
+                    float v2;
+                } data;
 
-           // Copy the bytes from the usb receive buffer into our structure so we
-           // can use the information
-           USB_Msg_Read_Into( &data, sizeof( data ) );
+                USB_Msg_Read_Into( &data, sizeof( data ) ); // copies bytes from usb receive buffer to struct
 
-           // Call MEGN540_Lab_Task Function
-           Multiply_And_Send( data.v1, data.v2 );
+                Divide_And_Send( data.v1, data.v2 ); // does the division, sends the usb message
 
-           // /* MEGN540 -- LAB 2 */ command_processed = true;
-           command_processed = true;
-       }
-       break;
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
+        case '+':
+            if( USB_Msg_Length() >= _Message_Length( '+' ) ) { // then process your addition...
 
-    case '/':
-       if( USB_Msg_Length() >= _Message_Length( '/' ) ) {
-           // then process your divide...
-           USB_Msg_Get();  // removes the first character from the received buffer,
-                           // we already know it was a * so no need to save it as a
-                           // variable
+                USB_Msg_Get();  // removes the first character from the received buffer,
+                                // we know it is '+' so it isn't saved as a variable
 
-           // Build a meaningful structure to put your data in. Here we want two
-           // floats.
-           struct __attribute__( ( __packed__ ) ) {
-               float v1;
-               float v2;
-           } data;
+                struct __attribute__( ( __packed__ ) ) { // makes a struct called data with two floats
+                    float v1;
+                    float v2;
+                } data;
 
-           // Copy the bytes from the usb receive buffer into our structure so we
-           // can use the information
-           USB_Msg_Read_Into( &data, sizeof( data ) );
+                USB_Msg_Read_Into( &data, sizeof( data ) ); // copies bytes from usb receive buffer to struct
 
-           // Call MEGN540_Lab_Task Function
-           Divide_And_Send( data.v1, data.v2 );
-           // /* MEGN540 -- LAB 2 */ command_processed = true;
-           command_processed = true;
-       }
-       break;
+                Add_And_Send( data.v1, data.v2 ); // does the addition, sends the usb message
 
-    case '+':
-       if( USB_Msg_Length() >= _Message_Length( '+' ) ) {
-           // then process your plus...
-           USB_Msg_Get();  // removes the first character from the received buffer,
-                           // we already know it was a * so no need to save it as a
-                           // variable
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
+        case '-':
+            if( USB_Msg_Length() >= _Message_Length( '-' ) ) { // then process your subtraction...
 
-           // Build a meaningful structure to put your data in. Here we want two
-           // floats.
-           struct __attribute__( ( __packed__ ) ) {
-               float v1;
-               float v2;
-           } data;
+                USB_Msg_Get();  // removes the first character from the received buffer,
+                                // we know it is '-' so it isn't saved as a variable
 
-           // Copy the bytes from the usb receive buffer into our structure so we
-           // can use the information
-           USB_Msg_Read_Into( &data, sizeof( data ) );
+                struct __attribute__( ( __packed__ ) ) { // makes a struct called data with two floats
+                    float v1;
+                    float v2;
+                } data;
 
-           // Call MEGN540_Lab_Task Function
-           Add_And_Send( data.v1, data.v2 );
-           // /* MEGN540 -- LAB 2 */ command_processed = true;
-           command_processed = true;
-       }
-       break;
+                USB_Msg_Read_Into( &data, sizeof( data ) ); // copies bytes from usb receive buffer to struct
 
-    case '-':
-       if( USB_Msg_Length() >= _Message_Length( '-' ) ) {
-           // then process your minus...
-           USB_Msg_Get();  // removes the first character from the received buffer,
-                           // we already know it was a * so no need to save it as a
-                           // variable
+                Subtract_And_Send( data.v1, data.v2 ); // does the subtraction, sends the usb message
 
-           // Build a meaningful structure to put your data in. Here we want two
-           // floats.
-           struct __attribute__( ( __packed__ ) ) {
-               float v1;
-               float v2;
-           } data;
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
 
-           // Copy the bytes from the usb receive buffer into our structure so we
-           // can use the information
-           USB_Msg_Read_Into( &data, sizeof( data ) );
-
-           // Call MEGN540_Lab_Task Function
-           Subtract_And_Send( data.v1, data.v2 );
-           // /* MEGN540 -- LAB 2 */ command_processed = true;
-           command_processed = true;
-       }
-       break;
-
-    case 't':
-       if( USB_Msg_Length() >= _Message_Length( 't' ) ) {
-           // then process your 't'...
-           USB_Msg_Get();  // removes the first character from the received buffer,
-                           // we already know it was a * so no need to save it as a
-                           // variable
-           char cmd = USB_Msg_Get(); // get the command character given after the 't' to determine behavior
-           switch(cmd){
-               case '0': // if a '0' is sent after the 't' char
-                   Task_Activate(&task_send_time,-1); // activates the task to run one iteration of task_send_time
-                   command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
-                   break;
-               case '1': // if a '1' is sent after the 't' char
-                   Task_Activate(&task_time_loop,-1); // activates the task to run one iteration of task_time_loop
-                   command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
-                   break;
-               default:
-                   break;
-           }
-       }
-       break;
-
-    case 'T':
-       if(USB_Msg_Length() >= _Message_Length('T')) {
-           // then process your 'T'...
-           USB_Msg_Get();  // removes the first character from the received buffer,
-                           // we already know it was a * so no need to save it as a
-                           // variable
-
-           char cmd = USB_Msg_Get(); // get the command character given after the 't' to determine behavior
-           float X;
-           USB_Msg_Read_Into( &X, sizeof(X) ); // reads the float value
-           switch(cmd){
-               case '0': // if a '0' is sent after the 'T' char
-                   if (X > 0){
-                       Task_Activate(&task_send_time, X); // activates the task to run one iteration of task_send_time
-                   }
-                   else {
-                       Task_Cancel(&task_send_time);
-                   }
-                   command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
-                   break;
-               case '1': // if a '1' is sent after the 't' char
-                   if (X > 0){
-                       Task_Activate(&task_time_loop, X); // activates the task to run one iteration of task_time_loop
-                   }
-                   else {
-                       Task_Cancel(&task_time_loop);
-                   }
-                   command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
-                   break;
-               default:
-                   break;
-           }
-       }
-       break;
-
-    case '~':
-       if( USB_Msg_Length() >= _Message_Length( '~' ) ) {
-           // /* MEGN540 -- LAB 2 */
-           USB_Flush_Input_Buffer();
-           task_restart.is_active = true;
-           command_processed = true;
-       }
-       break;
-
-    default:
-       // What to do if you dont recognize the command character
-       USB_Flush_Input_Buffer();
-       USB_Send_Msg( "cc", '?', &command, sizeof( command ) );
-}
-
-//********* MEGN540 -- LAB 2 ************//
-if( command_processed ) {
-Task_Activate( &task_message_handling_watchdog , -1); // RESET the WATCHDOG TIMER
-}
+        case '~':
+            if( USB_Msg_Length() >= _Message_Length( '~' ) ) { // then process your reset...
+                USB_Msg_Get();
+                USB_Send_Byte(0);
+                Task_Activate(&task_restart, -1);
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+                return;
+            }
+            break;
+        case 't':
+            if( USB_Msg_Length() >= _Message_Length( 't' ) ) { // then process your 't'...
+                USB_Msg_Get();  // removes the first character from the received buffer,
+                                // we know it is 't' so it isn't saved as a variable
+                char cmd = USB_Msg_Get(); // get the command character given after the 't' to determine behavior
+                switch(cmd){
+                    case '0': // if a '0' is sent after the 't' char
+                        Task_Activate(&task_send_time,-1); // activates the task to run one iteration of task_send_time
+                        command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+                        break;
+                    case '1': // if a '1' is sent after the 't' char
+                        Task_Activate(&task_time_loop,-1); // activates the task to run one iteration of task_time_loop
+                        command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+                        break;
+                    default:
+                        break;
+                }
+            }
+            break;
+        case 'T':
+            if(USB_Msg_Length() >= _Message_Length('T')) { // then process your 'T'...
+                USB_Msg_Get();  // removes the first character from the received buffer,
+                                // we know it is 'T' so it isn't saved as a variable
+                char cmd = USB_Msg_Get(); // get the command character given after the 't' to determine behavior
+                float X; // declare a float variable to dictate the frequency of the messages
+                USB_Msg_Read_Into( &X, sizeof(X) ); // reads the float value
+                switch(cmd){
+                    case '0': // if a '0' is sent after the 'T' char
+                        if (X > 0){
+                            Task_Activate(&task_send_time, X); // activates the task to run one iteration of task_send_time
+                        }
+                        else {
+                            Task_Cancel(&task_send_time); // if X<=0 cancel the task
+                        }
+                        command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+                        break;
+                    case '1': // if a '1' is sent after the 't' char
+                        if (X > 0){
+                            Task_Activate(&task_time_loop, X); // activates the task to run one iteration of task_time_loop
+                        }
+                        else {
+                            Task_Cancel(&task_time_loop); // if X<=0 cancel the task
+                        }
+                        command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+                        break;
+                    default:
+                        break;
+                }
+            }
+            break;
+        default: // case for unknown command character (unknown operator)
+            USB_Msg_Get(); // clears the unknown operator
+            USB_Send_Byte('?'); // sends a '?'
+            break;
+    }
+    //********* MEGN540 -- LAB 2 ************//
+    if( command_processed || (Timing_Seconds_Since(startTime)>=0.100) { //
+        // make a timer that activates the task_message_handling_watchdog task if 100ms have passed since the message handling function has been called?
+    Task_Activate( &task_message_handling_watchdog ,-1); // RESET the WATCHDOG TIMER
+    }
 }
 
 /**

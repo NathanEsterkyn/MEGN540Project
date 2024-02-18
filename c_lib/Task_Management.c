@@ -56,16 +56,16 @@ void Task_Cancel( Task_t* task )
 bool Task_Is_Ready( Task_t* task )
 {
     //****** MEGN540 --  START IN LAB 1, UPDATE IN Lab 2 ******//
-    // Note a run_period of 0 indicates the task should be run every time if it is active.
-    if (task->is_active){
-        if (task->run_period == 0){
-            return true;
+
+    if (task->is_active){ // if the task is currently active
+        if (task->run_period == 0){ // and if the run period is equal to zero, the task is ready
+            return true; // Note a run_period of 0 indicates the task should be run every time if it is active.
         }
         if (Timing_Seconds_Since(&task->time_last_ran) >= (task->run_period*0.001)){
-            return true;
+            return true; // if the time since the task last ran is larger than the interval given by the run period, the task is ready
         }
     }
-    return false;
+    return false; // otherwise, the task isn't ready
 }
 
 /**
@@ -85,7 +85,7 @@ void Task_Run( Task_t* task )
     task->task_fcn_ptr( task->time_last_ran.microsec );
     task->time_last_ran = Timing_Get_Time();
 
-    if(task->run_period < 0){ // if the task run period is negative, cancel after the task has been run once
+    if(task->run_period < 0){ // if the task run period is negative, cancel the task after it has been run once
         Task_Cancel(task);
     }
 }
@@ -105,10 +105,9 @@ bool Task_Run_If_Ready( Task_t* task )
     } else {
         if( Task_Is_Ready(task) ) {
             Task_Run(task);
-            return true;
+            return true; // return true if it ran
         } else {
-            return false;
+            return false; // return false if it did not run
         }
     }
-    // true if it ran, false if it did not run
 }

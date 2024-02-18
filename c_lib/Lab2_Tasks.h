@@ -20,7 +20,7 @@ all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
@@ -29,7 +29,7 @@ IN THE SOFTWARE.
 */
 
 /*
-* This file defines lab-spcific tasks for execution
+* This file defines lab-specific tasks for execution
 */
 
 #ifndef LAB2_TASKS_H
@@ -52,8 +52,8 @@ Task_t task_time_loop;                  ///<-- Lab 2: Indicates if the system sh
 Task_t task_send_time;                  ///<-- Lab 2: Indicates if the system should send the current time.
 Task_t task_message_handling_watchdog;  ///<-- LAB 2: Watchdog Timer for Flusing USB Input Messaging if incomplete message received.
 
-// Put your lab-specific task functionality and data_structures (if necessary) here so it is accessable to both
-// message handeling and the Lab main loops.
+// Put your lab-specific task functionality and data_structures (if necessary) here so it is accessible to both
+// message handling and the Lab main loops.
 void Send_Loop_Time( float _time_since_last );
 void Send_Time_Now( float _time_since_last );
 

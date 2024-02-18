@@ -2,13 +2,12 @@
 
 void Send_Time_Now( float _time_since_last){
     char time_cmd;
-    if(task_send_time.run_period<0){
+    if(task_send_time.run_period<0) {
         time_cmd = 't';
     }
-    else{
+    else {
         time_cmd = 'T';
     }
-
     float time = Timing_Get_Time_Sec();
     timing_data.cmd = '0';
     timing_data.time = time;
@@ -27,10 +26,10 @@ void Send_Loop_Time( float _time_since_last){
     }
     else {
         char time_cmd;
-        if(temp_run_period<0){
+        if(temp_run_period<0) {
             time_cmd = 't';
         }
-        else{
+        else {
             time_cmd = 'T';
         }
         timing_data.cmd = '1';
