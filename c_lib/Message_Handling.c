@@ -45,14 +45,12 @@ static uint8_t _Message_Length( char cmd );
 
 void Task_Message_Handling( float _time_since_last )
 {
-    //static Time_t start_time;
-
     if( !USB_Msg_Length() ) { // if there is nothing to process...
         return;
     }
     bool command_processed = false; // make sure task_message_handling_watchdog doesnt reset before a command is processed
     char command = USB_Msg_Peek(); // use Peek to get the operator without removing it so the process keeps going
-    //start_time = Timing_Get_Time(); // starts the timer
+
     switch( command ) { // process operator using a switch statement
         case '*':
             if( USB_Msg_Length() >= _Message_Length( '*' ) ) { // then process your multiplication...
