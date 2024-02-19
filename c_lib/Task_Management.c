@@ -65,7 +65,7 @@ bool Task_Is_Ready( Task_t* task )
         //}
     //}
     //return false; // otherwise, the task isn't ready
-    return task->is_active && ( Timing_Seconds_Since(&task->time_last_ran)>=task->run_period); // added
+    return task->is_active && ( Timing_Seconds_Since(&task->time_last_ran)>=task->run_period*0.001); // added
 }
 
 /**
