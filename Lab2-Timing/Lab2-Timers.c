@@ -57,17 +57,17 @@ void Initialize_Modules( float _time_not_used_ )
     USB_Flush_Input_Buffer();
     // Initialize all modules except USB (it can only be called once without messing things up)
     Initialize_Timing();
-    // Setup task handling
+    // Set up task handling
     Initialize_Task( &task_restart, Initialize_Modules /*function pointer to call*/ );
-    // Setup message handling to get processed at some desired rate.
+    // Set up message handling to get processed at some desired rate.
     Initialize_Task( &task_message_handling, Task_Message_Handling );
-    // Setup
+    // Set up the send current time task
     Initialize_Task( &task_send_time, Send_Time_Now);
-
+    // Set up the send loop time task
     Initialize_Task( &task_time_loop, Send_Loop_Time);
-
+    // Set up the message handling watchdog
     Initialize_Task( &task_message_handling_watchdog,  Task_Message_Handling_Watchdog );
-
+    // Set up the message handling protocol
     Task_Activate(&task_message_handling,0);
 }
 
@@ -79,9 +79,9 @@ int main( void )
     Initialize_USB();
     Initialize_Modules( 0.0 );
 
-    for( ;; ) {  // yet another way to do while (true)
-        Task_USB_Upkeep();
+    for( ;; ) {  // another way to do while (true)
 
+        Task_USB_Upkeep();
         Task_Run_If_Ready( &task_message_handling );
         Task_Run_If_Ready( &task_restart );
         Task_Run_If_Ready( &task_send_time );

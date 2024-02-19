@@ -55,17 +55,9 @@ void Task_Cancel( Task_t* task )
 bool Task_Is_Ready( Task_t* task )
 {
     //****** MEGN540 --  START IN LAB 1, UPDATE IN Lab 2 ******//
-
-    //if (task->is_active){ // if the task is currently active
-      //  if (task->run_period == 0){ // and if the run period is equal to zero, the task is ready
-           // return true; // Note a run_period of 0 indicates the task should be run every time if it is active.
-        //}
-        //if (Timing_Seconds_Since(&task->time_last_ran) >= (task->run_period*0.001)){
-            //return true; // if the time since the task last ran is larger than the interval given by the run period, the task is ready
-        //}
-    //}
-    //return false; // otherwise, the task isn't ready
-    return task->is_active && ( Timing_Seconds_Since(&task->time_last_ran)>=task->run_period*0.001); // added
+    // return true if the task is currently active and if the time since the task last ran is larger than the
+    // interval given by the run period, otherwise return false.
+    return task->is_active && ( Timing_Seconds_Since(&task->time_last_ran)>=task->run_period*0.001);
 }
 
 /**
@@ -81,10 +73,8 @@ void Task_Run( Task_t* task )
     // Update time_last_ran and is_active as appropriate.
     // Note that a negative run_period indicates the task should only be performed once, while
     // a run_period of 0 indicates the task should be run every time if it is active.
-    task->task_fcn_ptr( Timing_Seconds_Since(&task->time_last_ran)); // added
-    //task->task_fcn_ptr( task->time_last_ran.microsec );
+    task->task_fcn_ptr( Timing_Seconds_Since(&task->time_last_ran)); //
     task->time_last_ran = Timing_Get_Time();
-
     if(task->run_period < 0){ // if the task run period is negative, cancel the task after it has been run once
         Task_Cancel(task);
     }
@@ -97,21 +87,7 @@ void Task_Run( Task_t* task )
 bool Task_Run_If_Ready( Task_t* task )
 {
     //****** MEGN540 --  START IN LAB 1, UPDATE IN Lab 2   ******//
-    // use the prior functions to help with this.
-    // Check to see if the task is ready to run.
-    // Run it if it is ready
-    //if(!task) { // if there is no task ready
-        //return Task_Is_Ready(task); //
-    //} else {
-        //if( Task_Is_Ready(task) ) {
-            //Task_Run(task);
-            //return true; // return true if it ran
-        //} else {
-            //return false; // return false if it did not run
-        //}
-    //}
-
-    if( Task_Is_Ready(task) ) {
+    if( Task_Is_Ready(task) ) { // run the task if its ready
         Task_Run(task);
         return true;
     }
