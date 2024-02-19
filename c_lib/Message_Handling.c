@@ -195,7 +195,7 @@ void Task_Message_Handling( float _time_since_last )
     }
 
     //********* MEGN540 -- LAB 2 ************//
-    if( !command_processed || Timing_Seconds_Since(start_time)>=0.250 ) { // if the task has been completed
+    if( !command_processed || Timing_Seconds_Since(&start_time)>=0.250 ) { // if the task has been completed
         Task_Activate( &task_message_handling_watchdog, -1 );  // reset the watchdog timer
     }
 }
