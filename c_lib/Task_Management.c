@@ -21,8 +21,6 @@ void Task_Activate( Task_t* task, float run_period )
 {
     //****** MEGN540 --  START IN LAB 1, UPDATE IN Lab 2 ******//
     // Here you should change the state of the is_active member and set the time to now (lab 2)
-    // to identify the task is active
-    // set the run_period as proscribed
     task->is_active  = true; // sets the status to active - signalling to other functions to run the task
     task->run_period = run_period; // sets the run period to determine if the task runs once or indefinite
 }

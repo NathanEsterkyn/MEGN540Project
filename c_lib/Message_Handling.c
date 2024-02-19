@@ -46,29 +46,31 @@ static uint8_t _Message_Length( char cmd );
 void Task_Message_Handling( float _time_since_last )
 {
     static Time_t startTime;
-    static bool incomplete_command_flag;
-    if ( Timing_Seconds_Since(&startTime)>0.001 && incomplete_command_flag == 1) {
-        float x = 0;
-        USB_Flush_Input_Buffer();
-        USB_Send_Msg("cc", '?', &x, sizeof(x));
-        incomplete_command_flag = 0;
-    }
+    //static bool incomplete_command_flag;
+    //if ( Timing_Seconds_Since(&startTime)>0.001 && incomplete_command_flag == 1) {
+        //float x = 0;
+        //USB_Flush_Input_Buffer();
+        //USB_Send_Msg("cc", '?', &x, sizeof(x));
+        //incomplete_command_flag = 0;
+    //}
     if( !USB_Msg_Length() ) { // if there is nothing to process...
         return;
     }
     bool command_processed = false; // make sure task_message_handling_watchdog doesnt reset before a command is processed
     startTime = Timing_Get_Time();
-    incomplete_command_flag = 1;
+    //incomplete_command_flag = 1;
 
     char command = USB_Msg_Peek(); // use Peek to get the operator without removing it so the process keeps going
 
     switch( command ) { // process operator using a switch statement
         case '*':
             if( USB_Msg_Length() >= _Message_Length( '*' ) ) { // then process your multiplication...
-
+                if (Timing_Seconds_Since(&startTime)>0.001) {
+                    command_processed = false;
+                    break;
+                }
                 USB_Msg_Get();  // removes the first character from the received buffer,
-                                                                // we know it is '*' so it isn't saved as a variable
-
+                                // we know it is '*' so it isn't saved as a variable
                 struct __attribute__( ( __packed__ ) ) { // makes a struct called data with two floats
                     float v1;
                     float v2;
@@ -147,6 +149,10 @@ void Task_Message_Handling( float _time_since_last )
             break;
         case 't':
             if( USB_Msg_Length() >= _Message_Length( 't' ) ) { // then process your 't'...
+                if (Timing_Seconds_Since(&startTime)>0.001) {
+                    command_processed = false;
+                    break;
+                }
                 USB_Msg_Get();  // removes the first character from the received buffer,
                                 // we know it is 't' so it isn't saved as a variable
                 char cmd = USB_Msg_Get(); // get the command character given after the 't' to determine behavior
@@ -166,6 +172,10 @@ void Task_Message_Handling( float _time_since_last )
             break;
         case 'T':
             if(USB_Msg_Length() >= _Message_Length('T')) { // then process your 'T'...
+                if (Timing_Seconds_Since(&startTime)>0.001) { // if the task has timed out
+                    command_processed = false; // break and set the command to not processed
+                    break;
+                }
                 USB_Msg_Get();  // removes the first character from the received buffer,
                                 // we know it is 'T' so it isn't saved as a variable
                 char cmd = USB_Msg_Get(); // get the command character given after the 't' to determine behavior
@@ -200,10 +210,13 @@ void Task_Message_Handling( float _time_since_last )
             USB_Send_Byte('?'); // sends a '?'
             break;
     }
+
     //********* MEGN540 -- LAB 2 ************//
-    if( command_processed ) {
-        // make a timer that activates the task_message_handling_watchdog task if 100ms have passed since the message handling function has been called?
-    Task_Activate( &task_message_handling_watchdog ,-1); // RESET the WATCHDOG TIMER
+    if( command_processed ) { // if the task has been completed
+        Task_Activate( &task_message_handling_watchdog, -1 );  // reset the watchdog timer
+    }
+    else if (Timing_Seconds_Since(&startTime)>0.001) { // if the task hasn't been completed or has timed out
+        USB_Flush_Input_Buffer(); // flush the input buffer
     }
 }
 
