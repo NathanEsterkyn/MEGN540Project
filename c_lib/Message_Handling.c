@@ -152,8 +152,6 @@ void Task_Message_Handling( float _time_since_last )
                         command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
                         break;
                     default:
-                        USB_Msg_Get(); // clears the unknown operator
-                        USB_Send_Byte('?'); // sends a '?'
                         break;
                 }
             }
@@ -186,8 +184,6 @@ void Task_Message_Handling( float _time_since_last )
                         command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
                         break;
                     default:
-                        USB_Msg_Get(); // clears the unknown operator
-                        USB_Send_Byte('?'); // sends a '?'
                         break;
                 }
             }
