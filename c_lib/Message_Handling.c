@@ -150,6 +150,7 @@ void Task_Message_Handling( float _time_since_last )
                         command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
                         break;
                     default:
+                        Task_Activate( &task_message_handling_watchdog, 0 )
                         break;
                 }
             }
@@ -182,6 +183,7 @@ void Task_Message_Handling( float _time_since_last )
                         command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
                         break;
                     default:
+                        Task_Activate( &task_message_handling_watchdog, 0 )
                         break;
                 }
             }
