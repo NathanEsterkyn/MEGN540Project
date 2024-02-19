@@ -45,7 +45,7 @@ static uint8_t _Message_Length( char cmd );
 
 void Task_Message_Handling( float _time_since_last )
 {
-    static Time_t startTime;
+    static Time_t start_time;
 
     if( !USB_Msg_Length() ) { // if there is nothing to process...
         return;
