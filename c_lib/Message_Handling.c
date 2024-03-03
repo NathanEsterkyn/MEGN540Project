@@ -188,6 +188,98 @@ void Task_Message_Handling( float _time_since_last )
                 }
             }
             break;
+        case 'e':
+            if( USB_Msg_Length() >= _Message_Length( 'e' ) ) {
+
+                USB_Msg_Get();  // removes the first character from the received buffer,
+
+
+
+
+                // Time now
+                Task_Activate(&task_send_encoder_value, -1);
+
+
+
+                // /* MEGN540 -- LAB 2 */
+                command_processed = true;
+            }
+            break;
+        case 'E':
+            if( USB_Msg_Length() >= _Message_Length( 'E' ) ) {
+
+                USB_Msg_Get();  // removes the first character from the received buffer,
+
+                //uint8_t second = USB_Msg_Get();
+                struct __attribute__( ( __packed__ ) ) {
+                    float v1;
+                } data;
+
+                // Copy the bytes from the usb receive buffer into our structure so we
+                // can use the information
+                USB_Msg_Read_Into( &data, sizeof( data ) );
+                float timing = data.v1;
+
+
+                if (timing == 0) {
+                    Task_Cancel(&task_send_encoder_value);
+
+                    command_processed = true;
+                    break;
+                }
+
+                Task_Activate(&task_send_encoder_value, timing);
+
+                // /* MEGN540 -- LAB 2 */
+                command_processed = true;
+            }
+            break;
+        case 'b':
+            if( USB_Msg_Length() >= _Message_Length( 'b' ) ) {
+
+                USB_Msg_Get();  // removes the first character from the received buffer,
+
+
+
+
+                // Time now
+                Task_Activate(&task_send_battery_voltage, -1);
+
+
+
+                // /* MEGN540 -- LAB 2 */
+                command_processed = true;
+            }
+            break;
+        case 'B':
+            if( USB_Msg_Length() >= _Message_Length( 'B' ) ) {
+
+                USB_Msg_Get();  // removes the first character from the received buffer,
+
+                //uint8_t second = USB_Msg_Get();
+                struct __attribute__( ( __packed__ ) ) {
+                    float v1;
+                } data;
+
+                // Copy the bytes from the usb receive buffer into our structure so we
+                // can use the information
+                USB_Msg_Read_Into( &data, sizeof( data ) );
+                float timing = data.v1;
+
+
+                if (timing == 0) {
+                    Task_Cancel(&task_send_battery_voltage);
+
+                    command_processed = true;
+                    break;
+                }
+
+                Task_Activate(&task_send_battery_voltage, timing);
+
+                // /* MEGN540 -- LAB 2 */
+                command_processed = true;
+            }
+            break;
         default: // case for unknown command character (unknown operator)
             USB_Msg_Get(); // clears the unknown operator
             USB_Send_Byte('?'); // sends a '?'
