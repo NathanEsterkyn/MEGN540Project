@@ -113,7 +113,7 @@ int main( void ){
         // Encoder and Voltage Functionality
         Task_Run_If_Ready(&task_send_encoder_value);
         Task_Run_If_Ready(&task_send_battery_voltage);
-        //Task_Run_If_Ready(&task_send_battery_warning); // build this in
+        //Task_Run_If_Ready(&task_send_battery_warning);
 
         if (!task_message_handling_watchdog.is_active){ // if the message handling watchdog isn't active (message timeout functionality)
            Task_Activate(&task_message_handling_watchdog,250); // activate message handling watchdog to run every 0.25 seconds (250 ms)

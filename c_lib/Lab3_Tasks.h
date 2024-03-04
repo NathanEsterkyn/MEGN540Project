@@ -63,12 +63,12 @@ Task_t task_send_encoder_value;
 Task_t task_send_battery_warning; // create a task for low battery warning
 Filter_Data_t voltage_filter; // create a filter for the voltage values
 
-// Put your lab-specific task functionality and data_structures (if necessary) here so it is accessable to both
-// message handeling and the Lab main loops.
-void Send_Loop_Time( float _time_since_last );
-void Send_Time_Now( float _time_since_last );
+// Put your lab-specific task functionality and data_structures (if necessary) here, so it is accessible to both
+// message handling and the Lab main loops.
 static const float LOW_BATTERY_THRESHOLD = 1.5000; // threshold for low battery message
-void Send_Encoder_Value( float placeHolder);
-void Send_Battery_Voltage( float placeHolder );
+void Send_Loop_Time(float _time_since_last);
+void Send_Time_Now(float _time_since_last);
+void Send_Encoder_Value(float unused);
+void Send_Battery_Voltage(float unused);
 void Send_Battery_Warning(float unused);
 #endif  // ifndef LAB3_TASKS_H
