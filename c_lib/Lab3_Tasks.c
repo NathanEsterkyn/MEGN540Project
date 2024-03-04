@@ -25,7 +25,7 @@ void Send_Encoder_Value(float placeHolder){
 
 }
 
-void Send_Battery_Voltage(float placeHolder){
+void Send_Battery_Voltage(float unused){
     char command;
     float runPeriod = task_send_battery_voltage.run_period;
     if(runPeriod<0){
@@ -33,10 +33,7 @@ void Send_Battery_Voltage(float placeHolder){
     }else{
         command = 'B';
     }
-
     float voltage;
-
-
     voltage = Filter_Value(&voltage_filter, Battery_Voltage());
 
     USB_Send_Msg("cf", command, &voltage, sizeof(voltage));

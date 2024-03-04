@@ -220,35 +220,21 @@ void Task_Message_Handling( float _time_since_last )
                 USB_Msg_Read_Into( &data, sizeof( data ) );
                 float timing = data.v1;
 
-
                 if (timing == 0) {
                     Task_Cancel(&task_send_encoder_value);
 
                     command_processed = true;
                     break;
                 }
-
-                Task_Activate(&task_send_encoder_value, timing);
-
-                // /* MEGN540 -- LAB 2 */
-                command_processed = true;
+                Task_Activate(&task_send_encoder_value, timing); // sends the current encoder value
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
         case 'b':
             if( USB_Msg_Length() >= _Message_Length( 'b' ) ) {
-
                 USB_Msg_Get();  // removes the first character from the received buffer,
-
-
-
-
-                // Time now
-                Task_Activate(&task_send_battery_voltage, -1);
-
-
-
-                // /* MEGN540 -- LAB 2 */
-                command_processed = true;
+                Task_Activate(&task_send_battery_voltage, -1); // sends the current voltage
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
         case 'B':
