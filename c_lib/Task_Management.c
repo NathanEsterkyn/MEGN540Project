@@ -72,11 +72,13 @@ void Task_Run( Task_t* task )
     // Update time_last_ran and is_active as appropriate.
     // Note that a negative run_period indicates the task should only be performed once, while
     // a run_period of 0 indicates the task should be run every time if it is active.
-    task->task_fcn_ptr(Timing_Seconds_Since(&task->time_last_ran));
-    task->time_last_ran = Timing_Get_Time();
+    if (task->task_fcn_ptr != 0){
+        task->task_fcn_ptr(Timing_Seconds_Since(&task->time_last_ran));
+    }
     if(task->run_period < 0){ // if the task run period is negative, cancel the task after it has been run once
         Task_Cancel(task);
     }
+    task->time_last_ran = Timing_Get_Time();
 }
 
 /** Function Task_Run_If_Ready Function Task_Run_If_Ready checks to see if the given task is ready for execution, executes the task,
