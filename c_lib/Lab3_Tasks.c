@@ -11,7 +11,6 @@ void Send_Encoder_Value(float placeHolder){
     }else{
         command = 'E';
     }
-
     struct{
         float left;
         float right;
@@ -19,9 +18,7 @@ void Send_Encoder_Value(float placeHolder){
 
     data.left = Encoder_Counts_Left();
     data.right = Encoder_Counts_Right();
-
     USB_Send_Msg("cff", command, &data, sizeof(data));
-
 }
 
 void Send_Battery_Voltage(float unused){
@@ -34,18 +31,16 @@ void Send_Battery_Voltage(float unused){
     }
     float voltage;
     voltage = Filter_Value(&voltage_filter, Battery_Voltage());
-    /*
-    if (voltage <= LOW_BATTERY_THRESHOLD) { // if the battery is low, send a message
+    USB_Send_Msg("cf", command, &voltage, sizeof(voltage)); // send message with the battery voltage
+
+}
+void Send_Battery_Warning(float unused){
+    float vbat = Filter_Last_Output(&voltage_filter, Battery_Voltage());
+    if (vbat <= LOW_BATTERY_THRESHOLD){
         struct __attribute__((__packed__)) {char let[7]; float volt;} msg = {
             .let = {'B','A','T',' ','L','O','W'},
             .volt = voltage };
         // Send Warning to Serial that batteries need to be charged
         USB_Send_Msg("c7sf",'!', &msg, sizeof(msg));
     }
-    else {
-        USB_Send_Msg("cf", command, &voltage, sizeof(voltage));
-    }
-    */
-    USB_Send_Msg("cf", command, &voltage, sizeof(voltage));
-
 }

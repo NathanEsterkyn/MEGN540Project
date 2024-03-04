@@ -190,39 +190,24 @@ void Task_Message_Handling( float _time_since_last )
             break;
         case 'e':
             if( USB_Msg_Length() >= _Message_Length( 'e' ) ) {
-
                 USB_Msg_Get();  // removes the first character from the received buffer,
-
-
-
-
-                // Time now
-                Task_Activate(&task_send_encoder_value, -1);
-
-
-
-                // /* MEGN540 -- LAB 2 */
-                command_processed = true;
+                Task_Activate(&task_send_encoder_value, -1); // sends the current encoder value
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
         case 'E':
             if( USB_Msg_Length() >= _Message_Length( 'E' ) ) {
 
-                USB_Msg_Get();  // removes the first character from the received buffer,
-
-                //uint8_t second = USB_Msg_Get();
-                struct __attribute__( ( __packed__ ) ) {
-                    float v1;
+                USB_Msg_Get();  // removes the first character from the received buffer
+                struct __attribute__( ( __packed__ ) ) { // creates a struct for the received float
+                    float X;
                 } data;
+                USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received float
+                float timing = data.X;
 
-                // Copy the bytes from the usb receive buffer into our structure so we
-                // can use the information
-                USB_Msg_Read_Into( &data, sizeof( data ) );
-                float timing = data.v1;
-
-                if (timing == 0) {
+                if (timing <= 0) { // if the float received is <= 0, cancel the task
                     Task_Cancel(&task_send_encoder_value);
-                    command_processed = true;
+                    command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
                     break;
                 }
                 Task_Activate(&task_send_encoder_value, timing); // sends the current encoder value at requested interval [us]
@@ -231,7 +216,7 @@ void Task_Message_Handling( float _time_since_last )
             break;
         case 'b':
             if( USB_Msg_Length() >= _Message_Length( 'b' ) ) {
-                USB_Msg_Get();  // removes the first character from the received buffer,
+                USB_Msg_Get();  // removes the first character from the received buffer
                 Task_Activate(&task_send_battery_voltage, -1); // sends the current voltage
                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
@@ -239,7 +224,7 @@ void Task_Message_Handling( float _time_since_last )
         case 'B':
             if( USB_Msg_Length() >= _Message_Length( 'B' ) ) {
 
-                USB_Msg_Get();  // removes the first character from the received buffer,
+                USB_Msg_Get();  // removes the first character from the received buffer
                 struct __attribute__( ( __packed__ ) ) { // creates a struct for the received float
                     float X;
                 } data;

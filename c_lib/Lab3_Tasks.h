@@ -69,4 +69,5 @@ void Send_Time_Now( float _time_since_last );
 static const float LOW_BATTERY_THRESHOLD = 1.5000; // threshold for low battery message
 void Send_Encoder_Value( float placeHolder);
 void Send_Battery_Voltage( float placeHolder );
+void Send_Battery_Warning(float unused);
 #endif  // ifndef LAB3_TASKS_H
