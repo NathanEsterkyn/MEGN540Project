@@ -91,7 +91,7 @@ void Initialize_Modules(float unused)
     Task_Activate(&task_message_handling,0);
 
     // Activate battery warning task every second
-    Task_Activate(&task_send_battery_warning,1);
+    Task_Activate(&task_send_battery_warning,0);
 
 }
 
