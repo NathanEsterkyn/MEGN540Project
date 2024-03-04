@@ -242,7 +242,6 @@ void Task_Message_Handling( float _time_since_last )
 
                 USB_Msg_Get();  // removes the first character from the received buffer,
 
-                //uint8_t second = USB_Msg_Get();
                 struct __attribute__( ( __packed__ ) ) {
                     float v1;
                 } data;

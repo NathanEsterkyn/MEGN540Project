@@ -1,7 +1,6 @@
 #include "Battery_Monitor.h"
 
 static const float BITS_TO_BATTERY_VOLTS = 0.0050049; // conversion factor = (2*2.56/1023);
-static const float LOW_BATTERY_THRESHOLD = 1.5000; // threshold for low battery message
 
 /**
  * Function Initialize_Battery_Monitor initializes the Battery Monitor to record the current battery voltages.
@@ -45,14 +44,5 @@ float Battery_Voltage()
     {}
     data.split.LSB = ADCL; // record least significant bit
     data.split.MSB = ADCH & 0b00000011; // record most significant bit
-
-    if (data.value *BITS_TO_BATTERY_VOLTS <= LOW_BATTERY_THRESHOLD) { // if the battery is low, send a message
-        struct __attribute__((__packed__)) {char let[7]; float volt;} msg = {
-            .let = {'B','A','T',' ','L','O','W'},
-            .volt = bat_volt };
-        // Send Warning to Serial that batteries need to be charged
-        usb_send_msg("c7sf",'!', &msg, sizeof(msg));
-    }
-
     return data.value * BITS_TO_BATTERY_VOLTS; // return the value in voltage
 }
