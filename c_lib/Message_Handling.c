@@ -160,7 +160,7 @@ void Task_Message_Handling( float _time_since_last )
 
                 USB_Msg_Get();  // removes the first character from the received buffer,
                                 // we know it is 'T' so it isn't saved as a variable
-                char cmd = USB_Msg_Get(); // get the command character given after the 't' to determine behavior
+                char cmd = USB_Msg_Get(); // get the command character given after the 'T' to determine behavior
                 float X; // declare a float variable to dictate the frequency of the messages
                 USB_Msg_Read_Into( &X, sizeof(X) ); // reads the float value
                 switch(cmd){
@@ -222,11 +222,10 @@ void Task_Message_Handling( float _time_since_last )
 
                 if (timing == 0) {
                     Task_Cancel(&task_send_encoder_value);
-
                     command_processed = true;
                     break;
                 }
-                Task_Activate(&task_send_encoder_value, timing); // sends the current encoder value
+                Task_Activate(&task_send_encoder_value, timing); // sends the current encoder value at requested interval [us]
                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
@@ -241,28 +240,19 @@ void Task_Message_Handling( float _time_since_last )
             if( USB_Msg_Length() >= _Message_Length( 'B' ) ) {
 
                 USB_Msg_Get();  // removes the first character from the received buffer,
-
-                struct __attribute__( ( __packed__ ) ) {
-                    float v1;
+                struct __attribute__( ( __packed__ ) ) { // creates a struct for the received float
+                    float X;
                 } data;
+                USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received float
+                float timing = data.X;
 
-                // Copy the bytes from the usb receive buffer into our structure so we
-                // can use the information
-                USB_Msg_Read_Into( &data, sizeof( data ) );
-                float timing = data.v1;
-
-
-                if (timing == 0) {
+                if (timing <= 0) { // if the float received is <= 0, cancel the task
                     Task_Cancel(&task_send_battery_voltage);
-
-                    command_processed = true;
+                    command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
                     break;
                 }
-
-                Task_Activate(&task_send_battery_voltage, timing);
-
-                // /* MEGN540 -- LAB 2 */
-                command_processed = true;
+                Task_Activate(&task_send_battery_voltage, (timing*0.001)); // send the battery voltage at requested interval [s]
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
         default: // case for unknown command character (unknown operator)
