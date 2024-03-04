@@ -35,7 +35,7 @@ void Send_Battery_Voltage(float unused){
         .let = {'B','A','T',' ','L','O','W'},
         .volt = voltage };
     // Send Warning to Serial that batteries need to be charged
-    USB_Send_Msg("c7sf",'!', &msg, sizeof(msg));
+    USB_Send_Msg("c7sf", command, &msg, sizeof(msg));
     //USB_Send_Msg("cf", command, &voltage, sizeof(voltage)); // send message with the battery voltage
 
 }
