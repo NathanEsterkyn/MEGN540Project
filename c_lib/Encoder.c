@@ -14,35 +14,32 @@ static volatile int32_t _left_counts  = 0;  // Static limits it's use to this fi
 static volatile int32_t _right_counts = 0;  // Static limits it's use to this file
 
 /** Helper Funcions for Accessing Bit Information */
-// *** MEGN540 Lab 3 TODO ***
-// Hint, use avr's bit_is_set function to help
+
 static inline bool Right_XOR()
 {
-    return bit_is_set(PINE, PE6 ); // ????
-}  // MEGN540 Lab
+    return bit_is_set(PINE, PE6 ); // returns if bit is 1 or 0
+}
 static inline bool Right_B()
 {
-    return bit_is_set(PINF, PF0); // ????
-}  // MEGN540 Lab 3 TODO
+    return bit_is_set(PINF, PF0); // returns if bit is 1 or 0
+}
 static inline bool Right_A()
 {
-    return Right_B() ^ Right_XOR();  // ????
-}  // MEGN540 Lab 3 TODO
+    return Right_B() ^ Right_XOR();  // returns if bit is 1 or 0
+}
 
 static inline bool Left_XOR()
 {
-    return bit_is_set( PINB, PB4 ); // ????
-
-}  // MEGN540 Lab 3 TODO
+    return bit_is_set( PINB, PB4 ); // returns if bit is 1 or 0
+}
 static inline bool Left_B()
 {
-    return bit_is_set( PINE, PE2 ); // ????
-
-}  // MEGN540 Lab 3 TODO
+    return bit_is_set( PINE, PE2 ); // returns if bit is 1 or 0
+}
 static inline bool Left_A()
 {
-    return Left_B() ^ Left_XOR(); // ????
-}  // MEGN540 Lab 3 TODO
+    return Left_B() ^ Left_XOR(); // returns if bit is 1 or 0
+}
 
 /**
  * Function Encoders_Init initializes the encoders, sets up the pin change interrupts, and zeros the initial encoder
@@ -50,9 +47,6 @@ static inline bool Left_A()
  */
 void Initialize_Encoders()
 {
-    // *** MEGN540 Lab3 ***
-    // YOUR CODE HERE
-
     // Left encoder uses PB4 and PE2 pins as digital inputs. External interrupt PCINT4 is necessary to detect
     // the change in XOR flag. You'll need to see Section 11.1.5 - 11.1.7 for setup and use.
     // Note that the PCINT interrupt is trigered by any PCINT pin. In the ISR you should check to make sure
@@ -75,16 +69,16 @@ void Initialize_Encoders()
     EIMSK |= (1 << INT6);  // Enable INT6
 
 
-    // Initialize static file variables. These probably need to be updated.
-    _last_right_A = Right_A();  // MEGN540 Lab 3 TODO
-    _last_right_B = Right_B();  // MEGN540 Lab 3 TODO
+    // Initialize static file variables
+    _last_right_A = Right_A();
+    _last_right_B = Right_B();
 
-    _last_left_A   = Left_A();  // MEGN540 Lab 3 TODO
-    _last_left_B   = Left_A();  // MEGN540 Lab 3 TODO
-    _last_left_XOR = Left_XOR();  // MEGN540 Lab 3 TODO
+    _last_left_A   = Left_A();
+    _last_left_B   = Left_A();
+    _last_left_XOR = Left_XOR();
 
-    _left_counts  = 0;  // MEGN540 Lab 3 TODO
-    _right_counts = 0;  // MEGN540 Lab 3 TODO
+    _left_counts  = 0;
+    _right_counts = 0;
 }
 
 /**
@@ -93,17 +87,9 @@ void Initialize_Encoders()
  */
 int32_t Encoder_Counts_Left()
 {
-    // *** MEGN540 Lab3 ***
-    // YOUR CODE HERE
-    // Note: Interrupts can trigger during a function call and an int32 requires
-    // multiple clock cycles to read/save. You may want to stop interrupts, copy the value,
-    // and re-enable interrupts to prevent this from corrupting your read/write.
     cli();  // Disable interrupts
-
     int32_t counts = _left_counts;  // Copy the value of _left_counts
-
     sei();  // Re-enable interrupts
-
     return counts;
 }
 
@@ -113,20 +99,9 @@ int32_t Encoder_Counts_Left()
  */
 int32_t Encoder_Counts_Right()
 {
-    // *** MEGN540 Lab3 ***
-    // YOUR CODE HERE
-    // Note: Interrupts can trigger during a function call and an int32 requires
-    // multiple clock cycles to read/save. You may want to stop interrupts, copy the value,
-    // and re-enable interrupts to prevent this from corrupting your read/write.
-    // Disable interrupts
-    cli();
-
-    // Copy the value of _right_counts
-    int32_t counts = _right_counts;
-
-    // Re-enable interrupts
-    sei();
-
+    cli(); // Disable interrupts
+    int32_t counts = _right_counts; // Copy the value of _right_counts
+    sei(); // Re-enable interrupts
     return counts;
 }
 
@@ -136,8 +111,6 @@ int32_t Encoder_Counts_Right()
  */
 float Encoder_Rad_Left()
 {
-    // *** MEGN540 Lab3 ***
-    // YOUR CODE HERE.  How many counts per rotation???
     // Calculate the number of radians
     float radians = _left_counts * ( 2 * M_PI / 12 ); // 12 is the number of counts per rotation
     return radians;
@@ -149,10 +122,8 @@ float Encoder_Rad_Left()
  */
 float Encoder_Rad_Right()
 {
-    // *** MEGN540 Lab3 ***
-    // YOUR CODE HERE.  How many counts per rotation???
     // Calculate the number of radians
-    float radians = _right_counts * ( 2 * M_PI / 12 );
+    float radians = _right_counts * ( 2 * M_PI / 12 ); // 12 is the number of counts per rotation
     return radians;
 }
 
@@ -163,27 +134,20 @@ float Encoder_Rad_Right()
  */
 ISR(PCINT0_vect)
 {
-    if( bit_is_set(PINB, PB4))
-    {
-        if(_last_left_XOR)
-        {
-            if(bit_is_set(PINE, PE2))
-            {
+    if( bit_is_set(PINB, PB4)){
+        if(_last_left_XOR){
+            if(bit_is_set(PINE, PE2)){
                 _left_counts++;
             }
-            else
-            {
+            else{
                 _left_counts--;
             }
         }
-        else
-        {
-            if(bit_is_set(PINE, PE2))
-            {
+        else{
+            if(bit_is_set(PINE, PE2)){
                 _left_counts--;
             }
-            else
-            {
+            else{
                 _left_counts++;
             }
         }
