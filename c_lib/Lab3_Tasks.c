@@ -34,7 +34,7 @@ void Send_Battery_Voltage(float unused){
     }
     float voltage;
     voltage = Filter_Value(&voltage_filter, Battery_Voltage());
-
+    /*
     if (voltage <= LOW_BATTERY_THRESHOLD) { // if the battery is low, send a message
         struct __attribute__((__packed__)) {char let[7]; float volt;} msg = {
             .let = {'B','A','T',' ','L','O','W'},
@@ -45,4 +45,7 @@ void Send_Battery_Voltage(float unused){
     else {
         USB_Send_Msg("cf", command, &voltage, sizeof(voltage));
     }
+    */
+    USB_Send_Msg("cf", command, &voltage, sizeof(voltage));
+
 }
