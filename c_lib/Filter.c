@@ -29,6 +29,7 @@
 */
 
 #include "Filter.h"
+#include "Ring_Buffer.h"
 
 /**
  * Function Filter_Init initializes the filter given two float arrays and the order of the filter.  Note that the

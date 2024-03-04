@@ -40,8 +40,8 @@
 
 #ifndef RB_LENGTH_F
 #    define RB_LENGTH_F 8  // must be a power of 2 (max of 256) and larger than the filter order +1.
-#else
-#    warning RB_LENGTH_F has been defined outside of filter.h, care should be taken that it is large enough for the filter to use.
+//#else
+//#    warning RB_LENGTH_F has been defined outside of filter.h, care should be taken that it is large enough for the filter to use.
 #endif
 
 #include "Ring_Buffer.h"
