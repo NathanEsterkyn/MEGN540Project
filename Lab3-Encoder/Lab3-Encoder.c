@@ -82,7 +82,7 @@ void Initialize_Modules(float unused)
     // Set up encoder and battery voltage functionality
     Initialize_Task(&task_send_encoder_value, Send_Encoder_Value);
     Initialize_Task(&task_send_battery_voltage, Send_Battery_Voltage);
-    Initialize_Task(&task_send_battery_warning, Send_Battery_Warning);
+    //Initialize_Task(&task_send_battery_warning, Send_Battery_Warning);
 
     // Set up task message handling watchdog
     Initialize_Task( &task_message_handling_watchdog, Task_Message_Handling_Watchdog );
@@ -91,7 +91,7 @@ void Initialize_Modules(float unused)
     Task_Activate(&task_message_handling,0);
 
     // Activate battery warning task to run every second
-    Task_Activate(&task_send_battery_warning,1000);
+    //Task_Activate(&task_send_battery_warning,1000);
 
 }
 
@@ -113,7 +113,7 @@ int main( void ){
         // Encoder and Voltage Functionality
         Task_Run_If_Ready(&task_send_encoder_value);
         Task_Run_If_Ready(&task_send_battery_voltage);
-        Task_Run_If_Ready(&task_send_battery_warning); // build this in
+        //Task_Run_If_Ready(&task_send_battery_warning); // build this in
 
         if (!task_message_handling_watchdog.is_active){ // if the message handling watchdog isn't active (message timeout functionality)
            Task_Activate(&task_message_handling_watchdog,250); // activate message handling watchdog to run every 0.25 seconds (250 ms)
