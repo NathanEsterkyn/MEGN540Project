@@ -2,35 +2,33 @@
 #include "Filter.h"
 
 void Send_Encoder_Value(float unused){
-
-    //static float runPeriod = 0;
     char command;
     float runPeriod = task_send_encoder_value.run_period;
-    if(runPeriod<0){
+    if(runPeriod<0){ // detects whether the command was 'e' or 'E'
         command = 'e';
     }else{
         command = 'E';
     }
-    struct{
+    struct{ // structure to store encoder values
         float left;
         float right;
     }data;
 
-    data.left = Encoder_Counts_Left();
+    data.left = Encoder_Counts_Left(); // write to structure using functions
     data.right = Encoder_Counts_Right();
-    USB_Send_Msg("cff", command, &data, sizeof(data));
+    USB_Send_Msg("cff", command, &data, sizeof(data)); // send USB message
 }
 
 void Send_Battery_Voltage(float unused){
     char command;
     float runPeriod = task_send_battery_voltage.run_period;
-    if(runPeriod<0){
+    if(runPeriod<0){ // detects whether the command was 'b' or 'B'
         command = 'b';
     }else{
         command = 'B';
     }
-    float voltage;
-    voltage = Filter_Value(&voltage_filter, Battery_Voltage());
+    float voltage; // value to store voltage reading
+    voltage = Filter_Value(&voltage_filter, Battery_Voltage()); // filter voltage reading value
     USB_Send_Msg("cf", command, &voltage, sizeof(voltage)); // send message with the battery voltage
 }
 

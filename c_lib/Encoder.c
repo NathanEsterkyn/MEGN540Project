@@ -15,28 +15,27 @@ static volatile int32_t _right_counts = 0;  // Static limits it's use to this fi
 
 /** Helper Funcions for Accessing Bit Information */
 
-static inline bool Right_XOR()
+static inline bool Right_XOR() // register PINE at pin PE6
 {
     return bit_is_set(PINE, PE6 ); // returns if bit is 1 or 0
 }
-static inline bool Right_B()
+static inline bool Right_B() // register PINF at pin PF0
 {
     return bit_is_set(PINF, PF0); // returns if bit is 1 or 0
 }
-static inline bool Right_A()
+static inline bool Right_A() // found by taking the Xor of B and Xor channels
 {
     return Right_B() ^ Right_XOR();  // returns if bit is 1 or 0
 }
-
-static inline bool Left_XOR()
+static inline bool Left_XOR() // register PINB at pin PB4
 {
     return bit_is_set( PINB, PB4 ); // returns if bit is 1 or 0
 }
-static inline bool Left_B()
+static inline bool Left_B() // register PINE at PE2
 {
     return bit_is_set( PINE, PE2 ); // returns if bit is 1 or 0
 }
-static inline bool Left_A()
+static inline bool Left_A() // found by taking the Xor of B and Xor channels
 {
     return Left_B() ^ Left_XOR(); // returns if bit is 1 or 0
 }
@@ -61,12 +60,18 @@ void Initialize_Encoders()
     // DDRF &= ~(1 << PF0);  // Set PF0 as input
     // DDRE &= ~(1 << PE6);  // Set PE6 as input
 
-    PCICR |= (1 << PCIE0);  // Enable Pin Change Interrupt 0
-    PCMSK0 |= (1 << PCINT4);  // Enable Pin Change Interrupt 4
-    PCIFR |=(1<<PCIF0);
-    EIFR|=(INTF6);
-    EICRB |= (1 << ISC60);  // Set INT6 to trigger on rising edge
-    EIMSK |= (1 << INT6);  // Enable INT6
+    // setting up the pin change interrupt control register
+    PCICR |= (1 << PCIE0); // bit 0 - enable pin change interrupt 0
+    // setting up the pin change enable mask register
+    PCMSK0 |= (1 << PCINT4); // bit 4 - enable pin change interrupt on pin 4
+    // setting up the pin change interrupt flag register
+    PCIFR |=(1<<PCIF0); // bit 0 - set to high when an interrupt request is detected
+    // setting up the external interrupt flag register
+    EIFR|=(INTF6); // bit 6 - flag raised when an interrupt is detected on INT6
+    // setting up the external interrupt control register B
+    EICRB |= (1 << ISC60); // bit 4 - Set INT6 to trigger on any logic change
+    // setting up the external interrupt mask register
+    EIMSK |= (1 << INT6);  // bit 6 - Enables pin INT6 to serve as the interrupt
 
 
     // Initialize static file variables

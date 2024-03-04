@@ -190,7 +190,7 @@ void Task_Message_Handling( float _time_since_last )
             break;
         case 'e':
             if( USB_Msg_Length() >= _Message_Length( 'e' ) ) {
-                USB_Msg_Get();  // removes the first character from the received buffer,
+                USB_Msg_Get();  // removes the first character from the received buffer
                 Task_Activate(&task_send_encoder_value, -1); // sends the current encoder value
                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
