@@ -1,6 +1,4 @@
 #include "Task_Management.h"
-
-#include "SerialIO.h"
 #include "Timing.h"
 
 /** Function Initialize_Task initializes the task to a default state that is inactive.

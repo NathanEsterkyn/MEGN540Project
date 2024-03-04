@@ -48,84 +48,78 @@ SOFTWARE.
 #include "Encoder.h"
 #include "Battery_Monitor.h"
 
-// Include Lab Sepcific Functionality
+// Include Lab Specific Functionality
 #include "Lab1_Tasks.h"
 #include "Lab2_Tasks.h"
 #include "Lab3_Tasks.h"
 #include "Filter.h"
 
-void Initialize_Modules( float _time_not_used_ )
+void Initialize_Modules(float unused)
 {
-// Initialize (reinitialize) all global variables
+    USB_Flush_Input_Buffer(); // reset USB input buffers
 
-// reset USB input buffers
-USB_Flush_Input_Buffer();
+    // Initialize all modules except USB (it can only be called once without messing things up)
+    Initialize_Timing();
+    Initialize_Encoders();
+    Initialize_Battery_Monitor();
 
-// Initialize all modules except USB (it can only be called once without messing things up)
-Initialize_Timing();
-Initialize_Encoders();
-Initialize_Battery_Monitor();
-float den[] = {1, -1.8669, 0.8752};
-float num[] = {0.0021, 0.0042, 0.0021};
-Filter_Init( &voltage_filter, num, den, 2 );
-Filter_ShiftBy(&voltage_filter, Battery_Voltage());
+    // Set up voltage filter
+    float den[] = {1, -1.8669, 0.8752};
+    float num[] = {0.0021, 0.0042, 0.0021};
+    Filter_Init( &voltage_filter, num, den, 2 );
+    Filter_ShiftBy(&voltage_filter, Battery_Voltage());
 
-// Setup task handling
-Initialize_Task( &task_restart, Initialize_Modules /*function pointer to call*/ );
+    // Set up task handling
+    Initialize_Task( &task_restart, Initialize_Modules /*function pointer to call*/ );
 
-// Setup message handling to get processed at some desired rate.
-Initialize_Task( &task_message_handling, Task_Message_Handling );
+    // Set up message handling to get processed at some desired rate.
+    Initialize_Task( &task_message_handling, Task_Message_Handling );
 
-Initialize_Task(&task_time_loop, Send_Loop_Time);
-Initialize_Task(&task_send_time, Send_Time_Now);
-Initialize_Task(&task_send_encoder_value, Send_Encoder_Value);
-Initialize_Task(&task_send_battery_voltage, Send_Battery_Voltage);
-Task_Activate(&task_message_handling, 0);
+    // Set up timing functionality
+    Initialize_Task(&task_time_loop, Send_Loop_Time);
+    Initialize_Task(&task_send_time, Send_Time_Now);
 
-Initialize_Task( &task_message_handling_watchdog, Task_Message_Handling_Watchdog );
+    // Set up encoder and battery voltage functionality
+    Initialize_Task(&task_send_encoder_value, Send_Encoder_Value);
+    Initialize_Task(&task_send_battery_voltage, Send_Battery_Voltage);
+    Initialize_Task(&task_send_battery_warning, Send_Battery_Warning);
+
+    // Set up task message handling watchdog
+    Initialize_Task( &task_message_handling_watchdog, Task_Message_Handling_Watchdog );
+
+    // Activate message handling continuously
+    Task_Activate(&task_message_handling,0);
+
+    // Activate battery warning task every second
+    Task_Activate(&task_send_battery_warning,1);
+
 }
 
+int main( void ){
 
-int main( void )
-{
+    Initialize_USB(); // must only initialize USB once so its excluded from the modules
+    Initialize_Modules(0.0); // runs module initialization function
 
-Initialize_USB();
-Initialize_Modules( 0.0 );
-//uint16_t loop_micro = 0;
+    for(;;) {  // another way to do while(true)
+        Task_USB_Upkeep();
 
-for( ;; ) {  // yet another way to do while (true)
-Task_USB_Upkeep();
+        Task_Run_If_Ready(&task_message_handling); // run message handling if ready
+        Task_Run_If_Ready(&task_restart); // restart if ready
 
-Task_Run_If_Ready( &task_message_handling );
-Task_Run_If_Ready( &task_restart );
-Task_Run_If_Ready(&task_send_time);
-Task_Run_If_Ready(&task_time_loop);
+        // Timing Functionality
+        Task_Run_If_Ready(&task_send_time);
+        Task_Run_If_Ready(&task_time_loop);
 
-Task_Run_If_Ready(&task_send_encoder_value);
-Task_Run_If_Ready(&task_send_battery_voltage);
+        // Encoder and Voltage Functionality
+        Task_Run_If_Ready(&task_send_encoder_value);
+        Task_Run_If_Ready(&task_send_battery_voltage);
+        Task_Run_If_Ready(&task_send_battery_warning); // build this in
 
-if (!task_message_handling_watchdog.is_active){
-   Task_Activate( &task_message_handling_watchdog , 0.1);
-}
-// if(Task_Run_If_Ready(&task_send_time)){
-//     Send_Time_Now(0);
-//     if(task_send_time.run_period==-1){
-//         Task_Cancel(&task_send_time);
-//     }
-// }
-
-
-//if(Task_Run_If_Ready(&task_time_loop)){
-//             Send_Loop_Time(loop_micro*1.0);
-//             if(task_time_loop.run_period==-1){
-//                 Task_Cancel(&task_time_loop);
-//             }
-//         }
-// loop_micro = Timing_Get_Micro();
-
-
-Task_Run_If_Ready( &task_message_handling_watchdog );
-}
+        if (!task_message_handling_watchdog.is_active){ // if the message handling watchdog isn't active
+           Task_Activate(&task_message_handling_watchdog,0.1); // activate message handling watchdog
+        }
+        Task_Run_If_Ready(&task_message_handling_watchdog); // run watchdog if ready
+    }
 }
 
 // put your task function definitions here
