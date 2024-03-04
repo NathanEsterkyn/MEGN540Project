@@ -65,7 +65,8 @@ Filter_Data_t voltage_filter; // create a filter for the voltage values
 
 // Put your lab-specific task functionality and data_structures (if necessary) here, so it is accessible to both
 // message handling and the Lab main loops.
-static const float LOW_BATTERY_THRESHOLD = 1.5000; // threshold for low battery message
+static const float LOW_BATTERY_THRESHOLD_SW_OFF = 1.25; // thresholds for low battery message
+static const float LOW_BATTERY_THRESHOLD_SW_ON = 3.60;
 void Send_Loop_Time(float _time_since_last);
 void Send_Time_Now(float _time_since_last);
 void Send_Encoder_Value(float unused);

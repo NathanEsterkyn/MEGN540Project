@@ -36,7 +36,7 @@ void Send_Battery_Voltage(float unused){
 
 void Send_Battery_Warning(float unused){
     float voltage = Filter_Value(&voltage_filter, Battery_Voltage());
-    if (voltage <= LOW_BATTERY_THRESHOLD){
+    if (voltage > LOW_BATTERY_THRESHOLD_SW_OFF && voltage < LOW_BATTERY_THRESHOLD_SW_ON){
         struct __attribute__((__packed__)) {
             char let[7];
             float volt;
