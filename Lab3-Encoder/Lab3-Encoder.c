@@ -87,11 +87,11 @@ void Initialize_Modules(float unused)
     // Set up task message handling watchdog
     Initialize_Task( &task_message_handling_watchdog, Task_Message_Handling_Watchdog );
 
-    // Activate message handling continuously
+    // Activate message handling to run continuously
     Task_Activate(&task_message_handling,0);
 
-    // Activate battery warning task every second
-    Task_Activate(&task_send_battery_warning,0);
+    // Activate battery warning task to run every second
+    Task_Activate(&task_send_battery_warning,1);
 
 }
 
@@ -115,8 +115,8 @@ int main( void ){
         Task_Run_If_Ready(&task_send_battery_voltage);
         Task_Run_If_Ready(&task_send_battery_warning); // build this in
 
-        if (!task_message_handling_watchdog.is_active){ // if the message handling watchdog isn't active
-           Task_Activate(&task_message_handling_watchdog,0.1); // activate message handling watchdog
+        if (!task_message_handling_watchdog.is_active){ // if the message handling watchdog isn't active (message timeout functionality)
+           Task_Activate(&task_message_handling_watchdog,0.25); // activate message handling watchdog to run every 0.25 seconds (250 ms)
         }
         Task_Run_If_Ready(&task_message_handling_watchdog); // run watchdog if ready
     }
