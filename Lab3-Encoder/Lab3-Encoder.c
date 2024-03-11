@@ -121,5 +121,3 @@ int main( void ){
         Task_Run_If_Ready(&task_message_handling_watchdog); // run watchdog if ready
     }
 }
-
-// put your task function definitions here
