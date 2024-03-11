@@ -243,8 +243,8 @@ void Task_Message_Handling( float _time_since_last )
 
                 USB_Msg_Get();  // removes the first character from the received buffer
                 struct __attribute__( ( __packed__ ) ) { // creates a struct for the received unsigned int values
-                    uint32_t X;
-                    uint32_t Y;
+                    int16_t X;
+                    int16_t Y;
                 } data;
                 USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received integers
                 // Set the PWM command for the left (first) and right (second) side with the sign indicating
@@ -257,8 +257,8 @@ void Task_Message_Handling( float _time_since_last )
 
                 USB_Msg_Get();  // removes the first character from the received buffer
                 struct __attribute__( ( __packed__ ) ) { // creates a struct for the received unsigned int/float values
-                    uint32_t X;
-                    uint32_t Y;
+                    int16_t X;
+                    int16_t Y;
                     float Z;
                 } data;
                 USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received integers/float
