@@ -32,27 +32,27 @@ void Initialize_MotorPWM( uint16_t MAX_PWM )
     //PORTB |= (1 << PORTB1); // bit 1 - sets PB2 and PB1 to sources
 
     // Initialize Timer1
-    TCNT1 = 0; // bit x - initialize counter // update this to work with 16 bit registers page 113
+    TCNT1 = 0x0000; // bit x - initialize counter // update this to work with 16 bit registers page 113
 
-    // Configure Timer1 compare output mode for fast PWM
+    // Configure Timer1 compare output mode for phase and freq correct PWM
     TCCR1A |= (1 << COM1B0); // bit 4
     TCCR1A |= (1 << COM1B1); // bit 5 - overrides normal port functionality of PB6
     TCCR1A |= (1 << COM1A0); // bit 6
     TCCR1A |= (1 << COM1A1); // bit 7 - overrides normal port functionality of PB5
 
-    // Configure Timer1 waveform generation mode for fast PWM
+    // Configure Timer1 waveform generation mode for phase and freq correct PWM
     TCCR1B |= (1 << WGM13); // bit 4
-    TCCR1B |= (1 << WGM12); // bit 3
-    TCCR1A |= (1 << WGM11); // bit 1 - sets mode to fast PWM with TOP stored at ICR1
-    //TCCR1A |= (0 << WGM10); // bit 0
+    TCCR1B |= (0 << WGM12); // bit 3
+    TCCR1A |= (0 << WGM11); // bit 1 - sets mode to phase and freq correct PWM with TOP stored at ICR1
+    TCCR1A |= (0 << WGM10); // bit 0
 
     // Configure Timer1 clock select
-    //TCCR1B |= (0 << CS12); // bit 2
-    //TCCR1B |= (0 << CS11); // bit 1
+    TCCR1B |= (0 << CS12); // bit 2
+    TCCR1B |= (0 << CS11); // bit 1
     TCCR1B |= (1 << CS10); // bit 0 - No pre-scaling selected
 
     // Set the TOP value for base PWM freq.
-    ICR1H |= MAX_PWM; // read 14.6 more, 16 bit registers are different page 113
+    MotorPWM_Set_Max( uint16_t MAX_PWM )
 
     // Shut down Timer1 so the motors don't move yet
     PRR0 |= (1 << PRTIM1); // bit 3
@@ -93,12 +93,13 @@ void MotorPWM_Set_Left( int16_t pwm )
 {
     if (pwm >= 0) { // detect if desired motion is forwards or backwards
         PORTB |= (1 << PORTB2); // if pwm is positive - forwards
-        // set the duty cycle here on PB6
     }
     else {
-        PORTB |= (0 << PORTB2); // if pwm is negative - backwards
-        // set the duty cycle here on PB6
+        PORTB |= ( 0 << PORTB2 );  // if pwm is negative - backwards
     }
+    // set the duty cycle here on PB6
+    uint16_t duty = (abs(pwm)/255)*MotorPWM_Get_Max();
+    TCNT1 = duty; // set the duty cycle here on PB6 if TCNT1 = TOP we get 100% duty cycle page 135
 }
 
 /**
@@ -109,12 +110,13 @@ void MototPWM_Set_Right( int16_t pwm )
 {
     if (pwm >= 0) { // detect if desired motion is forwards or backwards
         PORTB |= (1 << PORTB1); // if pwm is positive - forwards
-        // set the duty cycle here on PB6
     }
     else {
         PORTB |= (0 << PORTB1); // if pwm is negative - backwards
-        // set the duty cycle here on PB6
     }
+    // set the duty cycle here on PB5
+    uint16_t duty = (abs(pwm)/255)*MotorPWM_Get_Max();
+    TCNT1 = duty; // set the duty cycle here on PB6 if TCNT1 = TOP we get 100% duty cycle page 135
 }
 
 /**
@@ -154,7 +156,7 @@ uint16_t MotorPWM_Get_Max()
 void MotorPWM_Set_Max( uint16_t MAX_PWM )
 {
     // Initialize Timer1
-    TCNT1 = 0; // bit x - initialize counter
+    //TCNT1 = 0; // bit x - initialize counter
     ICR1 = MAX_PWM; // set max PWM // update this to work with 16 bit registers page 113
 
 }
