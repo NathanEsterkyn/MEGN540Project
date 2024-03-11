@@ -189,7 +189,7 @@ void Task_Message_Handling( float _time_since_last )
             }
             break;
         case 'e':
-            if( USB_Msg_Length() >= _Message_Length( 'e' ) ) {
+            if( USB_Msg_Length() == _Message_Length( 'e' ) ) {
                 USB_Msg_Get();  // removes the first character from the received buffer
                 Task_Activate(&task_send_encoder_value, -1); // sends the current encoder value
                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
@@ -203,9 +203,8 @@ void Task_Message_Handling( float _time_since_last )
                     float X;
                 } data;
                 USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received float
-                float timing = data.X;
 
-                if (timing <= 0) { // if the float received is <= 0, cancel the task
+                if (data.X <= 0) { // if the float received is <= 0, cancel the task
                     Task_Cancel(&task_send_encoder_value);
                     command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
                     break;
@@ -215,7 +214,7 @@ void Task_Message_Handling( float _time_since_last )
             }
             break;
         case 'b':
-            if( USB_Msg_Length() >= _Message_Length( 'b' ) ) {
+            if( USB_Msg_Length() == _Message_Length( 'b' ) ) {
                 USB_Msg_Get();  // removes the first character from the received buffer
                 Task_Activate(&task_send_battery_voltage, -1); // sends the current voltage
                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
@@ -229,14 +228,81 @@ void Task_Message_Handling( float _time_since_last )
                     float X;
                 } data;
                 USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received float
-                float timing = data.X;
 
-                if (timing <= 0) { // if the float received is <= 0, cancel the task
+                if (data.X <= 0) { // if the float received is <= 0, cancel the task
                     Task_Cancel(&task_send_battery_voltage);
                     command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
                     break;
                 }
                 Task_Activate(&task_send_battery_voltage, (timing*1000)); // send the battery voltage at requested interval [s]
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
+        case 'p':
+            if( USB_Msg_Length() >= _Message_Length( 'p' ) ) {
+
+                USB_Msg_Get();  // removes the first character from the received buffer
+                struct __attribute__( ( __packed__ ) ) { // creates a struct for the received unsigned int values
+                    uint32_t X;
+                    uint32_t Y;
+                } data;
+                USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received integers
+                // Set the PWM command for the left (first) and right (second) side with the sign indicating
+                // direction, if power is in acceptable range.
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
+        case 'P':
+            if( USB_Msg_Length() >= _Message_Length( 'P' ) ) {
+
+                USB_Msg_Get();  // removes the first character from the received buffer
+                struct __attribute__( ( __packed__ ) ) { // creates a struct for the received unsigned int/float values
+                    uint32_t X;
+                    uint32_t Y;
+                    float Z;
+                } data;
+                USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received integers/float
+                // Set the PWM command for the left (first) and right (second) side with the sign indicating
+                // direction, if power is in acceptable range. The following float provides the duration in ms
+                // to have the PWM at the specified value, return to 0 PWM (stopped) once that time duration is
+                // reached.
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
+        case 's':
+            if( USB_Msg_Length() == _Message_Length( 's' ) ) {
+                USB_Msg_Get();  // removes the first character from the received buffer
+                // Stop PWM and disable motor system
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
+        case 'S':
+            if( USB_Msg_Length() == _Message_Length( 'S' ) ) {
+                USB_Msg_Get();  // removes the first character from the received buffer
+                // Stop PWM and disable motor system
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
+        case 'q':
+            if( USB_Msg_Length() == _Message_Length( 'q' ) ) {
+                USB_Msg_Get();  // removes the first character from the received buffer
+                // Send system identification data back to host.
+                // (total msg length is 16 bytes to fit one endpoint)
+                // time(s) PWM_L PWM_R Encoder_L Encoder_R [float] [int16_t] [int16_t] [int16_t] [int16_t]
+                command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
+        case 'Q':
+            if( USB_Msg_Length() >= _Message_Length( 'Q' ) ) {
+
+                USB_Msg_Get();  // removes the first character from the received buffer
+                struct __attribute__( ( __packed__ ) ) { // creates a struct for the received unsigned int/float values
+                    float X;
+                } data;
+                USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received integers/float
+                // Send the system identification information (above) back to the host every X milliseconds
+                // (as specified in the second float). If this float is zero or negative, then the repeat
+                // send request is canceled.
                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
