@@ -276,15 +276,15 @@ void Task_Message_Handling( float _time_since_last )
             break;
         case 's':
             if( USB_Msg_Length() == _Message_Length( 's' ) ) {
-                USB_Msg_Get();  // removes the first character from the received buffer
-                // Stop PWM and disable motor system
+                USB_Msg_Get(); // removes the first character from the received buffer
+                MotorPWM_Enable(1); // Stop PWM and disable motor system
                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
         case 'S':
             if( USB_Msg_Length() == _Message_Length( 'S' ) ) {
-                USB_Msg_Get();  // removes the first character from the received buffer
-                // Stop PWM and disable motor system
+                USB_Msg_Get(); // removes the first character from the received buffer
+                MotorPWM_Enable(1); // Stop PWM and disable motor system
                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
