@@ -234,7 +234,7 @@ void Task_Message_Handling( float _time_since_last )
                     command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
                     break;
                 }
-                Task_Activate(&task_send_battery_voltage, (timing*1000)); // send the battery voltage at requested interval [s]
+                Task_Activate(&task_send_battery_voltage, (data.X*1000)); // send the battery voltage at requested interval [s]
                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
@@ -247,7 +247,7 @@ void Task_Message_Handling( float _time_since_last )
                     int16_t Y;
                 } data;
                 USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received integers
-                if (Battery_Check) {
+                if (Battery_Check()) {
                     Set_PWM_Value(data.X,data.Y);
                 }
                 // Set the PWM command for the left (first) and right (second) side with the sign indicating

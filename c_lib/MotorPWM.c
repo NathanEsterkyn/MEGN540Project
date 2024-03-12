@@ -50,7 +50,7 @@ void Initialize_MotorPWM( uint16_t MAX_PWM )
     TCCR1B |= (1 << CS10); // bit 0 - No pre-scaling selected
 
     // Set the TOP value for base PWM freq.
-    MotorPWM_Set_Max( uint16_t MAX_PWM )
+    MotorPWM_Set_Max(MAX_PWM);
 
     // Shut down Timer1 so the motors don't move yet
     PRR0 |= (1 << PRTIM1); // bit 3
