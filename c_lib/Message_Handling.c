@@ -209,7 +209,7 @@ void Task_Message_Handling( float _time_since_last )
                     command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
                     break;
                 }
-                Task_Activate(&task_send_encoder_value, timing); // sends the current encoder value at requested interval [us]
+                Task_Activate(&task_send_encoder_value, data.X); // sends the current encoder value at requested interval [us]
                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;

@@ -89,7 +89,7 @@ void MotorPWM_Set_Left( int16_t pwm );
  * Function MototPWM_Set_Right sets the PWM duty cycle for the right motor.
  * @return [int32_t] The count number.
  */
-void MototPWM_Set_Right( int16_t pwm );
+void MotorPWM_Set_Right( int16_t pwm );
 
 /**
  * Function MotorPWM_Get_Left returns the current PWM duty cycle for the left motor. If disabled it returns what the

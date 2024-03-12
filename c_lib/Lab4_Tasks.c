@@ -26,7 +26,7 @@ bool Battery_Check(float unused){
         USB_Send_Msg("c7sf",'!', &msg, sizeof(msg));
         return false;
     }
-    else if ((voltage > LOW_BATTERY_THRESHOLD_SW_OFF &&){
+    if ((voltage > LOW_BATTERY_THRESHOLD_SW_OFF){
         struct __attribute__((__packed__)) {
             char let[9];
         }msg = {.let = {'P','O','W','E','R',' ','O','F','F'}};
@@ -34,5 +34,7 @@ bool Battery_Check(float unused){
         USB_Send_Msg("c9s",'!', &msg, sizeof(msg));
         return false;
     }
-    return true;
+    else {
+        return true;
+    }
 }

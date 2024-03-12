@@ -136,7 +136,7 @@ int16_t MotorPWM_Get_Left()
 {
     uint16_t duty = TCNT1;
     uint16_t Max = MotorPWM_Get_Max();
-    return((duty/Max)*MAX_DUTY)
+    return((duty/Max)*MAX_DUTY);
 }
 
 /**
@@ -148,7 +148,7 @@ int16_t MotorPWM_Get_Right()
 {
     uint16_t duty = TCNT1;
     uint16_t Max = MotorPWM_Get_Max();
-    return((duty/Max)*MAX_DUTY)
+    return((duty/Max)*MAX_DUTY);
 }
 
 /**
@@ -157,7 +157,7 @@ int16_t MotorPWM_Get_Right()
 */
 uint16_t MotorPWM_Get_Max()
 {
-    int16_t = TOP;
+    int16_t TOP;
     cli();  // Disable interrupts
     TOP = ICR1; // update this to work with 16 bit registers page 113
     sei();  // Re-enable interrupts
