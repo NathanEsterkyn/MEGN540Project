@@ -101,7 +101,7 @@ void MotorPWM_Set_Left( int16_t pwm )
             PORTB |= ( 0 << PORTB2 );  // if pwm is negative - backwards
         }
         // set the duty cycle here on PB6
-        uint16_t duty = (abs(pwm)/MAX_DUTY)*MotorPWM_Get_Max();
+        uint16_t duty = (pwm/MAX_DUTY)*MotorPWM_Get_Max();
         TCNT1 = duty; // set the duty cycle here on PB6 if TCNT1 = TOP we get 100% duty cycle page 135
     }
     PORTB |= (1 << PORTB6);
@@ -121,7 +121,7 @@ void MotorPWM_Set_Right( int16_t pwm )
             PORTB |= (0 << PORTB1); // if pwm is negative - backwards
         }
         // set the duty cycle here on PB5
-        uint16_t duty = (abs(pwm)/MAX_DUTY)*MotorPWM_Get_Max();
+        uint16_t duty = (pwm/MAX_DUTY)*MotorPWM_Get_Max();
         TCNT1 = duty; // set the duty cycle here on PB6 if TCNT1 = TOP we get 100% duty cycle page 135
     }
     PORTB |= (1 << PORTB5);

@@ -56,7 +56,6 @@
 #include <avr/io.h>        // For pin input/output access
 #include <ctype.h>         // For int32_t type
 #include <stdbool.h>       // For bool
-#include <stdlib. h>
 #include "Lab4_Tasks.h"
 
 
