@@ -85,7 +85,7 @@ void Initialize_Modules(float unused)
     Initialize_Task(&task_send_battery_warning, Send_Battery_Warning);
 
     // Set up task message handling watchdog
-    Initialize_Task( &task_message_handling_watchdog, Task_Message_Handling_Watchdog );
+    Initialize_Task(&task_message_handling_watchdog, Task_Message_Handling_Watchdog);
 
     // Activate message handling to run continuously
     Task_Activate(&task_message_handling,0);

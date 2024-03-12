@@ -248,7 +248,9 @@ void Task_Message_Handling( float _time_since_last )
                 } data;
                 USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received integers
                 if (Battery_Check(0.0)) {
-                    Set_PWM_Value(data.X,data.Y);
+                    MotorPWM_Enable(1); // enable motors
+                    MotorPWM_Set_Left(data.X); // set left motor PWM value
+                    MotorPWM_Set_Right(data.Y); // set right motor PWM vale
                 }
                 // Set the PWM command for the left (first) and right (second) side with the sign indicating
                 // direction, if power is in acceptable range.

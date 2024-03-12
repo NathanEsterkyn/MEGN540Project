@@ -1,7 +1,7 @@
 #include "Lab4_Tasks.h"
 #include "Filter.h"
 
-void Set_PWM_Value(int16_t Left, int16_t Right){
+void Set_PWM_Value(float unused){
     char command;
     float runPeriod = task_set_pwm_value.run_period; // make a task for setting the PWM value
     if(runPeriod<0){ // detects whether the command was 'b' or 'B'
@@ -9,9 +9,6 @@ void Set_PWM_Value(int16_t Left, int16_t Right){
     }else{
         command = 'P';
     }
-    MotorPWM_Enable(1); // enable motors
-    MotorPWM_Set_Left(Left); // set left motor PWM value
-    MotorPWM_Set_Right(Right); // set right motor PWM vale
     USB_Send_Byte(command); // send message with the command
 }
 
