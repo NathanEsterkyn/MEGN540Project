@@ -247,7 +247,7 @@ void Task_Message_Handling( float _time_since_last )
                     int16_t Y;
                 } data;
                 USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received integers
-                if (Battery_Check()) {
+                if (Battery_Check(0.0)) {
                     Set_PWM_Value(data.X,data.Y);
                 }
                 // Set the PWM command for the left (first) and right (second) side with the sign indicating
