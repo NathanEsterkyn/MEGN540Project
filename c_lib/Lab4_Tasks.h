@@ -63,6 +63,6 @@ Filter_Data_t voltage_filter; // create a filter for the voltage values
 // Put your lab-specific task functionality and data_structures (if necessary) here, so it is accessible to both
 // message handling and the Lab main loops.
 static const int16_t MAX_DUTY = 100; // maximum duty cycle value
-void Set_PWM_Value(int16_t Left, int16_t Right);
+void Set_PWM_Value(float unused);
 bool Battery_Check(float unused);
 #endif
