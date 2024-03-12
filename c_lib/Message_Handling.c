@@ -247,6 +247,9 @@ void Task_Message_Handling( float _time_since_last )
                     int16_t Y;
                 } data;
                 USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received integers
+                if (Battery_Check) {
+                    Set_PWM_Value(data.X,data.Y);
+                }
                 // Set the PWM command for the left (first) and right (second) side with the sign indicating
                 // direction, if power is in acceptable range.
                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog

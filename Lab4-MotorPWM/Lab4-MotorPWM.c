@@ -34,11 +34,13 @@
 #include "Timing.h"            // for Time understanding
 #include "Encoder.h"
 #include "Battery_Monitor.h"
+#include "MotorPWM.h"
 
 // Include Lab Specific Functionality
 #include "Lab1_Tasks.h"
 #include "Lab2_Tasks.h"
 #include "Lab3_Tasks.h"
+#include "Lab4_Tasks.h"
 #include "Filter.h"
 
 void Initialize_Modules(float unused)
@@ -49,6 +51,7 @@ void Initialize_Modules(float unused)
     Initialize_Timing();
     Initialize_Encoders();
     Initialize_Battery_Monitor();
+    Initialize_MotorPWM(1000);
 
     // Set up voltage filter
     float den[] = {1, -1.8669, 0.8752};
@@ -70,6 +73,9 @@ void Initialize_Modules(float unused)
     Initialize_Task(&task_send_encoder_value, Send_Encoder_Value);
     Initialize_Task(&task_send_battery_voltage, Send_Battery_Voltage);
     Initialize_Task(&task_send_battery_warning, Send_Battery_Warning);
+
+    // Set up PWM functionality
+    Initialize_Task(&task_set_pwm_value, Set_PWM_Value);
 
     // Set up task message handling watchdog
     Initialize_Task( &task_message_handling_watchdog, Task_Message_Handling_Watchdog );
@@ -100,6 +106,9 @@ int main(){
         Task_Run_If_Ready(&task_send_encoder_value);
         Task_Run_If_Ready(&task_send_battery_voltage);
         Task_Run_If_Ready(&task_send_battery_warning);
+
+        // PWM Functionality
+        Task_Run_If_Ready(&task_set_pwm_value);
 
         if (!task_message_handling_watchdog.is_active){ // if the message handling watchdog isn't active (message timeout functionality)
             Task_Activate(&task_message_handling_watchdog,250); // activate message handling watchdog to run every 0.25 seconds (250 ms)

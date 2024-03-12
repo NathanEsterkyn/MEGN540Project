@@ -32,8 +32,8 @@ IN THE SOFTWARE.
 * This file defines lab-spcific tasks for execution
  */
 
-#ifndef LAB3_TASKS_H
-#define LAB3_TASKS_H
+#ifndef LAB4_TASKS_H
+#define LAB4_TASKS_H
 
 #include "Task_Management.h"
 #include "Encoder.h"
@@ -52,24 +52,19 @@ IN THE SOFTWARE.
 #include "Timing.h"    // Timing interface
 #include "Filter.h"
 #include "Battery_Monitor.h"
+#include "MotorPWM.h"
 
 // Put your lab-specific tasks here
-// e.g. Task_t task_restart;  ///<-- Lab 1: This flag indicates that the device received a restart command from the hoast. Default inactive.
-Task_t task_time_loop;                  ///<-- Lab 2: Indicates if the system should report time to complete a loop.
-Task_t task_send_time;                  ///<-- Lab 2: Indicates if the system should send the current time.
-Task_t task_message_handling_watchdog;  ///<-- LAB 2: Watchdog Timer for Flusing USB Input Messaging if incomplete message received.
-Task_t task_send_battery_voltage;                  ///<-- Lab 2: Indicates if the system should report time to complete a loop.
-Task_t task_send_encoder_value;
-Task_t task_send_battery_warning; // create a task for low battery warning
+Task_t task_message_handling_watchdog;
+Task_t task_send_battery_voltage;
+Task_t task_set_pwm_value;
 Filter_Data_t voltage_filter; // create a filter for the voltage values
 
 // Put your lab-specific task functionality and data_structures (if necessary) here, so it is accessible to both
 // message handling and the Lab main loops.
 static const float LOW_BATTERY_THRESHOLD_SW_OFF = 1.25; // thresholds for low battery message
 static const float LOW_BATTERY_THRESHOLD_SW_ON = 3.60;
-void Send_Loop_Time(float _time_since_last);
-void Send_Time_Now(float _time_since_last);
-void Send_Encoder_Value(float unused);
-void Send_Battery_Voltage(float unused);
-void Send_Battery_Warning(float unused);
-#endif  // ifndef LAB3_TASKS_H
+static const int16_t MAX_DUTY = 100; // maximum duty cycle value
+void Set_PWM_Value(int16_t Left, int16_t Right);
+bool Battery_Check(float unused);
+#endif

@@ -28,8 +28,6 @@ void Initialize_MotorPWM( uint16_t MAX_PWM )
     DDRB |= (1 << DDB5); // bit 5
     DDRB |= (1 << DDB2); // bit 2
     DDRB |= (1 << DDB1); // bit 1 - sets PB 1,2,5,and 6 to outputs
-    //PORTB |= (1 << PORTB2); // bit 2
-    //PORTB |= (1 << PORTB1); // bit 1 - sets PB2 and PB1 to sources
 
     // Initialize Timer1
     TCNT1 = 0x0000; // bit x - initialize counter // update this to work with 16 bit registers page 113
@@ -66,8 +64,12 @@ void MotorPWM_Enable( bool enable )
 {
     // The Power Reduction Timer/Counter1 bit, PRTIM1, in “Power Reduction
     // Register 0 - PRR0” on page 47 must be written to zero to enable Timer/Counter1 module.
-    PRR0 |= (0 << PRTIM1); // bit 3 - enable Timer1
-    enable = true;
+    if (enable == true) {
+        PRR0 |= (0 << PRTIM1); // bit 3 - enable Timer1
+    }
+    if (enable == false) {
+        PRR0 |= (1 << PRTIM1); // bit 3 - disable Timer1
+    }
 }
 
 /**
@@ -77,11 +79,11 @@ void MotorPWM_Enable( bool enable )
 bool MotorPWM_Is_Enabled()
 {
     // detect if enabled
-    if ((PRR0 >> PRTIM1) == 0) {
-        return true;
+    if (bit_is_set(PRR0, PRTIM1)){ // how to access register states
+        return false;
     }
     else {
-        return false;
+        return true;
     }
 }
 
@@ -91,32 +93,38 @@ bool MotorPWM_Is_Enabled()
 */
 void MotorPWM_Set_Left( int16_t pwm )
 {
-    if (pwm >= 0) { // detect if desired motion is forwards or backwards
-        PORTB |= (1 << PORTB2); // if pwm is positive - forwards
+    if (MotorPWM_Is_Enabled()){
+        if (pwm > 0) { // detect if desired motion is forwards or backwards
+            PORTB |= (1 << PORTB2); // if pwm is positive - forwards
+        }
+        else {
+            PORTB |= ( 0 << PORTB2 );  // if pwm is negative - backwards
+        }
+        // set the duty cycle here on PB6
+        uint16_t duty = (abs(pwm)/MAX_DUTY)*MotorPWM_Get_Max();
+        TCNT1 = duty; // set the duty cycle here on PB6 if TCNT1 = TOP we get 100% duty cycle page 135
     }
-    else {
-        PORTB |= ( 0 << PORTB2 );  // if pwm is negative - backwards
-    }
-    // set the duty cycle here on PB6
-    uint16_t duty = (abs(pwm)/255)*MotorPWM_Get_Max();
-    TCNT1 = duty; // set the duty cycle here on PB6 if TCNT1 = TOP we get 100% duty cycle page 135
+    PORTB |= (1 << PORTB6);
 }
 
 /**
 * Function MototPWM_Set_Right sets the PWM duty cycle for the right motor.
 * @return [int32_t] The count number.
 */
-void MototPWM_Set_Right( int16_t pwm )
+void MotorPWM_Set_Right( int16_t pwm )
 {
-    if (pwm >= 0) { // detect if desired motion is forwards or backwards
-        PORTB |= (1 << PORTB1); // if pwm is positive - forwards
+    if (MotorPWM_Is_Enabled()){
+        if (pwm >= 0) { // detect if desired motion is forwards or backwards
+            PORTB |= (1 << PORTB1); // if pwm is positive - forwards
+        }
+        else {
+            PORTB |= (0 << PORTB1); // if pwm is negative - backwards
+        }
+        // set the duty cycle here on PB5
+        uint16_t duty = (abs(pwm)/MAX_DUTY)*MotorPWM_Get_Max();
+        TCNT1 = duty; // set the duty cycle here on PB6 if TCNT1 = TOP we get 100% duty cycle page 135
     }
-    else {
-        PORTB |= (0 << PORTB1); // if pwm is negative - backwards
-    }
-    // set the duty cycle here on PB5
-    uint16_t duty = (abs(pwm)/255)*MotorPWM_Get_Max();
-    TCNT1 = duty; // set the duty cycle here on PB6 if TCNT1 = TOP we get 100% duty cycle page 135
+    PORTB |= (1 << PORTB5);
 }
 
 /**
@@ -126,7 +134,9 @@ void MototPWM_Set_Right( int16_t pwm )
 */
 int16_t MotorPWM_Get_Left()
 {
-
+    uint16_t duty = TCNT1;
+    uint16_t Max = MotorPWM_Get_Max();
+    return((duty/Max)*MAX_DUTY)
 }
 
 /**
@@ -136,7 +146,9 @@ int16_t MotorPWM_Get_Left()
 */
 int16_t MotorPWM_Get_Right()
 {
-
+    uint16_t duty = TCNT1;
+    uint16_t Max = MotorPWM_Get_Max();
+    return((duty/Max)*MAX_DUTY)
 }
 
 /**
@@ -145,7 +157,11 @@ int16_t MotorPWM_Get_Right()
 */
 uint16_t MotorPWM_Get_Max()
 {
-    return ICR1; // update this to work with 16 bit registers page 113
+    int16_t = TOP;
+    cli();  // Disable interrupts
+    TOP = ICR1; // update this to work with 16 bit registers page 113
+    sei();  // Re-enable interrupts
+    return TOP;
 }
 
 /**
@@ -157,6 +173,8 @@ void MotorPWM_Set_Max( uint16_t MAX_PWM )
 {
     // Initialize Timer1
     //TCNT1 = 0; // bit x - initialize counter
+    cli();  // Disable interrupts
     ICR1 = MAX_PWM; // set max PWM // update this to work with 16 bit registers page 113
+    sei();  // Re-enable interrupts
 
 }
