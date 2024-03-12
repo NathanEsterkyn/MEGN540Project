@@ -24,8 +24,8 @@ void Initialize_MotorPWM( uint16_t MAX_PWM )
 
 
     // Set Data Direction Register (DDR) for OC1A and OC1B
-    DDRB |= (1 << DDB6); // bit 6
-    DDRB |= (1 << DDB5); // bit 5
+    DDRB |= (0 << DDB6); // bit 6 // MODDED
+    DDRB |= (0 << DDB5); // bit 5 // MODDED
     DDRB |= (1 << DDB2); // bit 2
     DDRB |= (1 << DDB1); // bit 1 - sets PB 1,2,5,and 6 to outputs
 
@@ -53,7 +53,7 @@ void Initialize_MotorPWM( uint16_t MAX_PWM )
     MotorPWM_Set_Max(MAX_PWM);
 
     // Shut down Timer1 so the motors don't move yet
-    PRR0 |= (1 << PRTIM1); // bit 3
+    //PRR0 |= (1 << PRTIM1); // bit 3
 }
 
 /**
@@ -66,9 +66,13 @@ void MotorPWM_Enable( bool enable )
     // Register 0 - PRR0” on page 47 must be written to zero to enable Timer/Counter1 module.
     if (enable == true) {
         PRR0 |= (0 << PRTIM1); // bit 3 - enable Timer1
+        DDRB |= (1 << DDB6); // bit 6
+        DDRB |= (1 << DDB5); // bit 5
     }
     if (enable == false) {
         PRR0 |= (1 << PRTIM1); // bit 3 - disable Timer1
+        DDRB |= (0 << DDB6); // bit 6
+        DDRB |= (0 << DDB5); // bit 5
     }
 }
 
