@@ -86,7 +86,7 @@ void Initialize_Modules(float unused)
 
     // Activate battery check task to run continuously and warning task to run every second
     Task_Activate(&task_check_battery_voltage,0);
-    Task_Activate(&task_send_battery_warning,1000);
+    //Task_Activate(&task_send_battery_warning,1000);
 }
 
 int main(){
@@ -106,8 +106,9 @@ int main(){
 
         // Encoder and Voltage Functionality
         Task_Run_If_Ready(&task_send_encoder_value);
+        Task_Run_If_Ready(&task_check_battery_voltage);
         Task_Run_If_Ready(&task_send_battery_voltage);
-        Task_Run_If_Ready(&task_send_battery_warning);
+        //Task_Run_If_Ready(&task_send_battery_warning);
 
         // PWM Functionality
         Task_Run_If_Ready(&task_set_pwm_value);
