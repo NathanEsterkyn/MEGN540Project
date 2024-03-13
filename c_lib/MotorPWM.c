@@ -62,11 +62,11 @@ void Initialize_MotorPWM( uint16_t MAX_PWM )
 */
 void MotorPWM_Enable( bool enable )
 {
-    if (enable == 0) {
+    if (enable == 1) {
         DDRB |= (1 << DDB6); // bit 6
         DDRB |= (1 << DDB5); // bit 5 - set data direction to output for PB5 and PB6
     }
-    if (enable == 1) {
+    if (enable == 0) {
         DDRB |= (0 << DDB6); // bit 6
         DDRB |= (0 << DDB5); // bit 5 - set data direction to input for PB5 and PB6
     }
