@@ -40,6 +40,7 @@ void Check_Battery_Voltage(float unused){ // check the filtered voltage value (s
 }
 
 void Send_Battery_Warning(float unused){ // send the battery low message (should run every 1000ms)
+    float voltage = Filter_Value(&voltage_filter, Battery_Voltage());
     struct __attribute__((__packed__)) {
         char let[7];
         float volt;
