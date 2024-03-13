@@ -62,11 +62,11 @@ void Initialize_MotorPWM( uint16_t MAX_PWM )
 */
 void MotorPWM_Enable( bool enable )
 {
-    if (enable == true) {
+    if (enable == 1) {
         DDRB |= (1 << DDB6); // bit 6
         DDRB |= (1 << DDB5); // bit 5 - set data direction to output for PB5 and PB6
     }
-    if (enable == false) {
+    if (enable == 0) {
         DDRB |= (0 << DDB6); // bit 6
         DDRB |= (0 << DDB5); // bit 5 - set data direction to input for PB5 and PB6
     }
@@ -80,10 +80,10 @@ bool MotorPWM_Is_Enabled()
 {
     // detect if enabled
     if (bit_is_set(DDRB, DDB6) && bit_is_set(DDRB, DDB5)){ // use bit_is_set function to access register state
-        return false;
+        return true;
     }
     else {
-        return true;
+        return false;
     }
 }
 
@@ -114,7 +114,7 @@ void MotorPWM_Set_Left( int16_t pwm )
 void MotorPWM_Set_Right( int16_t pwm )
 {
     if (MotorPWM_Is_Enabled()){
-        if (pwm >= 0) { // detect if desired motion is forwards or backwards
+        if (pwm > 0) { // detect if desired motion is forwards or backwards
             PORTB |= (1 << PORTB1); // if pwm is positive - forwards
         }
         else {
@@ -134,7 +134,7 @@ void MotorPWM_Set_Right( int16_t pwm )
 */
 int16_t MotorPWM_Get_Left()
 {
-    uint16_t duty = TCNT1;
+    uint16_t duty = OCR1B;
     uint16_t Max = MotorPWM_Get_Max();
     return((duty/Max)*MAX_DUTY);
 }
@@ -146,7 +146,7 @@ int16_t MotorPWM_Get_Left()
 */
 int16_t MotorPWM_Get_Right()
 {
-    uint16_t duty = TCNT1;
+    uint16_t duty = OCR1A;
     uint16_t Max = MotorPWM_Get_Max();
     return((duty/Max)*MAX_DUTY);
 }
