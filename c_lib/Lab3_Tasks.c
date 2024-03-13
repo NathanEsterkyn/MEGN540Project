@@ -32,14 +32,18 @@ void Send_Battery_Voltage(float unused){
     USB_Send_Msg("cf", command, &voltage, sizeof(voltage)); // send message with the battery voltage
 }
 
-void Send_Battery_Warning(float unused){
+void Check_Battery_Voltage(float unused){ // check the filtered voltage value (should run constantly)
     float voltage = Filter_Value(&voltage_filter, Battery_Voltage());
     if (voltage > LOW_BATTERY_THRESHOLD_SW_OFF && voltage < LOW_BATTERY_THRESHOLD_SW_ON){
-        struct __attribute__((__packed__)) {
-            char let[7];
-            float volt;
-        }msg = {.let = {'B','A','T',' ','L','O','W'}, .volt = voltage};
-        // Send Warning to Serial that batteries need to be charged
-        USB_Send_Msg("c7sf",'!', &msg, sizeof(msg));
+        Send_Battery_Warning(0.0);
     }
+}
+
+void Send_Battery_Warning(float unused){ // send the battery low message (should run every 1000ms)
+    struct __attribute__((__packed__)) {
+        char let[7];
+        float volt;
+    }msg = {.let = {'B','A','T',' ','L','O','W'}, .volt = voltage};
+    // Send Warning to Serial that batteries need to be charged
+    USB_Send_Msg("c7sf",'!', &msg, sizeof(msg));
 }

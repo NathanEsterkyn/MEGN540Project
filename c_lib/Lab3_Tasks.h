@@ -60,7 +60,8 @@ Task_t task_send_time;                  ///<-- Lab 2: Indicates if the system sh
 Task_t task_message_handling_watchdog;  ///<-- LAB 2: Watchdog Timer for Flusing USB Input Messaging if incomplete message received.
 Task_t task_send_battery_voltage;                  ///<-- Lab 2: Indicates if the system should report time to complete a loop.
 Task_t task_send_encoder_value;
-Task_t task_send_battery_warning; // create a task for low battery warning
+Task_t task_check_battery_voltage; // create a task to check the current voltage
+Task_t task_send_battery_warning; // create a task to send the low battery warning
 Filter_Data_t voltage_filter; // create a filter for the voltage values
 
 // Put your lab-specific task functionality and data_structures (if necessary) here, so it is accessible to both
@@ -71,5 +72,6 @@ void Send_Loop_Time(float _time_since_last);
 void Send_Time_Now(float _time_since_last);
 void Send_Encoder_Value(float unused);
 void Send_Battery_Voltage(float unused);
+void Check_Battery_Voltage(float unused);
 void Send_Battery_Warning(float unused);
 #endif  // ifndef LAB3_TASKS_H

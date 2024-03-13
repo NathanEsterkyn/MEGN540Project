@@ -81,6 +81,7 @@ void Initialize_Modules(float unused)
 
     // Set up encoder and battery voltage functionality
     Initialize_Task(&task_send_encoder_value, Send_Encoder_Value);
+    Initialize_Task(&task_check_battery_voltage, Check_Battery_Voltage);
     Initialize_Task(&task_send_battery_voltage, Send_Battery_Voltage);
     Initialize_Task(&task_send_battery_warning, Send_Battery_Warning);
 
@@ -90,7 +91,8 @@ void Initialize_Modules(float unused)
     // Activate message handling to run continuously
     Task_Activate(&task_message_handling,0);
 
-    // Activate battery warning task to run every second
+    // Activate battery check task to run continuously and warning task to run every second
+    Task_Activate(&task_check_battery_voltage,0);
     Task_Activate(&task_send_battery_warning,1000);
 
 }

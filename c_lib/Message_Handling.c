@@ -247,13 +247,11 @@ void Task_Message_Handling( float _time_since_last )
                     int16_t Y;
                 } data;
                 USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received integers
-                if (Battery_Check(0.0)) {
-                    MotorPWM_Enable(1); // enable motors
+                if (Battery_Check(0.0)) { // if the battery is of an acceptable voltage
                     MotorPWM_Set_Left(data.X); // set left motor PWM value
                     MotorPWM_Set_Right(data.Y); // set right motor PWM vale
+                    MotorPWM_Enable(1); // enable motors
                 }
-                // Set the PWM command for the left (first) and right (second) side with the sign indicating
-                // direction, if power is in acceptable range.
                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
@@ -329,7 +327,7 @@ void Task_Message_Handling( float _time_since_last )
 *
 * @param _unused_
 */
-void Task_Message_Handling_Watchdog( float _unused_ )
+void Task_Message_Handling_Watchdog( float unused )
 {
     USB_Flush_Input_Buffer(); // re-initializes the receive ring buffer
 }
