@@ -49,11 +49,13 @@ IN THE SOFTWARE.
 //Task_t task_message_handling_watchdog;
 //Task_t task_send_battery_voltage;
 Task_t task_set_pwm_value;
+Task_t task_stop_pwm;
 Filter_Data_t voltage_filter; // create a filter for the voltage values
 
 // Put your lab-specific task functionality and data_structures (if necessary) here, so it is accessible to both
 // message handling and the Lab main loops.
 static const int16_t MAX_DUTY = 100; // maximum duty cycle value
 void Set_PWM_Value(float unused);
+void Stop_PWM(float unused);
 bool Battery_Check(float unused);
 #endif
