@@ -9,7 +9,13 @@ void Set_PWM_Value(float unused){
     }else{
         command = 'P';
     }
-    USB_Send_Byte(command); // send message with the command
+    struct{ // structure to store PWM values
+        int16_t left;
+        int16_t right;
+    }data;
+    data.left = MotorPWM_Get_Left(); // write to structure using functions
+    data.right = MotorPWM_Get_Right();
+    USB_Send_Msg("cff", command, &data, sizeof(data)); // send USB message
 }
 
 bool Battery_Check(float unused){
