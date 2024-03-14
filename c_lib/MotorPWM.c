@@ -8,44 +8,21 @@
  */
 void Initialize_MotorPWM( uint16_t MAX_PWM )
 {
-    // Set the Waveform Generation mode (WGMn3:0) and Compare Output mode (COMnx1:0) bits
-    // fast PWM mode (WGMn3:0 = 5, 6, 7, 14, or 15)
-    // In non-inverting Compare Output mode, the Output Compare (OC1x) is set on the compare
-    // match between TCNTn and OCRnx, and cleared at TOP. In inverting Compare Output mode
-    // output is cleared on compare match and set at TOP
-    //
-    // The PWM resolution for fast PWM can be fixed to 8-, 9-, or 10-bit, or defined by ICR1 (why aren't we using OCR1A with the double buffer?)
-    // ICR1 sets TOP - ICR1, WGMn3:0 = 14 (1110), this is the base PWM freq.
-    // TCNT1
-    // OC1x Interrupt Flag will be set when a compare match occurs
-    // The Timer/Counter Overflow Flag (TOVn) is set each time the counter reaches TOP - so is ICFn Flag
+    // Note:
+    // the Timer Overflow Flag (TOV1) is set each time the counter reaches TOP - so is ICFn Flag (once per cycle)
     // Left motor PWM on PB6 with direction via PB2 - OC1B
     // Right motor PWM on PB5 with direction via PB1 - OC1A
 
     // Set Data Direction Register (DDR) for OC1A and OC1B
-    DDRB |= ( 1 << DDB6 );  // bit 6 // MODDED - keep disabled by setting as input
-    DDRB |= ( 1 << DDB5 );  // bit 5 // MODDED - keep disabled by setting as input
+    DDRB |= ( 1 << DDB6 );  // bit 6
+    DDRB |= ( 1 << DDB5 );  // bit 5
     DDRB |= ( 1 << DDB2 );  // bit 2
     DDRB |= ( 1 << DDB1 );  // bit 1 - sets PB 1,2,5,and 6 to outputs
 
-    // Initialize Timer1
-    // TCNT1 = 0x0000; // bit x - initialize counter // update this to work with 16 bit registers page 113
-
-    // Configure Timer1 compare output mode for phase and freq correct PWM
-    // TCCR1A |= (1 << COM1B0); // bit 4
-    // TCCR1B |= ( 1 << COM1B1 );  // bit 5 - overrides normal port functionality of PB6
-    // TCCR1A |= (1 << COM1A0); // bit 6
-    // TCCR1B |= ( 1 << COM1A1 );  // bit 7 - overrides normal port functionality of PB5
-
-    // Configure Timer1 waveform generation mode for phase and freq correct PWM
-    TCCR1B |= ( 1 << WGM13 );  // bit 4
-    // TCCR1B |= ( 0 << WGM12 );  // bit 3
-    // TCCR1A |= ( 0 << WGM11 );  // bit 1 - sets mode to phase and freq correct PWM with TOP stored at ICR1
-    // TCCR1A |= ( 0 << WGM10 );  // bit 0
+    // Configure Timer1 waveform generation mode for phase and freq correct PWM - mode 8
+    TCCR1B |= ( 1 << WGM13 );  // bit 4 - sets mode to phase and freq correct PWM with TOP stored at ICR1
 
     // Configure Timer1 clock select
-    // TCCR1B |= ( 0 << CS12 );  // bit 2
-    // TCCR1B |= ( 0 << CS11 );  // bit 1
     TCCR1B |= ( 1 << CS10 );  // bit 0 - No pre-scaling selected
 
     // Set the TOP value for base PWM freq.
@@ -54,6 +31,8 @@ void Initialize_MotorPWM( uint16_t MAX_PWM )
 
     // Ensure Timer1 is on
     // PRR0 |= (0 << PRTIM1); // bit 3
+    TCCR1A |= ( 1 << COM1B1 ); // bit 5 - sets up channel B for this behavior
+    TCCR1A |= ( 1 << COM1A1 ); // bit 7 - sets up channel A for this behavior
 }
 
 /**
@@ -62,17 +41,17 @@ void Initialize_MotorPWM( uint16_t MAX_PWM )
  */
 void MotorPWM_Enable( bool enable )
 {
+    // Configure Timer1 compare output mode for phase and freq correct PWM - Clear OC1A and OC1B on compare match
+    // when up-counting. Set OC1A and OC1B on compare match when down-counting. (for a non-inverted PWM signal)
     if( enable == 1 ) {
-        // DDRB |= ( 1 << DDB6 );  // bit 6
-        // DDRB |= ( 1 << DDB5 );  // bit 5 - set data direction to output for PB5 and PB6
-        TCCR1A |= ( 1 << COM1B1 );
-        TCCR1A |= ( 1 << COM1A1 );
+        PRR0 &= ~(1 << PRTIM1); // bit 3
+        //TCCR1A |= ( 1 << COM1B1 ); // bit 5 - sets up channel B for this behavior
+        //TCCR1A |= ( 1 << COM1A1 ); // bit 7 - sets up channel A for this behavior
     }
     if( enable == 0 ) {
-        // DDRB |= ( 0 << DDB6 );  // bit 6
-        // DDRB |= ( 0 << DDB5 );  // bit 5 - set data direction to input for PB5 and PB6
-        TCCR1A &= ~( 1 << COM1B1 );
-        TCCR1A &= ~( 1 << COM1A1 );
+        PRR0 |= (1 << PRTIM1); // bit 3
+        //TCCR1A &= ~( 1 << COM1B1 );
+        //TCCR1A &= ~( 1 << COM1A1 ); // sets bits to zero - Normal port operation, OC1A and OC1B disconnected
     }
 }
 
@@ -82,9 +61,7 @@ void MotorPWM_Enable( bool enable )
  */
 bool MotorPWM_Is_Enabled()
 {
-    // detect if enabled
-    // if( bit_is_set( DDRB, DDB6 ) && bit_is_set( DDRB, DDB5 ) ) {  // use bit_is_set function to access register state
-    if bit_is_set( TCCR1A, COM1A1 ) {
+    if bit_is_set( TCCR1A, COM1A1 ) { // use bit_is_set function to access register state for OC1A
         return true;
     } else {
         return false;
@@ -100,16 +77,12 @@ void MotorPWM_Set_Left( int16_t pwm )
     if( MotorPWM_Is_Enabled() ) {
         if( pwm > 0 ) {                 // detect if desired motion is forwards or backwards
             PORTB &= ~( 1 << PORTB2 );  // if pwm is positive - forwards
-            OCR1B = ( pwm );
+            OCR1B = ( pwm ); // sets output compare register, triggers interrupt when TCNT1 == pwm
         } else {
             PORTB |= ( 1 << PORTB2 );  // if pwm is negative - backwards
             OCR1B = -( pwm );
         }
-        // set the duty cycle here on PB6 - OC1B
-        // uint16_t duty = ( pwm / MAX_DUTY ) * MotorPWM_Get_Max();
-        // OCR1B         = duty;  // if OCR1B = TOP we get 100% duty cycle
     }
-    // PORTB |= (1 << PORTB6); // access the data at PB5
 }
 
 /**
@@ -121,16 +94,12 @@ void MotorPWM_Set_Right( int16_t pwm )
     if( MotorPWM_Is_Enabled() ) {
         if( pwm > 0 ) {                 // detect if desired motion is forwards or backwards
             PORTB &= ~( 1 << PORTB1 );  // if pwm is positive - forwards
-            OCR1A = ( pwm );
+            OCR1A = ( pwm ); // sets output compare register, triggers interrupt when TCNT1 == pwm
         } else {
             PORTB |= ( 1 << PORTB1 );  // if pwm is negative - backwards
             OCR1A = -( pwm );
         }
-        // set the duty cycle here on PB5 - OC1A
-        // uint16_t duty = ( pwm / MAX_DUTY ) * MotorPWM_Get_Max();
-        // OCR1A         = duty;  // if OCR1A = TOP we get 100% duty cycle
     }
-    // PORTB |= (1 << PORTB5); // access the data at PB5
 }
 
 /**
