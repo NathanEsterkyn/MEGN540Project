@@ -51,7 +51,7 @@ void Initialize_Modules(float unused)
     Initialize_Timing();
     Initialize_Encoders();
     Initialize_Battery_Monitor();
-    Initialize_MotorPWM(1000);
+    Initialize_MotorPWM(1000); // lower TOP value = higher PWM freq
 
     // Set up voltage filter
     float den[] = {1, -1.8669, 0.8752};
