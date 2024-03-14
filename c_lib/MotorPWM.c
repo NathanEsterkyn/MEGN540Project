@@ -103,7 +103,9 @@ void MotorPWM_Set_Right( int16_t pwm )
 int16_t MotorPWM_Get_Left()
 {
     int16_t pwm = OCR1B;
-    return ( pwm );
+    int16_t TOP = MotorPWM_Get_Max();
+    int16_t duty = (pwm/TOP)*100;
+    return ( duty );
 }
 
 /**
@@ -114,7 +116,9 @@ int16_t MotorPWM_Get_Left()
 int16_t MotorPWM_Get_Right()
 {
     int16_t pwm = OCR1A;
-    return ( pwm );
+    int16_t TOP = MotorPWM_Get_Max();
+    int16_t duty = (pwm/TOP)*100;
+    return ( duty );
 }
 
 /**
