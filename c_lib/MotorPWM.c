@@ -28,11 +28,6 @@ void Initialize_MotorPWM( uint16_t MAX_PWM )
     // Set the TOP value for base PWM freq.
     MotorPWM_Set_Max( MAX_PWM );
     MotorPWM_Enable( false );
-
-    // Ensure Timer1 is on
-    // PRR0 |= (0 << PRTIM1); // bit 3
-    TCCR1A |= ( 1 << COM1B1 ); // bit 5 - sets up channel B for this behavior
-    TCCR1A |= ( 1 << COM1A1 ); // bit 7 - sets up channel A for this behavior
 }
 
 /**
@@ -44,14 +39,12 @@ void MotorPWM_Enable( bool enable )
     // Configure Timer1 compare output mode for phase and freq correct PWM - Clear OC1A and OC1B on compare match
     // when up-counting. Set OC1A and OC1B on compare match when down-counting. (for a non-inverted PWM signal)
     if( enable == 1 ) {
-        PRR0 &= ~(1 << PRTIM1); // bit 3
-        //TCCR1A |= ( 1 << COM1B1 ); // bit 5 - sets up channel B for this behavior
-        //TCCR1A |= ( 1 << COM1A1 ); // bit 7 - sets up channel A for this behavior
+        TCCR1A |= ( 1 << COM1B1 ); // bit 5 - sets up channel B for this behavior
+        TCCR1A |= ( 1 << COM1A1 ); // bit 7 - sets up channel A for this behavior
     }
     if( enable == 0 ) {
-        PRR0 |= (1 << PRTIM1); // bit 3
-        //TCCR1A &= ~( 1 << COM1B1 );
-        //TCCR1A &= ~( 1 << COM1A1 ); // sets bits to zero - Normal port operation, OC1A and OC1B disconnected
+        TCCR1A &= ~( 1 << COM1B1 );
+        TCCR1A &= ~( 1 << COM1A1 ); // sets bits to zero - Normal port operation, OC1A and OC1B disconnected
     }
 }
 
