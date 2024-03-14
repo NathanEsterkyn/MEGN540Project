@@ -45,7 +45,7 @@ IN THE SOFTWARE.
 #include "Battery_Monitor.h"
 #include "MotorPWM.h"
 
-// Put your lab-specific tasks here
+// Put your lab-specific tasks here:
 Task_t task_set_pwm_value;
 Task_t task_stop_pwm;
 Filter_Data_t voltage_filter; // create a filter for the voltage values
