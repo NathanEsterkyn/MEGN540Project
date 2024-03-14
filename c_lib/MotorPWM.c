@@ -100,10 +100,10 @@ void MotorPWM_Set_Left( int16_t pwm )
     if( MotorPWM_Is_Enabled() ) {
         if( pwm > 0 ) {                 // detect if desired motion is forwards or backwards
             PORTB &= ~( 1 << PORTB2 );  // if pwm is positive - forwards
-            OCR1B = ( pwm / MAX_DUTY );
+            OCR1B = ( pwm );
         } else {
             PORTB |= ( 1 << PORTB2 );  // if pwm is negative - backwards
-            OCR1B = -( pwm / MAX_DUTY );
+            OCR1B = -( pwm );
         }
         // set the duty cycle here on PB6 - OC1B
         // uint16_t duty = ( pwm / MAX_DUTY ) * MotorPWM_Get_Max();
@@ -121,10 +121,10 @@ void MotorPWM_Set_Right( int16_t pwm )
     if( MotorPWM_Is_Enabled() ) {
         if( pwm > 0 ) {                 // detect if desired motion is forwards or backwards
             PORTB &= ~( 1 << PORTB1 );  // if pwm is positive - forwards
-            OCR1A = ( pwm / MAX_DUTY );
+            OCR1A = ( pwm );
         } else {
             PORTB |= ( 1 << PORTB1 );  // if pwm is negative - backwards
-            OCR1A = -( pwm / MAX_DUTY );
+            OCR1A = -( pwm );
         }
         // set the duty cycle here on PB5 - OC1A
         // uint16_t duty = ( pwm / MAX_DUTY ) * MotorPWM_Get_Max();
@@ -140,9 +140,7 @@ void MotorPWM_Set_Right( int16_t pwm )
  */
 int16_t MotorPWM_Get_Left()
 {
-    uint16_t duty = OCR1B;
-    uint16_t Max  = MotorPWM_Get_Max();
-    return ( ( duty / Max ) * MAX_DUTY );
+    return ( ( OCR1B / MotorPWM_Get_Max() ) * 100 );
 }
 
 /**
@@ -152,9 +150,7 @@ int16_t MotorPWM_Get_Left()
  */
 int16_t MotorPWM_Get_Right()
 {
-    uint16_t duty = OCR1A;
-    uint16_t Max  = MotorPWM_Get_Max();
-    return ( ( duty / Max ) * MAX_DUTY );
+    return ( ( OCR1A / MotorPWM_Get_Max() ) * 100 );
 }
 
 /**
