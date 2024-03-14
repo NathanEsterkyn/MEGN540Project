@@ -56,5 +56,6 @@ Filter_Data_t voltage_filter; // create a filter for the voltage values
 static const int16_t MAX_DUTY = 100; // maximum duty cycle value
 //void Set_PWM_Value(float unused);
 //void Stop_PWM(float unused);
+void Send_System_Data(float unused);
 bool Battery_Check(float unused);
 #endif

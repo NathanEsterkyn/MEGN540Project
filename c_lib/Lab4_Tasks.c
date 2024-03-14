@@ -29,7 +29,7 @@ void Stop_PWM(float unused) {
     USB_Send_Byte(command); // send USB message
 }
 **/
-void Send_System_data(float unused) {
+void Send_System_Data(float unused) {
     char command;
     float runPeriod = task_send_system_data.run_period;
     if(runPeriod<0){ // detects whether the command was 'q' or 'Q'
