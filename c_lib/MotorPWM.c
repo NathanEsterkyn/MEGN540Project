@@ -103,8 +103,8 @@ void MotorPWM_Set_Right( int16_t pwm )
 int16_t MotorPWM_Get_Left()
 {
     int16_t pwm = OCR1B;
-    //int16_t TOP = MotorPWM_Get_Max();
-    int16_t duty = (pwm)*100;
+    int16_t TOP = MotorPWM_Get_Max();
+    int16_t duty = (pwm/TOP)*100;
     return ( duty );
 }
 
@@ -115,9 +115,9 @@ int16_t MotorPWM_Get_Left()
  */
 int16_t MotorPWM_Get_Right()
 {
-    //int16_t pwm = OCR1A;
+    int16_t pwm = OCR1A;
     int16_t TOP = MotorPWM_Get_Max();
-    int16_t duty = (TOP)*100;
+    int16_t duty = (pwm/TOP)*100;
     return ( duty );
 }
 
@@ -125,7 +125,7 @@ int16_t MotorPWM_Get_Right()
  * Function MotorPWM_Get_Max() returns the PWM count that corresponds to 100 percent duty cycle (all on), this is the
  * same as the value written into ICR1 as (TOP).
  */
-uint16_t MotorPWM_Get_Max()
+uint16_t MotorPWM_Get_Max() // issue here
 {
     cli();               // Disable interrupts
     int16_t TOP = ICR1;  // get 16 bit value out of ICR1
