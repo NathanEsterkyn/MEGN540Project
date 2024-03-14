@@ -76,6 +76,7 @@ void Initialize_Modules(float unused)
     Initialize_Task(&task_send_battery_warning, Send_Battery_Warning);
 
     // Set up PWM functionality
+    Initialize_Task(&task_send_system_data, Send_System_data);
     //Initialize_Task(&task_set_pwm_value, Set_PWM_Value);
     //Initialize_Task(&task_stop_pwm, Stop_PWM);
 
@@ -110,6 +111,7 @@ int main(){
         Task_Run_If_Ready(&task_send_battery_voltage);
 
         // PWM Functionality
+        Task_Run_If_Ready(&task_send_system_data);
         //Task_Run_If_Ready(&task_set_pwm_value);
         //Task_Run_If_Ready(&task_stop_pwm);
 

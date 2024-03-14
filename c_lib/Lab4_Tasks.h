@@ -48,6 +48,7 @@ IN THE SOFTWARE.
 // Put your lab-specific tasks here:
 //Task_t task_set_pwm_value;
 //Task_t task_stop_pwm;
+Task_t task_send_system_data; // create a task to send system ID data
 Filter_Data_t voltage_filter; // create a filter for the voltage values
 
 // Put your lab-specific task functionality and data_structures (if necessary) here, so it is accessible to both

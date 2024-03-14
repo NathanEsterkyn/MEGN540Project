@@ -1,7 +1,7 @@
 #include "Lab4_Tasks.h"
 #include "Filter.h"
 /**
-void Set_PWM_Value(float unused){
+void Set_PWM_Value(float unused) {
     char command;
     float runPeriod = task_set_pwm_value.run_period; // make a task for setting the PWM value
     if(runPeriod<0){ // detects whether the command was 'p' or 'P'
@@ -18,7 +18,7 @@ void Set_PWM_Value(float unused){
     USB_Send_Msg("cff", command, &data, sizeof(data)); // send USB message
 }
 
-void Stop_PWM(float unused){
+void Stop_PWM(float unused) {
     char command;
     float runPeriod = task_stop_pwm.run_period; // make a task for setting the PWM value
     if(runPeriod<0){ // detects whether the command was 's' or 'S'
@@ -29,7 +29,32 @@ void Stop_PWM(float unused){
     USB_Send_Byte(command); // send USB message
 }
 **/
-bool Battery_Check(float unused){
+void Send_System_data(float unused) {
+    char command;
+    float runPeriod = task_send_system_data.run_period;
+    if(runPeriod<0){ // detects whether the command was 'q' or 'Q'
+        command = 'q';
+    }else{
+        command = 'Q';
+    }
+    struct{ // structure to store encoder values
+        float Time;
+        int16_t PWM_L;
+        int16_t PWM_R;
+        int16_t Encoder_L;
+        int16_t Encoder_R;
+    }data;
+
+    data.Time = Timing_Get_Time_Sec();
+    data.PWM_L = MotorPWM_Get_Left();
+    data.PWM_R = MotorPWM_Get_Right();
+    data.Encoder_L = Encoder_Counts_Left(); // write to structure using functions
+    data.Encoder_R = Encoder_Counts_Right();
+
+    USB_Send_Msg("cf4h", command, &data, sizeof(data)); // send USB message
+}
+
+bool Battery_Check(float unused) {
     float voltage = Filter_Value(&voltage_filter, Battery_Voltage());
     if (voltage < 1.0){
         struct __attribute__((__packed__)) {

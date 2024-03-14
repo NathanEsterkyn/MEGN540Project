@@ -293,25 +293,27 @@ void Task_Message_Handling( float _time_since_last )
         case 'q':
             if( USB_Msg_Length() == _Message_Length( 'q' ) ) {
                 USB_Msg_Get();  // removes the first character from the received buffer
-                // Send system identification data back to host.
-                // (total msg length is 16 bytes to fit one endpoint)
-                // time(s) PWM_L PWM_R Encoder_L Encoder_R [float] [int16_t] [int16_t] [int16_t] [int16_t]
+                Task_Activate( &task_send_system_data, -1 );  // sends the system ID data once
                 command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
         case 'Q':
             if( USB_Msg_Length() >= _Message_Length( 'Q' ) ) {
 
-                USB_Msg_Get();                            // removes the first character from the received buffer
-                struct __attribute__( ( __packed__ ) ) {  // creates a struct for the received unsigned int/float values
-                    float X;
-                } data;
-                USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received integers/float
-                // Send the system identification information (above) back to the host every X milliseconds
-                // (as specified in the second float). If this float is zero or negative, then the repeat
-                // send request is canceled.
-                command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
-            }
+                 USB_Msg_Get();                            // removes the first character from the received buffer
+                 struct __attribute__( ( __packed__ ) ) {  // creates a struct for the received float
+                     float Time;
+                 } data;
+                 USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received float
+
+                 if( data.Time <= 0 ) {  // if the float received is <= 0, cancel the task
+                     Task_Cancel( &task_send_system_data );
+                     command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
+                     break;
+                 }
+                 Task_Activate( &task_send_system_data, data.Time );  // sends the current encoder value at requested interval [us]
+                 command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
+             }
             break;
         default:                   // case for unknown command character (unknown operator)
             USB_Msg_Get();         // clears the unknown operator
