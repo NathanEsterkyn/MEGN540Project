@@ -1,6 +1,6 @@
 #include "Lab4_Tasks.h"
 #include "Filter.h"
-
+/**
 void Set_PWM_Value(float unused){
     char command;
     float runPeriod = task_set_pwm_value.run_period; // make a task for setting the PWM value
@@ -28,7 +28,7 @@ void Stop_PWM(float unused){
     }
     USB_Send_Byte(command); // send USB message
 }
-
+**/
 bool Battery_Check(float unused){
     float voltage = Filter_Value(&voltage_filter, Battery_Voltage());
     if (voltage < 1.0){

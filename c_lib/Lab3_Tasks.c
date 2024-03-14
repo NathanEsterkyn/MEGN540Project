@@ -35,7 +35,7 @@ void Send_Battery_Voltage(float unused){
 void Check_Battery_Voltage(float unused){ // check the filtered voltage value (should run constantly)
     float voltage = Filter_Value(&voltage_filter, Battery_Voltage());
     if (voltage > LOW_BATTERY_THRESHOLD_SW_OFF && voltage < LOW_BATTERY_THRESHOLD_SW_ON){
-        Task_Activate( &task_send_battery_warning, 1000 ); // Send_Battery_Warning(0.0);
+        Task_Activate( &task_send_battery_warning, 1000 ); // send battery warning every second
     }
     else {
         Task_Cancel( &task_send_battery_warning );
@@ -44,8 +44,6 @@ void Check_Battery_Voltage(float unused){ // check the filtered voltage value (s
 
 void Send_Battery_Warning(float unused){ // send the battery low message (should run every 1000ms)
     float voltage = Filter_Value(&voltage_filter, Battery_Voltage());
-    //Time_t startTime = Timing_Get_Time();
-    //if ( Timing_Seconds_Since(&startTime) >= 1000 )
     struct __attribute__((__packed__)) {
         char let[7];
         float volt;

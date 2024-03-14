@@ -93,7 +93,6 @@ void Initialize_Modules(float unused)
 
     // Activate battery check task to run continuously and warning task to run every second
     Task_Activate(&task_check_battery_voltage,0);
-    Task_Activate(&task_send_battery_warning,1000);
 
 }
 
