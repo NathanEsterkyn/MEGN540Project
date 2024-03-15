@@ -127,6 +127,7 @@ int16_t MotorPWM_Get_Right()
  */
 uint16_t MotorPWM_Get_Max() // issue here
 {
+    int16_t TOP = 0x0000;
     cli();               // Disable interrupts
     TOP = ICR1;          // get 16 bit value out of ICR1
     sei();               // Re-enable interrupts
