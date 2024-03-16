@@ -65,9 +65,9 @@ void Initialize_Encoders()
     // setting up the pin change enable mask register
     PCMSK0 |= (1 << PCINT4); // bit 4 - enable pin change interrupt on pin 4
     // setting up the pin change interrupt flag register
-    PCIFR |=(1<<PCIF0); // bit 0 - set to high when an interrupt request is detected
+    PCIFR |= (1 << PCIF0); // bit 0 - set to high when an interrupt request is detected
     // setting up the external interrupt flag register
-    EIFR|=(INTF6); // bit 6 - flag raised when an interrupt is detected on INT6
+    EIFR|= (INTF6); // bit 6 - flag raised when an interrupt is detected on INT6
     // setting up the external interrupt control register B
     EICRB |= (1 << ISC60); // bit 4 - Set INT6 to trigger on any logic change
     // setting up the external interrupt mask register
@@ -81,6 +81,7 @@ void Initialize_Encoders()
     _last_left_A   = Left_A();
     _last_left_B   = Left_A();
     _last_left_XOR = Left_XOR();
+    _last_right_XOR = Right_XOR();
 
     _left_counts  = 0;
     _right_counts = 0;
@@ -137,35 +138,40 @@ float Encoder_Rad_Right()
  * the Pin Change Interrupts can trigger for multiple pins.
  * @return
  */
-ISR(PCINT0_vect)
+ISR( PCINT0_vect )
 {
-    if( bit_is_set(PINB, PB4)){
-        if(_last_left_XOR){
-            if(bit_is_set(PINE, PE2)){
-                _left_counts++;
+    /**    if( bit_is_set(PINB, PB4)){
+            if(_last_left_XOR){
+                if(bit_is_set(PINE, PE2)){
+                    _left_counts++;
+                }
+                else{
+                    _left_counts--;
+                }
             }
             else{
-                _left_counts--;
+                if(bit_is_set(PINE, PE2)){
+                    _left_counts--;
+                }
+                else{
+                    _left_counts++;
+                }
             }
+            _last_left_XOR = !_last_left_XOR;
         }
-        else{
-            if(bit_is_set(PINE, PE2)){
-                _left_counts--;
-            }
-            else{
-                _left_counts++;
-            }
-        }
-        _last_left_XOR = !_last_left_XOR;
     }
+    **/
+    _left_counts += ( Left_A() ^ _last_left_B ) - ( _last_left_A ^ Left_B() );
+    _last_left_B = Left_B();
+    _last_left_A = Left_A();
 }
-
 /**
  * Interrupt Service Routine for the right Encoder.
  * @return
  */
-ISR(INT6_vect)
+ISR( INT6_vect )
 {
+    /**
     if( bit_is_set( PINE, PE6 ) ) {
         if( _last_right_A ) {
             if( bit_is_set( PINF, PF0 ) ) {
@@ -182,4 +188,8 @@ ISR(INT6_vect)
         }
         _last_right_A = !_last_right_A;
     }
+    **/
+    _right_counts += ( Right_A() ^ _last_left_B ) - ( _last_right_A ^ Right_B() );
+    _last_right_B = Right_B();
+    _last_right_A = Right_A();
 }
