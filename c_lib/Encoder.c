@@ -9,6 +9,7 @@ static volatile bool _last_right_B = 0;  // Static limits it's use to this file
 static volatile bool _last_left_A   = 0;  // Static limits it's use to this file
 static volatile bool _last_left_B   = 0;  // Static limits it's use to this file
 static volatile bool _last_left_XOR = 0;  // Necessary to check if PB4 triggered the ISR or not
+static volatile bool _last_right_XOR = 0;  // Necessary to check if PB4 triggered the ISR or not
 
 static volatile int32_t _left_counts  = 0;  // Static limits it's use to this file
 static volatile int32_t _right_counts = 0;  // Static limits it's use to this file
