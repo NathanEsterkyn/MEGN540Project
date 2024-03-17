@@ -105,7 +105,7 @@ int16_t MotorPWM_Get_Left()
     //int16_t pwm = OCR1B;
     //int16_t TOP = MotorPWM_Get_Max();
     //int16_t duty = (pwm/TOP)*100;
-    //return ( 100.0 * ( (1.0 * OCR1B) / MotorPWM_Get_Max() ) );
+    //return ( 100.0 * ( (1.0 * OCR1B) / MotorPWM_Get_Max() ) );// this works
     if bit_is_set( PORTB, PORTB2 ) {
         return (-OCR1B);
     }
