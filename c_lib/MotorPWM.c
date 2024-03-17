@@ -54,7 +54,7 @@ void MotorPWM_Enable( bool enable )
  */
 bool MotorPWM_Is_Enabled()
 {
-    if bit_is_set( TCCR1A, COM1A1 ) { // use bit_is_set function to access register state for OC1A
+    if( bit_is_set( TCCR1A, COM1A1 ) ){ // use bit_is_set function to access register state for OC1A
         return true;
     } else {
         return false;
@@ -106,7 +106,12 @@ int16_t MotorPWM_Get_Left()
     //int16_t TOP = MotorPWM_Get_Max();
     //int16_t duty = (pwm/TOP)*100;
     //return ( 100.0 * ( (1.0 * OCR1B) / MotorPWM_Get_Max() ) );
-    return (OCR1B);
+    if bit_is_set( PORTB, PORTB2 ) {
+        return (-OCR1B);
+    }
+    else {
+        return (OCR1B);
+    }
 }
 
 /**
@@ -120,7 +125,12 @@ int16_t MotorPWM_Get_Right()
     //int16_t TOP = MotorPWM_Get_Max();
     //int16_t duty = (pwm/TOP)*100;
     //return ( 100.0 * ( (1.0 * OCR1A) / MotorPWM_Get_Max() ) );
-    return (OCR1A);
+    if bit_is_set( PORTB, PORTB1 ) {
+        return (-OCR1A);
+    }
+    else {
+        return (OCR1A);
+    }
 }
 
 /**
