@@ -46,16 +46,14 @@ IN THE SOFTWARE.
 #include "MotorPWM.h"
 
 // Put your lab-specific tasks here:
-//Task_t task_set_pwm_value;
-//Task_t task_stop_pwm;
 Task_t task_send_system_data; // create a task to send system ID data
 Filter_Data_t voltage_filter; // create a filter for the voltage values
 
 // Put your lab-specific task functionality and data_structures (if necessary) here, so it is accessible to both
 // message handling and the Lab main loops.
 static const int16_t MAX_DUTY = 100; // maximum duty cycle value
-//void Set_PWM_Value(float unused);
-//void Stop_PWM(float unused);
-void Send_System_Data(float unused);
-bool Battery_Check(float unused);
+static const float POWER_OFF = 1.0; // power off lower voltage limit
+static const float LOW_POWER = 3.6; // Low battery lower voltage limit
+void Send_System_Data(float unused); // function for system ID
+bool Battery_Check(float unused); // function to verify battery before running motors
 #endif

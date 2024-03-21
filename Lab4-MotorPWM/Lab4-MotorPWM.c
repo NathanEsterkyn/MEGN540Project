@@ -51,7 +51,7 @@ void Initialize_Modules(float unused)
     Initialize_Timing();
     Initialize_Encoders();
     Initialize_Battery_Monitor();
-    Initialize_MotorPWM(1000); // lower TOP value = higher PWM freq
+    Initialize_MotorPWM(1000); // lower TOP value = higher PWM freq - 1000 = 8kHz
 
     // Set up voltage filter
     float den[] = {1, -1.8669, 0.8752};
@@ -77,8 +77,6 @@ void Initialize_Modules(float unused)
 
     // Set up PWM functionality
     Initialize_Task(&task_send_system_data, Send_System_Data);
-    //Initialize_Task(&task_set_pwm_value, Set_PWM_Value);
-    //Initialize_Task(&task_stop_pwm, Stop_PWM);
 
     // Set up task message handling watchdog
     Initialize_Task( &task_message_handling_watchdog, Task_Message_Handling_Watchdog );
@@ -112,8 +110,6 @@ int main(){
 
         // PWM Functionality
         Task_Run_If_Ready(&task_send_system_data);
-        //Task_Run_If_Ready(&task_set_pwm_value);
-        //Task_Run_If_Ready(&task_stop_pwm);
 
         if (!task_message_handling_watchdog.is_active){ // if the message handling watchdog isn't active (message timeout functionality)
             Task_Activate(&task_message_handling_watchdog,250); // activate message handling watchdog to run every 0.25 seconds (250 ms)

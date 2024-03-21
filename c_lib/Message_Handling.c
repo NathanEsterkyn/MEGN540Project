@@ -259,19 +259,14 @@ void Task_Message_Handling( float _time_since_last )
                     float Time;
                 } data;
                 USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received integers/float
-                // Set the PWM command for the left (first) and right (second) side with the sign indicating
-                // direction, if power is in acceptable range. The following float provides the duration in ms
-                // to have the PWM at the specified value, return to 0 PWM (stopped) once that time duration is
-                // reached.
-                Time_t timeStart = Timing_Get_Time();
-
+                Time_t timeStart = Timing_Get_Time(); // get the current time
                 if( Battery_Check( 0.0 ) ) {                 // if the battery is of an acceptable voltage
-                    while( Timing_Seconds_Since(&timeStart) <= ( data.Time * 0.001 ) ) {
+                    while( Timing_Seconds_Since(&timeStart) <= ( data.Time * 0.001 ) ) { // for the time requested
                         MotorPWM_Enable( true );                    // enable motors
                         MotorPWM_Set_Left( data.Left );             // set left motor PWM value
                         MotorPWM_Set_Right( data.Right );            // set right motor PWM vale
                     }
-                    MotorPWM_Enable( false );
+                    MotorPWM_Enable( false );   // disable motors
                 }
                 command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
             }
@@ -311,7 +306,7 @@ void Task_Message_Handling( float _time_since_last )
                      command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
                      break;
                  }
-                 Task_Activate( &task_send_system_data, data.Time );  // sends the current encoder value at requested interval [us]
+                 Task_Activate( &task_send_system_data, data.Time );  // sends the current encoder value at requested interval [ms]
                  command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
              }
             break;

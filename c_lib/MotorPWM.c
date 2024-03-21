@@ -73,7 +73,7 @@ void MotorPWM_Set_Left( int16_t pwm )
             OCR1B = ( pwm ); // sets output compare register, triggers interrupt when TCNT1 == pwm
         } else {
             PORTB |= ( 1 << PORTB2 );  // if pwm is negative - backwards
-            OCR1B = -( pwm );
+            OCR1B = -( pwm ); // sets output compare register
         }
     }
 }
@@ -90,7 +90,7 @@ void MotorPWM_Set_Right( int16_t pwm )
             OCR1A = ( pwm ); // sets output compare register, triggers interrupt when TCNT1 == pwm
         } else {
             PORTB |= ( 1 << PORTB1 );  // if pwm is negative - backwards
-            OCR1A = -( pwm );
+            OCR1A = -( pwm ); // sets output compare register
         }
     }
 }
@@ -102,15 +102,12 @@ void MotorPWM_Set_Right( int16_t pwm )
  */
 int16_t MotorPWM_Get_Left()
 {
-    //int16_t pwm = OCR1B;
-    //int16_t TOP = MotorPWM_Get_Max();
-    //int16_t duty = (pwm/TOP)*100;
-    //return ( 100.0 * ( (1.0 * OCR1B) / MotorPWM_Get_Max() ) );// this works
+    //return ( 100.0 * ( (1.0 * OCR1B) / MotorPWM_Get_Max() ) ); // this works to send a duty cycle value 0-100%
     if bit_is_set( PORTB, PORTB2 ) {
-        return (-OCR1B);
+        return (-OCR1B); // if motors are spinning backwards - send a negative value
     }
     else {
-        return (OCR1B);
+        return (OCR1B); // send PWM value
     }
 }
 
@@ -121,15 +118,12 @@ int16_t MotorPWM_Get_Left()
  */
 int16_t MotorPWM_Get_Right()
 {
-    //int16_t pwm = OCR1A;
-    //int16_t TOP = MotorPWM_Get_Max();
-    //int16_t duty = (pwm/TOP)*100;
-    //return ( 100.0 * ( (1.0 * OCR1A) / MotorPWM_Get_Max() ) );
+    //return ( 100.0 * ( (1.0 * OCR1A) / MotorPWM_Get_Max() ) ); // this works to send a duty cycle value 0-100%
     if bit_is_set( PORTB, PORTB1 ) {
-        return (-OCR1A);
+        return (-OCR1A); // if motors are spinning backwards - send a negative value
     }
     else {
-        return (OCR1A);
+        return (OCR1A); // send PWM value
     }
 }
 
