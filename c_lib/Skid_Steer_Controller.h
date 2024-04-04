@@ -42,7 +42,7 @@ typedef struct {
     Controller_t controller_left;   // Z-Transform Controller for the left-side drive
     Controller_t controller_right;  // Z-Transform Controller for the right-side drive
 
-    float wheel_base_width;             // The left-to-right seporation distance between the two side's drive wheels
+    float wheel_base_width;             // The left-to-right separation distance between the two side's drive wheels
     float conversion_speed_to_control;  // Relates the linear tangential speed of the left-side or right-side wheel to the motor speed being controlled
     float max_abs_control;              // The maximum control that can be applied, to enable control saturation
 
@@ -64,36 +64,36 @@ typedef struct {
     float ( *measurement_left_fcn_ptr )( void );   // function pointer to a function that provides a measurement for the left-side's drive angular measurement
     float ( *measurement_right_fcn_ptr )( void );  // function pointer to a function that provides a measurement for the right-side's drive angular measurement
 
-    void ( *control_left_fcn_ptr )( float );   // function pointer to a function that alows a left-side drive control to be specified
-    void ( *control_right_fcn_ptr )( float );  // function pointer to a function that alows a right-side drive control to be specified
+    void ( *control_left_fcn_ptr )( float );   // function pointer to a function that allows a left-side drive control to be specified
+    void ( *control_right_fcn_ptr )( float );  // function pointer to a function that allows a right-side drive control to be specified
 
 } Skid_Steer_Controller_t;
 
 /**
- * @brief Initialize_Skid_Steer initializes the skid steer object thats statically created in the c file
+ * @brief Initialize_Skid_Steer initializes the skid steer object that is statically created in the c file
  *
  * @param z_transform_numerator the controller's z-transform numerator
  * @param z_transform_denominator the controller's z-transform denominator
  * @param z_transform_order the controller's order
- * @param descritization_period the period used to descritize the z-transform coefficients
+ * @param discretization_period the period used to discretize the z-transform coefficients
  * @param error_to_control_gain the conversion from error (counts? or rad?) to control (pwm?) for the controller
- * @param max_abs_control the absolute valued maximum control for satruation in control units (pwm?)
- * @param wheel_base_width the axel-width between treds to help convert from left-right imballance to car rotation
+ * @param max_abs_control the absolute valued maximum control for saturation in control units (pwm?)
+ * @param wheel_base_width the axel-width between treads to help convert from left-right imbalance to car rotation
  * @param wheel_diameter  the diameter of the wheels to convert from wheel rotation to translation
  *
  * // Optional function pointers to assist with making this code more generic
  * @param measurement_left_fcn_ptr a function pointer to the left-side measurement
  * @param measurement_right_fcn_ptr a function pointer to the right-side measurement
  * @param control_left_fcn_ptr a function pointer to the left side's control application
- * @param control_right_fcn_ptr a founction pointer to the right side's control applicaion
+ * @param control_right_fcn_ptr a function pointer to the right side's control application
  */
 void Initialize_Skid_Steer( Skid_Steer_Controller_t* p_skid_steer, float* z_transform_numerator, float* z_transform_denominator, uint8_t z_transform_order,
-                            float descritization_period, float error_to_control_gain, float max_abs_control, float wheel_base_width, float wheel_diameter,
+                            float discretization_period, float error_to_control_gain, float max_abs_control, float wheel_base_width, float wheel_diameter,
                             float ( *measurement_left_fcn_ptr )( void ), float ( *measurement_right_fcn_ptr )( void ), void ( *control_left_fcn_ptr )( float ),
                             void ( *control_right_fcn_ptr )( float ) );
 
 /**
- * @brief Skid_Steer_Command_Displacement sets a new target diplacment for the robot to execute. This is a relative displacment to the current position, not an
+ * @brief Skid_Steer_Command_Displacement sets a new target displacement for the robot to execute. This is a relative displacement to the current position, not an
  * absolute target.
  *
  * @param linear The arc-length to travel (m)

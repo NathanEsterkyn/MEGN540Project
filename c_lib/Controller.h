@@ -20,7 +20,7 @@
 
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -65,7 +65,7 @@ void Controller_Set_Target_Velocity( Controller_t* p_cont, float vel );
  * Function Controller_Set_Target_Position sets the target postion for the 
  * controller, this also sets the target velocity to 0.
  */
-void Controller_Set_Target_Position( Controller_t* p_cont, float vel );
+void Controller_Set_Target_Position( Controller_t* p_cont, float pos );
 
 /**
  * Function Controller_Update takes in a new measurement and returns the

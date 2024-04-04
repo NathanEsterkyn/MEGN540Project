@@ -20,7 +20,7 @@
 
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
@@ -29,7 +29,7 @@
 */
 
 /*
- * This file defines lab-spcific tasks for execution
+ * This file defines lab-specific tasks for execution
  */
 
 #ifndef LAB5_TASKS_H
@@ -38,13 +38,13 @@
 #include "Task_Management.h"
 
 // Include your lab-specific headers here
-// e.g. #include "SerialIO.h"  // necessary for sending arithmatic results back to user
+// e.g. #include "SerialIO.h"  // necessary for sending arithmetic results back to user
 
 // Put your lab-specific tasks here
-// e.g. Task_t task_restart;  ///<-- Lab 1: This flag indicates that the device received a restart command from the hoast. Default inactive.
+// e.g. Task_t task_restart;  ///<-- Lab 1: This flag indicates that the device received a restart command from the host. Default inactive.
 
-// Put your lab-specific task functionality and data_structures (if necessary) here so it is accessable to both
-// message handeling and the Lab main loops.
+// Put your lab-specific task functionality and data_structures (if necessary) here so it is accessible to both
+// message handling and the Lab main loops.
 // e.g. void Send_Time_Now( float _time_since_last );
 
 #endif  // ifndef LAB5_TASKS_H

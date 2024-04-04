@@ -310,6 +310,74 @@ void Task_Message_Handling( float _time_since_last )
                  command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
              }
             break;
+        case 'd':
+            if( USB_Msg_Length() >= _Message_Length( 'd' ) ) {
+
+                 USB_Msg_Get();                            // removes the first character from the received buffer
+                 struct __attribute__( ( __packed__ ) ) {  // creates a struct for the received floats
+                     float Lin;
+                     float Ang;
+                 } data;
+                 USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
+                 // sets the linear and angular distance
+                 //Task_Activate( &task_send_system_data, data.Time );  // sends the current encoder value at requested interval [ms]
+                 command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
+        case 'D':
+            if( USB_Msg_Length() >= _Message_Length( 'D' ) ) {
+
+                 USB_Msg_Get();                            // removes the first character from the received buffer
+                 struct __attribute__( ( __packed__ ) ) {  // creates a struct for the received floats
+                     float Lin;
+                     float Ang;
+                     float Time;
+                 } data;
+                 USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
+
+                 if( data.Time <= 0 ) {  // if the time received is <= 0, cancel the task
+                     //Task_Cancel( &task_send_system_data );
+                     command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
+                     break;
+                 }
+                 //Task_Activate( &task_send_system_data, data.Time );  // sends the current encoder value at requested interval [ms]
+                 command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
+        case 'v':
+            if( USB_Msg_Length() >= _Message_Length( 'v' ) ) {
+
+                 USB_Msg_Get();                            // removes the first character from the received buffer
+                 struct __attribute__( ( __packed__ ) ) {  // creates a struct for the received floats
+                     float Lin;
+                     float Ang;
+                 } data;
+                 USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
+                 // sets the linear and angular velocities
+                 //Task_Activate( &task_send_system_data, data.Time );  // sends the current encoder value at requested interval [ms]
+                 command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
+        case 'V':
+            if( USB_Msg_Length() >= _Message_Length( 'V' ) ) {
+
+                 USB_Msg_Get();                            // removes the first character from the received buffer
+                 struct __attribute__( ( __packed__ ) ) {  // creates a struct for the received floats
+                     float Lin;
+                     float Ang;
+                     float Time;
+                 } data;
+                 USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
+
+                 if( data.Time <= 0 ) {  // if the float received is <= 0, cancel the task
+                     //Task_Cancel( &task_send_system_data );
+                     command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
+                     break;
+                 }
+                 //Task_Activate( &task_send_system_data, data.Time );  // sends the current encoder value at requested interval [ms]
+                 command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
         default:                   // case for unknown command character (unknown operator)
             USB_Msg_Get();         // clears the unknown operator
             USB_Send_Byte( '?' );  // sends a '?'
