@@ -1,5 +1,4 @@
 #include "Controller.h"
-typedef struct { Filter_Data_t controller; float kp; float target_pos; float target_vel; float update_period;} Controller_t;
 /**
  * Function Initialize_Controller sets up the z-transform based controller for the system.
  */
@@ -7,7 +6,7 @@ void Initialize_Controller(Controller_t* p_cont, float kp, float* num, float* de
 
     p_cont->kp = kp; // set the P gain
     p_cont->update_period = update_period; // set the update period
-    p_cont->controller = Filter_Init( controller, num, den, order ); // create the filter object
+    p_cont->controller = Filter_Init( &controller, num, den, order ); // create the filter object
 }
 
 /**
@@ -33,17 +32,31 @@ void Controller_Set_Target_Position( Controller_t* p_cont, float pos ) {
 float Controller_Update( Controller_t* p_cont, float measurement, float dt ) {
     float* A = p_cont->controller.numerator; // A coefficient
     float* B = p_cont->controller.denominator; // B coefficient
+    float theta_target = 0.0
+
+    float input_last = Filter_Last_Output(&p_cont->controller);
     float output_this = B(0)*measurement + B(1)*input_last + A(1)*Controller_Last(p_cont);
     float output_last = output_this;
-    float input_last = measurement;
+    input_last = measurement;
 
+    if (p_cont->target_vel > 0) {
+        theta_target = p_cont->target_vel*dt;
+    }
+    else {
+        theta_target = p_cont->target_pos;
+    }
+    float U = p_cont->kp*(theta_target - output_this);
+    return U;
 }
 
 /**
  * Function Controller_Last returns the last control command
  */
 float Controller_Last( Controller_t* p_cont) {
-
+    if (rb_length_F(&p_cont->controller.out_list) > 0) { // if there is content in the output buffer
+        return rb_get_F(&p_cont->controller.out_list,0); // get latest filtered value from back of output buffer
+    }
+    return 0;
 }
 
 /**
