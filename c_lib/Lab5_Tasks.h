@@ -39,12 +39,24 @@
 
 // Include your lab-specific headers here
 // e.g. #include "SerialIO.h"  // necessary for sending arithmetic results back to user
+#include "SerialIO.h"  // USB interface for sending results back to user
+#include "Timing.h"    // Timing interface
+#include "Filter.h"
+#include "Battery_Monitor.h"
+#include "MotorPWM.h"
+#include "encoder.h"
+#include "Message_Handling.h"
 
 // Put your lab-specific tasks here
 // e.g. Task_t task_restart;  ///<-- Lab 1: This flag indicates that the device received a restart command from the host. Default inactive.
+Task_t task_send_distance;
+Task_t task_send_velocity;
 
 // Put your lab-specific task functionality and data_structures (if necessary) here so it is accessible to both
 // message handling and the Lab main loops.
 // e.g. void Send_Time_Now( float _time_since_last );
+
+void Send_Distance(float unused);
+void Send_Velocity(float unused);
 
 #endif  // ifndef LAB5_TASKS_H

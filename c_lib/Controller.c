@@ -32,7 +32,7 @@ void Controller_Set_Target_Position( Controller_t* p_cont, float pos ) {
 float Controller_Update( Controller_t* p_cont, float measurement, float dt ) {
     float* A = p_cont->controller.numerator; // A coefficient
     float* B = p_cont->controller.denominator; // B coefficient
-    float theta_target = 0.0
+    float theta_target = 0.0;
 
     float input_last = Filter_Last_Output(&p_cont->controller);
     float output_this = B(0)*measurement + B(1)*input_last + A(1)*Controller_Last(p_cont);
@@ -64,7 +64,7 @@ float Controller_Last( Controller_t* p_cont) {
  * to match the measurement so it starts with zero error.
  */
 void Controller_SetTo(Controller_t* p_cont, float measurement ) {
-
+    Filter_SetTo(&p_cont->controller,measurement);
 }
 
 /**
@@ -72,5 +72,5 @@ void Controller_SetTo(Controller_t* p_cont, float measurement ) {
  * by the desired amount. This is helpful when dealing with wrapping.
  */
 void Controller_ShiftBy(Controller_t* p_cont, float measurement ) {
-
+    Filter_ShiftBy(&p_cont->controller,measurement);
 }

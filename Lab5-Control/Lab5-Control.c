@@ -35,12 +35,14 @@
 #include "Encoder.h"
 #include "Battery_Monitor.h"
 #include "MotorPWM.h"
+#include "controller.h"
 
 // Include Lab Specific Functionality
 #include "Lab1_Tasks.h"
 #include "Lab2_Tasks.h"
 #include "Lab3_Tasks.h"
 #include "Lab4_Tasks.h"
+#include "Lab5_Tasks.h"
 #include "Filter.h"
 
 void Initialize_Modules(float unused)
@@ -78,6 +80,18 @@ void Initialize_Modules(float unused)
     // Set up PWM functionality
     Initialize_Task(&task_send_system_data, Send_System_Data);
 
+    // Set up controllers
+    float denL[] = {1, -0.870776};
+    float numL[] = {2.057436, -1.928212};
+    float denR[] = {1, -0.859936};
+    float numR[] = {3.917527, -3.777463};
+    float kpL = 0.782586;
+    float kpR = 1.021661;
+    Initialize_Controller(&Left_Controller,kpL,numL,denL,1,0.01);
+    Initialize_Controller(&Right_Controller,kpR,numR,denR,1,0.01);
+    Initialize_Task(&task_send_velocity, Send_Velocity);
+    Initialize_Task(&task_send_position, Send_Position);
+
     // Set up task message handling watchdog
     Initialize_Task( &task_message_handling_watchdog, Task_Message_Handling_Watchdog );
 
@@ -109,6 +123,10 @@ int main()
 
         // PWM Functionality
         Task_Run_If_Ready(&task_send_system_data);
+
+        // Control Functionality
+        Task_Run_If_Ready(&task_send_velocity);
+        Task_Run_If_Ready(&task_send_position);
 
         if (!task_message_handling_watchdog.is_active){ // if the message handling watchdog isn't active (message timeout functionality)
             Task_Activate(&task_message_handling_watchdog,250); // activate message handling watchdog to run every 0.25 seconds (250 ms)

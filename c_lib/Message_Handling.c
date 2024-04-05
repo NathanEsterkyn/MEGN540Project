@@ -315,12 +315,14 @@ void Task_Message_Handling( float _time_since_last )
 
                  USB_Msg_Get();                            // removes the first character from the received buffer
                  struct __attribute__( ( __packed__ ) ) {  // creates a struct for the received floats
-                     float Lin;
-                     float Ang;
+                     static float Lin;
+                     static float Ang;
                  } data;
                  USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
                  // sets the linear and angular distance
-                 //Task_Activate( &task_send_system_data, data.Time );  // sends the current encoder value at requested interval [ms]
+                 if( Battery_Check( 0.0 ) ) { // if the battery is good
+                     Task_Activate( &task_send_distance, -1);
+                 }
                  command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
@@ -336,11 +338,17 @@ void Task_Message_Handling( float _time_since_last )
                  USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
 
                  if( data.Time <= 0 ) {  // if the time received is <= 0, cancel the task
-                     //Task_Cancel( &task_send_system_data );
                      command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
                      break;
                  }
-                 //Task_Activate( &task_send_system_data, data.Time );  // sends the current encoder value at requested interval [ms]
+
+                 Time_t timeStart = Timing_Get_Time(); // get the current time
+                 if( Battery_Check( 0.0 ) ) {                 // if the battery is of an acceptable voltage
+                     while( Timing_Seconds_Since(&timeStart) <= ( data.Time * 0.001 ) ) { // for the time requested
+                        Task_Activate( &task_send_distance, -1);
+                     }
+                     Task_Cancel( &task_send_distance);   // disable motors
+                 }
                  command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
