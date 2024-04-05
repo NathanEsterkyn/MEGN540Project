@@ -31,6 +31,11 @@ void Controller_Set_Target_Position( Controller_t* p_cont, float pos ) {
  * new control value.
  */
 float Controller_Update( Controller_t* p_cont, float measurement, float dt ) {
+    float* A = p_cont->controller.numerator; // A coefficient
+    float* B = p_cont->controller.denominator; // B coefficient
+    float output_this = B(0)*measurement + B(1)*input_last + A(1)*Controller_Last(p_cont);
+    float output_last = output_this;
+    float input_last = measurement;
 
 }
 
