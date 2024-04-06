@@ -315,16 +315,19 @@ void Task_Message_Handling( float _time_since_last )
 
                  USB_Msg_Get();                            // removes the first character from the received buffer
                  struct __attribute__( ( __packed__ ) ) {  // creates a struct for the received floats
-                     static float Lin;
-                     static float Ang;
+                     float Lin;
+                     float Ang;
                  } data;
                  USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
                  // sets the linear and angular distance
                  if( Battery_Check( 0.0 ) ) { // if the battery is good
+                     float* tread_data = Skid_Steer( data.Lin, data.Ang, 0 );
+                     Left_Controller.target_pos = tread_data(0);
+                     Right_Controller.target_pos = tread_data(1);
                      // set controller left and right position targets using the controller objects we initialized in the main program
                      // this passes Lin and Ang through. Do the math here to convert Linear and Angular positions into left and right position
                      // targets.
-                     Task_Activate( &task_send_distance, 0.010); // update the controller and run the motors every 10 ms
+                     Task_Activate( &task_send_distance, 10); // update the controller and run the motors every 10 ms
                  }
                  command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
             }

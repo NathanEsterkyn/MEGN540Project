@@ -59,7 +59,7 @@ void Initialize_Modules(float unused)
     float den[] = {1, -1.8669, 0.8752};
     float num[] = {0.0021, 0.0042, 0.0021};
     Filter_Init( &voltage_filter, num, den, 2 );
-    Filter_ShiftBy(&voltage_filter, Battery_Voltage());
+    Filter_ShiftBy( &voltage_filter, Battery_Voltage() );
 
     // Set up task handling
     Initialize_Task( &task_restart, Initialize_Modules /*function pointer to call*/ );
@@ -68,14 +68,14 @@ void Initialize_Modules(float unused)
     Initialize_Task( &task_message_handling, Task_Message_Handling );
 
     // Set up timing functionality
-    Initialize_Task(&task_time_loop, Send_Loop_Time);
-    Initialize_Task(&task_send_time, Send_Time_Now);
+    Initialize_Task( &task_time_loop, Send_Loop_Time );
+    Initialize_Task( &task_send_time, Send_Time_Now );
 
     // Set up encoder and battery voltage functionality
-    Initialize_Task(&task_send_encoder_value, Send_Encoder_Value);
-    Initialize_Task(&task_check_battery_voltage, Check_Battery_Voltage);
-    Initialize_Task(&task_send_battery_voltage, Send_Battery_Voltage);
-    Initialize_Task(&task_send_battery_warning, Send_Battery_Warning);
+    Initialize_Task( &task_send_encoder_value, Send_Encoder_Value );
+    Initialize_Task( &task_check_battery_voltage, Check_Battery_Voltage );
+    Initialize_Task( &task_send_battery_voltage, Send_Battery_Voltage );
+    Initialize_Task( &task_send_battery_warning, Send_Battery_Warning );
 
     // Set up PWM functionality
     Initialize_Task(&task_send_system_data, Send_System_Data);
@@ -87,19 +87,19 @@ void Initialize_Modules(float unused)
     float numR[] = {3.917527, -3.777463};
     float kpL = 0.782586;
     float kpR = 1.021661;
-    Initialize_Controller(&Left_Controller,kpL,numL,denL,1,0.01);
-    Initialize_Controller(&Right_Controller,kpR,numR,denR,1,0.01);
-    Initialize_Task(&task_send_velocity, Send_Velocity);
-    Initialize_Task(&task_send_position, Send_Position);
+    Initialize_Controller( &Left_Controller,kpL,numL,denL,1,0.01 );
+    Initialize_Controller( &Right_Controller,kpR,numR,denR,1,0.01 );
+    Initialize_Task( &task_send_velocity, Send_Velocity );
+    Initialize_Task( &task_send_position, Send_Position );
 
     // Set up task message handling watchdog
     Initialize_Task( &task_message_handling_watchdog, Task_Message_Handling_Watchdog );
 
     // Activate message handling to run continuously
-    Task_Activate(&task_message_handling,0);
+    Task_Activate( &task_message_handling, 0 );
 
     // Activate battery check task to run continuously
-    Task_Activate(&task_check_battery_voltage,0);
+    Task_Activate( &task_check_battery_voltage, 0 );
 }
 int main()
 {

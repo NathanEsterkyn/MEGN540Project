@@ -46,17 +46,21 @@
 #include "MotorPWM.h"
 #include "encoder.h"
 #include "Message_Handling.h"
+#include "Controller.h"
 
 // Put your lab-specific tasks here
 // e.g. Task_t task_restart;  ///<-- Lab 1: This flag indicates that the device received a restart command from the host. Default inactive.
 Task_t task_send_distance;
 Task_t task_send_velocity;
+Controller_t Left_Controller;
+Controller_t Right_Controller;
 
 // Put your lab-specific task functionality and data_structures (if necessary) here so it is accessible to both
 // message handling and the Lab main loops.
 // e.g. void Send_Time_Now( float _time_since_last );
-
+static const float Car_Width = 0.086; // central distance between treads in meters
 void Send_Distance(float unused);
 void Send_Velocity(float unused);
+float* Skid_Steer(float Lin, float Ang, uint8_t ID); // function to convert linear and angular values into tread-specific values
 
 #endif  // ifndef LAB5_TASKS_H
