@@ -5,7 +5,7 @@
 void Initialize_Controller(Controller_t* p_cont, float kp, float* num, float* den, uint8_t order, float update_period) {
     p_cont->kp = kp; // set the P gain
     p_cont->update_period = update_period; // set the update period
-    p_cont->controller = Filter_Init( &controller, num, den, order ); // create the filter object for the controller
+    Filter_Init( &p_cont->controller, num, den, order ); // create the filter object for the controller
 }
 
 /**
