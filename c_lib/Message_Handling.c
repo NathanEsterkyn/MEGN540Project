@@ -322,8 +322,8 @@ void Task_Message_Handling( float _time_since_last )
                  // sets the linear and angular distance
                  if( Battery_Check( 0.0 ) ) { // if the battery is good
                      float* tread_data = Skid_Steer( data.Lin, data.Ang, 0 );
-                     Left_Controller.target_pos = tread_data(0);
-                     Right_Controller.target_pos = tread_data(1);
+                     Controller_Set_Target_Position(Left_Controller, tread_data(0) );
+                     Controller_Set_Target_Position(Right_Controller, tread_data(1) );
                      // set controller left and right position targets using the controller objects we initialized in the main program
                      // this passes Lin and Ang through. Do the math here to convert Linear and Angular positions into left and right position
                      // targets.

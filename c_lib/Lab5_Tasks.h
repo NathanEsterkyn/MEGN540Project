@@ -59,6 +59,9 @@ Controller_t Right_Controller;
 // message handling and the Lab main loops.
 // e.g. void Send_Time_Now( float _time_since_last );
 static const float Car_Width = 0.086; // central distance between treads in meters
+static const float Car_Wheel_Diameter = 0.039; // central distance between treads in meters
+static const float MAX_PWM = 1000;
+static const float pi = 3.14159;
 void Send_Distance(float unused);
 void Send_Velocity(float unused);
 float* Skid_Steer(float Lin, float Ang, uint8_t ID); // function to convert linear and angular values into tread-specific values

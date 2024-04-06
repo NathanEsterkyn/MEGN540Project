@@ -1,9 +1,21 @@
 #include "Lab5_Tasks.h"
 
 void Send_Distance(float unused) {
-    // enable PWM
-    // get a controller value (update)
-    // send the value to the motors
+
+    // Left Motor
+    float left_measurement = Encoder_Rad_Left(); // get a measurement of left motor - radians
+    float left_error = ( Left_Controller.target_pos - ( pi*Car_Wheel_Diameter ) * ( left_measurement/2*pi ) ); // calculate the position error
+    float new_left = Controller_Update( Left_Controller, left_error, Left_Controller.update_period ); // get a new control value from the controller
+    new_left = Saturate(new_left,MAX_PWM); // saturate the controller
+    MotorPWM_Set_Left( new_left ); // set the new left motor PWM value
+
+    // Right Motor
+    float right_measurement = Encoder_Rad_Right();
+    float right_error = ( Right_Controller.target_pos - ( pi*Car_Wheel_Diameter ) * ( right_measurement/2*pi ) );
+    float new_right = Controller_Update( Right_Controller, right_error, Right_Controller.update_period );
+    MotorPWM_Set_Right( new_right );
+
+    MotorPWM_Enable( true ); // enable motors
 }
 
 void Send_Velocity(float unused) {
