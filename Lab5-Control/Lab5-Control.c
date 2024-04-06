@@ -90,7 +90,7 @@ void Initialize_Modules(float unused)
     Initialize_Controller( &Left_Controller,kpL,numL,denL,1,0.01 );
     Initialize_Controller( &Right_Controller,kpR,numR,denR,1,0.01 );
     Initialize_Task( &task_send_velocity, Send_Velocity );
-    Initialize_Task( &task_send_position, Send_Position );
+    Initialize_Task( &task_send_distance, Send_Distance );
 
     // Set up task message handling watchdog
     Initialize_Task( &task_message_handling_watchdog, Task_Message_Handling_Watchdog );

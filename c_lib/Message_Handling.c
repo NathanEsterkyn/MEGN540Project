@@ -321,13 +321,12 @@ void Task_Message_Handling( float _time_since_last )
                  USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
                  // sets the linear and angular distance
                  if( Battery_Check( 0.0 ) ) { // if the battery is good
-                     float* tread_data = Skid_Steer( data.Lin, data.Ang, 0 );
-                     Controller_Set_Target_Position(Left_Controller, tread_data(0) );
-                     Controller_Set_Target_Position(Right_Controller, tread_data(1) );
-                     // set controller left and right position targets using the controller objects we initialized in the main program
-                     // this passes Lin and Ang through. Do the math here to convert Linear and Angular positions into left and right position
-                     // targets.
-                     Task_Activate( &task_send_distance, 10); // update the controller and run the motors every 10 ms
+                     float dist_Left = data.Lin - data.Ang*(Car_Width*0.5); // calculate distance for left to travel
+                     float dist_Right = data.Lin + data.Ang*(Car_Width*0.5); // calculate distance for right to travel
+                     Controller_Set_Target_Position(&Left_Controller, dist_Left ); // set targets based on calculation
+                     Controller_Set_Target_Position(&Right_Controller, dist_Right );
+
+                     Task_Activate( &task_send_distance, Left_Controller.update_period * 1000); // update the controller and run the motors every 10 ms
                  }
                  command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
             }
@@ -367,8 +366,18 @@ void Task_Message_Handling( float _time_since_last )
                      float Ang;
                  } data;
                  USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
-                 // sets the linear and angular velocities
-                 //Task_Activate( &task_send_system_data, data.Time );  // sends the current encoder value at requested interval [ms]
+                 if( Battery_Check( 0.0 ) ) { // if the battery is good
+                     // void* tread_data = Skid_Steer( data.Lin, data.Ang, 0 );
+                     float vel_Left = data.Lin - data.Ang*(Car_Width*0.5);
+                     float vel_Right = data.Lin + data.Ang*(Car_Width*0.5);
+                     // USB_Send_Msg("cff", 'd',  &data, sizeof( data ) );
+                     Controller_Set_Target_Velocity(&Left_Controller, vel_Left );
+                     Controller_Set_Target_Velocity(&Right_Controller, vel_Right );
+                     // set controller left and right position targets using the controller objects we initialized in the main program
+                     // this passes Lin and Ang through. Do the math here to convert Linear and Angular positions into left and right position
+                     // targets.
+                     Task_Activate( &task_send_distance, 10); // update the controller and run the motors every 10 ms
+                 }
                  command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;

@@ -3,10 +3,9 @@
  * Function Initialize_Controller sets up the z-transform based controller for the system.
  */
 void Initialize_Controller(Controller_t* p_cont, float kp, float* num, float* den, uint8_t order, float update_period) {
-
     p_cont->kp = kp; // set the P gain
     p_cont->update_period = update_period; // set the update period
-    p_cont->controller = Filter_Init( &controller, num, den, order ); // create the filter object
+    p_cont->controller = Filter_Init( &controller, num, den, order ); // create the filter object for the controller
 }
 
 /**
@@ -15,6 +14,7 @@ void Initialize_Controller(Controller_t* p_cont, float kp, float* num, float* de
  */
 void Controller_Set_Target_Velocity( Controller_t* p_cont, float vel ) {
     p_cont->target_vel = vel;
+    p_cont->target_pos = 0;
 }
 
 /**
@@ -23,6 +23,7 @@ void Controller_Set_Target_Velocity( Controller_t* p_cont, float vel ) {
  */
 void Controller_Set_Target_Position( Controller_t* p_cont, float pos ) {
     p_cont->target_pos = pos;
+    p_cont->target_vel = 0;
 }
 
 /**
@@ -30,22 +31,18 @@ void Controller_Set_Target_Position( Controller_t* p_cont, float pos ) {
  * new control value.
  */
 float Controller_Update( Controller_t* p_cont, float measurement, float dt ) {
-    float* A = p_cont->controller.numerator; // A coefficient
-    float* B = p_cont->controller.denominator; // B coefficient
-    float theta_target = 0.0;
 
-    float input_last = Filter_Last_Output(&p_cont->controller);
-    float output_this = B(0)*measurement + B(1)*input_last + A(1)*Controller_Last(p_cont);
-    float output_last = output_this;
-    input_last = measurement;
+    float U = 0.0; // initialize a float for the controller output
+    float output_this = Filter_Value( &p_cont->controller, measurement ); // use filter value to apply numerator and denominator values
 
-    if (p_cont->target_vel > 0) {
-        theta_target = p_cont->target_vel*dt;
+    if (p_cont->target_pos == 0) { // if in velocity mode
+        p_cont->target_vel = p_cont->target_vel + p_cont->target_vel*dt;
     }
-    else {
-        theta_target = p_cont->target_pos;
+    else { // else in position mode
+        p_cont->target_pos = p_cont->target_pos;
     }
-    float U = p_cont->kp*(theta_target - output_this);
+
+    U = p_cont->kp*(p_cont->target_pos - output_this); // update final control law
     return U;
 }
 
@@ -53,24 +50,21 @@ float Controller_Update( Controller_t* p_cont, float measurement, float dt ) {
  * Function Controller_Last returns the last control command
  */
 float Controller_Last( Controller_t* p_cont) {
-    if (rb_length_F(&p_cont->controller.out_list) > 0) { // if there is content in the output buffer
-        return rb_get_F(&p_cont->controller.out_list,0); // get latest filtered value from back of output buffer
-    }
-    return 0;
+    return ( Filter_Last_Output( &p_cont->controller) );
 }
 
 /**
  * Function Controller_SettTo sets the Filter's input and output lists
  * to match the measurement so it starts with zero error.
  */
-void Controller_SetTo(Controller_t* p_cont, float measurement ) {
-    Filter_SetTo(&p_cont->controller,measurement);
+void Controller_SetTo( Controller_t* p_cont, float measurement ) {
+    Filter_SetTo( &p_cont->controller, measurement );
 }
 
 /**
  * Function Controller_ShiftBy shifts the Filter's input and output lists
  * by the desired amount. This is helpful when dealing with wrapping.
  */
-void Controller_ShiftBy(Controller_t* p_cont, float measurement ) {
-    Filter_ShiftBy(&p_cont->controller,measurement);
+void Controller_ShiftBy( Controller_t* p_cont, float measurement ) {
+    Filter_ShiftBy( &p_cont->controller, measurement );
 }
