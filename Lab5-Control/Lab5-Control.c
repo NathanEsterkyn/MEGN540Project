@@ -81,10 +81,10 @@ void Initialize_Modules(float unused)
     Initialize_Task(&task_send_system_data, Send_System_Data);
 
     // Set up controllers
-    float denL[] = {1, -0.86};
-    float numL[] = {2.0, -2.0};
-    float denR[] = {1, -0.86};
-    float numR[] = {4.0, -3.0};
+    float denL[] = {1, -0.870776};
+    float numL[] = {2.057436, -1.928212};
+    float denR[] = {1, -0.859936};
+    float numR[] = {3.917527, -3.777463};
     float kpL = 2.0;
     float kpR = 2.0;
     Initialize_Controller( &Left_Controller,kpL,numL,denL,1,0.01 );
