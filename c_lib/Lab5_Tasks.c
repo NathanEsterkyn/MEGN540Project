@@ -14,20 +14,6 @@ void Send_Command(float unused) {
     new_right = Saturate(new_right,MAX_PWM) + Dead_Band_adj;
     MotorPWM_Set_Right( new_right );
 
-    // Anti-whine shutoff
-    /*
-    float ccL = new_left;
-    float lcL = Controller_Last( &Left_Controller );
-    float ccR = new_right;
-    float lcR = Controller_Last( &Right_Controller );
-
-    if ((ccL - lcL) && (ccR - lcR) <= 0.00001 ) {
-        MotorPWM_Set_Left(0);
-        MotorPWM_Set_Right(0);
-        MotorPWM_Enable( false );
-        Task_Cancel( &task_send_command );
-    }
-    */
     // FOR TESTING PURPOSES:
 
     struct __attribute__( ( __packed__ ) ) {
@@ -63,20 +49,3 @@ void Clear_Command(float unused) {
 void Cancel_Command(float unused) {
     Task_Cancel( &task_send_command ); // cancel the task
 }
-
-/*
-float* Skid_Steer(float Lin, float Ang, uint8_t ID) {
-
-    struct __attribute__( ( __packed__ ) ) {  // creates a struct for the received floats
-        float Left;
-        float Right;
-    } skid_steer;
-
-    if (ID == 0) { // ID == 0 for position mode, 1 for velocity mode
-        skid_steer.Left = Lin - Ang*(Car_Width*0.5);
-        skid_steer.Right = Lin + Ang*(Car_Width*0.5);
-    }
-
-    return skid_steer;
-}
- */

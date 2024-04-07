@@ -78,7 +78,7 @@ void Initialize_Modules(float unused)
     Initialize_Task( &task_send_battery_warning, Send_Battery_Warning );
 
     // Set up PWM functionality
-    Initialize_Task(&task_send_system_data, Send_System_Data);
+    Initialize_Task( &task_send_system_data, Send_System_Data );
 
     // Set up controllers
     float denL[] = {1, -0.870776};
@@ -110,20 +110,20 @@ int main()
     for(;;) {  // another way to do while(true)
         Task_USB_Upkeep();
 
-        Task_Run_If_Ready(&task_message_handling); // run message handling if ready
-        Task_Run_If_Ready(&task_restart); // restart if ready
+        Task_Run_If_Ready( &task_message_handling ); // run message handling if ready
+        Task_Run_If_Ready( &task_restart ); // restart if ready
 
         // Timing Functionality
-        Task_Run_If_Ready(&task_send_time);
-        Task_Run_If_Ready(&task_time_loop);
+        Task_Run_If_Ready( &task_send_time );
+        Task_Run_If_Ready( &task_time_loop );
 
         // Encoder and Voltage Functionality
-        Task_Run_If_Ready(&task_send_encoder_value);
-        Task_Run_If_Ready(&task_check_battery_voltage);
-        Task_Run_If_Ready(&task_send_battery_voltage);
+        Task_Run_If_Ready( &task_send_encoder_value );
+        Task_Run_If_Ready( &task_check_battery_voltage );
+        Task_Run_If_Ready( &task_send_battery_voltage );
 
         // PWM Functionality
-        Task_Run_If_Ready(&task_send_system_data);
+        Task_Run_If_Ready( &task_send_system_data );
 
         // Control Functionality
         Task_Run_If_Ready( &task_send_command );
@@ -131,9 +131,9 @@ int main()
         Task_Run_If_Ready( &task_cancel_command );
 
         if (!task_message_handling_watchdog.is_active){ // if the message handling watchdog isn't active (message timeout functionality)
-            Task_Activate(&task_message_handling_watchdog,250); // activate message handling watchdog to run every 0.25 seconds (250 ms)
+            Task_Activate( &task_message_handling_watchdog, 250 ); // activate message handling watchdog to run every 0.25 seconds (250 ms)
         }
-        Task_Run_If_Ready(&task_message_handling_watchdog); // run watchdog if ready
+        Task_Run_If_Ready( &task_message_handling_watchdog ); // run watchdog if ready
     }
     return 0;
 }

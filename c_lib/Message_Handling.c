@@ -355,7 +355,7 @@ void Task_Message_Handling( float _time_since_last )
                  Controller_Set_Target_Position( &Right_Controller, dist_Right );
 
                  if( Battery_Check( 0.0 ) ) { // if the battery is of an acceptable voltage
-                     USB_Send_Msg("cfff", 'D', &data, sizeof(data)); // send USB message
+                     USB_Send_Msg("cfff", 'D', &data, sizeof(data)); // send USB message FOR TESTING
                      Task_Activate( &task_send_command, Left_Controller.update_period * 1000 ); // runs the motors
                      Task_Activate( &task_cancel_command, data.Time ); // cancel the task after the specified time
                  }
@@ -396,18 +396,18 @@ void Task_Message_Handling( float _time_since_last )
                  USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
 
                  if( data.Time <= 0 ) {  // if the float received is <= 0, cancel the task
-                     //Task_Cancel( &task_send_system_data );
+                     Task_Cancel( &task_send_command );
                      command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
                      break;
                  }
 
-                 float vel_Left = data.Lin - data.Ang*(Car_Width*0.5);
-                 float vel_Right = data.Lin + data.Ang*(Car_Width*0.5);
+                 float vel_Left = ( 1000* data.Lin - data.Ang*(Car_Width*0.5) );
+                 float vel_Right = ( 1000* data.Lin + data.Ang*(Car_Width*0.5) );
                  Controller_Set_Target_Velocity(&Left_Controller, vel_Left );
                  Controller_Set_Target_Velocity(&Right_Controller, vel_Right );
 
                  if( Battery_Check( 0.0 ) ) { // if the battery is of an acceptable voltage
-                     USB_Send_Msg("cfff", 'V', &data, sizeof(data)); // send USB message
+                     USB_Send_Msg("cfff", 'V', &data, sizeof(data)); // send USB message FOR TESTING
                      Task_Activate( &task_send_command, Left_Controller.update_period * 1000 ); // runs the motors
                      Task_Activate( &task_cancel_command, data.Time ); // cancel the task after the specified time
                  }
