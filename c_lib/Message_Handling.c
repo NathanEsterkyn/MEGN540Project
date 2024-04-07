@@ -329,7 +329,7 @@ void Task_Message_Handling( float _time_since_last )
                      Task_Activate( &task_send_command, Left_Controller.update_period * 1000 ); // update the controller and run the motors every 10 ms
                  }
                  Task_Activate( &task_clear_command, -1); // clears all the control data and stops the motors
-                 command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
+                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
         case 'D':
@@ -354,9 +354,11 @@ void Task_Message_Handling( float _time_since_last )
                  Controller_Set_Target_Position( &Left_Controller, dist_Left ); // set targets based on calculation
                  Controller_Set_Target_Position( &Right_Controller, dist_Right );
                  Time_t timeStart = Timing_Get_Time(); // get the current time
-
+                 USB_Send_Msg("c3f", 'B',  &data, sizeof( data ) ); // for testing
                  if( Battery_Check( 0.0 ) ) {                 // if the battery is of an acceptable voltage
-                     while( Timing_Seconds_Since( &timeStart ) <= ( data.Time * 0.001 ) ) { // for the time requested
+                     USB_Send_Msg("c3f", 'I',  &data, sizeof( data ) ); // for testing
+                     while( Timing_Seconds_Since( &timeStart ) <= ( data.Time ) ) { // for the time requested
+                        USB_Send_Msg("c3f", 'G',  &data, sizeof( data ) ); // for testing
                         Task_Activate( &task_send_command, Left_Controller.update_period * 1000 );
                      }
                      Task_Cancel( &task_send_command); // disable motors
