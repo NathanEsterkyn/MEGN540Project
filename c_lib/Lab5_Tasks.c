@@ -20,7 +20,10 @@ void Send_Command(float unused) {
     float ccR = new_right;
     float lcR = Controller_Last( &Right_Controller );
 
-    if ((ccL - lcL) + (ccR - lcR) <= 0.1 ) {
+    if ((ccL - lcL) + (ccR - lcR) <= 0.001 ) {
+        MotorPWM_Set_Left(0);
+        MotorPWM_Set_Right(0);
+        MotorPWM_Enable( false );
         Task_Cancel( &task_send_command );
     }
 
