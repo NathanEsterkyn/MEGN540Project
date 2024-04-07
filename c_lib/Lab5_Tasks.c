@@ -39,11 +39,11 @@ void Send_Distance(float unused) {
 
     MotorPWM_Enable( true ); // enable motors
 }
-/*
+
 void Send_Velocity(float unused) {
 
 }
-
+/*
 float* Skid_Steer(float Lin, float Ang, uint8_t ID) {
 
     struct __attribute__( ( __packed__ ) ) {  // creates a struct for the received floats

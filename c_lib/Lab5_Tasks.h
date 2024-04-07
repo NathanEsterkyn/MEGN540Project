@@ -64,6 +64,6 @@ static const float MAX_PWM = 1000;
 static const float pi = 3.14159;
 void Send_Distance(float unused);
 void Send_Velocity(float unused);
-float* Skid_Steer(float Lin, float Ang, uint8_t ID); // function to convert linear and angular values into tread-specific values
+//float* Skid_Steer(float Lin, float Ang, uint8_t ID); // function to convert linear and angular values into tread-specific values
 
 #endif  // ifndef LAB5_TASKS_H
