@@ -344,7 +344,6 @@ void Task_Message_Handling( float _time_since_last )
                  USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
 
                  if( data.Time <= 0 ) {  // if the time received is <= 0, cancel the task
-                     USB_Send_Byte('A'); // for testing
                      Task_Cancel( &task_send_command );
                      command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
                      break;
@@ -355,11 +354,11 @@ void Task_Message_Handling( float _time_since_last )
                  Controller_Set_Target_Position( &Left_Controller, dist_Left ); // set targets based on calculation
                  Controller_Set_Target_Position( &Right_Controller, dist_Right );
                  Time_t timeStart = Timing_Get_Time(); // get the current time
-                 USB_Send_Byte('B'); // for testing
+
                  if( Battery_Check( 0.0 ) ) {                 // if the battery is of an acceptable voltage
-                     USB_Send_Byte('I'); // for testing
+
                      while( Timing_Seconds_Since( &timeStart ) <= ( data.Time * 0.001 ) ) { // for the time requested
-                        USB_Send_Byte('G'); // for testing
+                        USB_Send_Msg("cfff", 'B', &data, sizeof(data)); // send USB message
                         Task_Activate( &task_send_command, Left_Controller.update_period * 1000 );
                      }
                      Task_Cancel( &task_send_command); // disable motors
