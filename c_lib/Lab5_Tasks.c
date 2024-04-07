@@ -36,8 +36,8 @@ void Send_Distance(float unused) {
     data_R.error = Right_Controller.target_pos - right_measurement;
     data_R.PWM = new_right;
 
-    USB_Send_Msg("c3f", 'L',  &data.L, sizeof( data.L ) );
-    USB_Send_Msg("c3f", 'L',  &data.R, sizeof( data.R ) );
+    USB_Send_Msg("c3f", 'L',  &data_L, sizeof( data_L ) );
+    USB_Send_Msg("c3f", 'L',  &data_R, sizeof( data_R ) );
 }
 
 void Send_Velocity(float unused) {
