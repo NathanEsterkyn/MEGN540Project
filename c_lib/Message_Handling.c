@@ -319,12 +319,12 @@ void Task_Message_Handling( float _time_since_last )
                      float Ang;
                  } data;
                  USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
-                 // sets the linear and angular distance
+
                  if( Battery_Check( 0.0 ) ) { // if the battery is good
                      float dist_Left = data.Lin - data.Ang*(Car_Width*0.5); // calculate distance for left to travel
                      float dist_Right = data.Lin + data.Ang*(Car_Width*0.5); // calculate distance for right to travel
-                     Controller_Set_Target_Position(&Left_Controller, dist_Left ); // set targets based on calculation
-                     Controller_Set_Target_Position(&Right_Controller, dist_Right );
+                     Controller_Set_Target_Position( &Left_Controller, dist_Left ); // set targets based on calculation
+                     Controller_Set_Target_Position( &Right_Controller, dist_Right );
 
                      Task_Activate( &task_send_command, Left_Controller.update_period * 1000 ); // update the controller and run the motors every 10 ms
                  }
@@ -343,18 +343,19 @@ void Task_Message_Handling( float _time_since_last )
                  USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
 
                  if( data.Time <= 0 ) {  // if the time received is <= 0, cancel the task
+                     Task_Cancel( &task_send_command );
                      command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
                      break;
                  }
 
                  float dist_Left = data.Lin - data.Ang*(Car_Width*0.5); // calculate distance for left to travel
                  float dist_Right = data.Lin + data.Ang*(Car_Width*0.5); // calculate distance for right to travel
-                 Controller_Set_Target_Position(&Left_Controller, dist_Left ); // set targets based on calculation
-                 Controller_Set_Target_Position(&Right_Controller, dist_Right );
+                 Controller_Set_Target_Position( &Left_Controller, dist_Left ); // set targets based on calculation
+                 Controller_Set_Target_Position( &Right_Controller, dist_Right );
                  Time_t timeStart = Timing_Get_Time(); // get the current time
 
                  if( Battery_Check( 0.0 ) ) {                 // if the battery is of an acceptable voltage
-                     while( Timing_Seconds_Since(&timeStart) <= ( data.Time * 0.001 ) ) { // for the time requested
+                     while( Timing_Seconds_Since( &timeStart ) <= ( data.Time * 0.001 ) ) { // for the time requested
                         Task_Activate( &task_send_command, Left_Controller.update_period * 1000 );
                      }
                      Task_Cancel( &task_send_command); // disable motors
