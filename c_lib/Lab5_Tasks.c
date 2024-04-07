@@ -15,6 +15,7 @@ void Send_Command(float unused) {
     MotorPWM_Set_Right( new_right );
 
     // Anti-whine shutoff
+    /*
     float ccL = new_left;
     float lcL = Controller_Last( &Left_Controller );
     float ccR = new_right;
@@ -26,7 +27,7 @@ void Send_Command(float unused) {
         MotorPWM_Enable( false );
         Task_Cancel( &task_send_command );
     }
-
+    */
     // FOR TESTING PURPOSES:
 
     struct __attribute__( ( __packed__ ) ) {
