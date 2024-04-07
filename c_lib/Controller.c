@@ -33,10 +33,18 @@ void Controller_Set_Target_Position( Controller_t* p_cont, float pos ) {
 float Controller_Update( Controller_t* p_cont, float measurement, float dt ) {
 
     float U = 0.0; // initialize a float for the controller output
-    p_cont->target_pos = p_cont->target_pos + p_cont->target_vel*dt; // statement distinguishes between position and velocity mode
     float output_this = Filter_Value( &p_cont->controller, measurement ); // use filter value to apply numerator and denominator values
 
-    U = p_cont->kp*(p_cont->target_pos - output_this); // update final control law
+    if (p_cont->target_pos == 0) { // if it's in velocity mode
+        p_cont->target_vel = p_cont->target_vel + p_cont->target_vel*dt; // statement distinguishes between position and velocity mode
+        U = p_cont->kp*(p_cont->target_vel - output_this); // update final control law
+
+    }
+    if (p_cont->target_vel == 0) { // if it's in position mode
+        p_cont->target_pos = p_cont->target_pos; // statement distinguishes between position and velocity mode
+        U = p_cont->kp*(p_cont->target_pos - output_this); // update final control law
+    }
+
     return U;
 }
 
