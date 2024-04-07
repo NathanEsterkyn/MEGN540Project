@@ -354,11 +354,11 @@ void Task_Message_Handling( float _time_since_last )
                  Controller_Set_Target_Position( &Left_Controller, dist_Left ); // set targets based on calculation
                  Controller_Set_Target_Position( &Right_Controller, dist_Right );
                  Time_t timeStart = Timing_Get_Time(); // get the current time
-                 USB_Send_Msg("c", 'B'); // for testing
+                 USB_Send_Byte('B'); // for testing
                  if( Battery_Check( 0.0 ) ) {                 // if the battery is of an acceptable voltage
-                     USB_Send_Msg("c", 'I'); // for testing
+                     USB_Send_Byte('I'); // for testing
                      while( Timing_Seconds_Since( &timeStart ) <= ( data.Time ) ) { // for the time requested
-                        USB_Send_Msg("c", 'G'); // for testing
+                        USB_Send_Byte('G'); // for testing
                         Task_Activate( &task_send_command, Left_Controller.update_period * 1000 );
                      }
                      Task_Cancel( &task_send_command); // disable motors
