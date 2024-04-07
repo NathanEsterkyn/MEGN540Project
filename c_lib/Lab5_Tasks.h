@@ -44,7 +44,7 @@
 #include "Filter.h"
 #include "Battery_Monitor.h"
 #include "MotorPWM.h"
-#include "encoder.h"
+#include "Encoder.h"
 #include "Message_Handling.h"
 #include "Controller.h"
 
