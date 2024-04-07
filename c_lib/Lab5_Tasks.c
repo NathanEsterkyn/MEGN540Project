@@ -5,14 +5,14 @@ void Send_Distance(float unused) {
     // Left Motor
     float left_measurement = ( pi*Car_Wheel_Diameter ) * Encoder_Rad_Left()/2*pi; // get a measurement of left motor - radians
     float new_left = Controller_Update( &Left_Controller, left_measurement, Left_Controller.update_period ); // get a new control value from the controller
-    new_left = Saturate(new_left,MAX_PWM); // saturate the controller
-    MotorPWM_Set_Left( new_left + 50 ); // set the new left motor PWM value
+    new_left = Saturate(new_left,MAX_PWM) + Dead_Band_adj; // saturate the controller and adjust for dead band
+    MotorPWM_Set_Left( new_left ); // set the new left motor PWM value
 
     // Right Motor
     float right_measurement = ( pi*Car_Wheel_Diameter ) * Encoder_Rad_Right()/2*pi;
     float new_right = Controller_Update( &Right_Controller, right_measurement, Right_Controller.update_period );
-    new_right = Saturate(new_right,MAX_PWM);
-    MotorPWM_Set_Right( new_right + 50 );
+    new_right = Saturate(new_right,MAX_PWM) + Dead_Band_adj;
+    MotorPWM_Set_Right( new_right );
 
     // FOR TESTING PURPOSES:
 

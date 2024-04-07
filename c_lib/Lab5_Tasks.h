@@ -60,6 +60,7 @@ Controller_t Right_Controller;
 // e.g. void Send_Time_Now( float _time_since_last );
 static const float Car_Width = 0.086; // central distance between treads in meters
 static const float Car_Wheel_Diameter = 0.039; // central distance between treads in meters
+static const float Dead_Band_adj = 50.0;
 static const float MAX_PWM = 1000;
 static const float pi = 3.14159;
 void Send_Distance(float unused);
