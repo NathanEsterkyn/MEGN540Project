@@ -356,12 +356,9 @@ void Task_Message_Handling( float _time_since_last )
                  Time_t timeStart = Timing_Get_Time(); // get the current time
 
                  if( Battery_Check( 0.0 ) ) { // if the battery is of an acceptable voltage
-
-                     while( Timing_Seconds_Since( &timeStart ) <= ( data.Time * 0.001 ) ) { // for the time requested
-                        USB_Send_Msg("cfff", 'B', &data, sizeof(data)); // send USB message
-                        Task_Activate( &task_send_command, Left_Controller.update_period * 1000 );
-                     }
-                     Task_Cancel( &task_send_command); // disable motors
+                     USB_Send_Msg("cfff", 'D', &data, sizeof(data)); // send USB message
+                     Task_Activate( &task_send_command, Left_Controller.update_period * 1000 ); // runs the motors
+                     Task_Activate( &task_clear_command, data.Time ); // cancel the task after the specified time
                  }
                  Task_Activate( &task_clear_command, -1); // clears all the control data and stops the motors
                  command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
@@ -410,11 +407,10 @@ void Task_Message_Handling( float _time_since_last )
                  Controller_Set_Target_Velocity(&Right_Controller, vel_Right );
                  Time_t timeStart = Timing_Get_Time(); // get the current time
 
-                 if( Battery_Check( 0.0 ) ) {                 // if the battery is of an acceptable voltage
-                     while( Timing_Seconds_Since(&timeStart) <= ( data.Time * 0.001 ) ) { // for the time requested
-                        Task_Activate( &task_send_command, Left_Controller.update_period * 1000 );
-                     }
-                     Task_Cancel( &task_send_command);
+                 if( Battery_Check( 0.0 ) ) { // if the battery is of an acceptable voltage
+                     USB_Send_Msg("cfff", 'V', &data, sizeof(data)); // send USB message
+                     Task_Activate( &task_send_command, Left_Controller.update_period * 1000 ); // runs the motors
+                     Task_Activate( &task_clear_command, data.Time ); // cancel the task after the specified time
                  }
                  Task_Activate( &task_clear_command, -1); // clears all the control data and stops the motors
                  command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
