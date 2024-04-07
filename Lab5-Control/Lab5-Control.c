@@ -35,7 +35,7 @@
 #include "Encoder.h"
 #include "Battery_Monitor.h"
 #include "MotorPWM.h"
-#include "controller.h"
+#include "Controller.h"
 
 // Include Lab Specific Functionality
 #include "Lab1_Tasks.h"
