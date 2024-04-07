@@ -47,5 +47,6 @@ void Clear_Command(float unused) {
 }
 
 void Cancel_Command(float unused) {
+    Initialize_Encoders(); // resets the encoders
     Task_Cancel( &task_send_command ); // cancel the task
 }

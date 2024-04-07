@@ -401,8 +401,8 @@ void Task_Message_Handling( float _time_since_last )
                      break;
                  }
 
-                 float vel_Left = ( 1000* data.Lin - data.Ang*(Car_Width*0.5) );
-                 float vel_Right = ( 1000* data.Lin + data.Ang*(Car_Width*0.5) );
+                 float vel_Left = ( (2000*data.Lin) - (1000*data.Ang/2*pi)*(Car_Width*0.5) );
+                 float vel_Right = ( (2000*data.Lin) + (1000*data.Ang/2*pi)*(Car_Width*0.5) );
                  Controller_Set_Target_Velocity(&Left_Controller, vel_Left );
                  Controller_Set_Target_Velocity(&Right_Controller, vel_Right );
 
