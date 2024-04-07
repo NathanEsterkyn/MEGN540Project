@@ -355,7 +355,7 @@ void Task_Message_Handling( float _time_since_last )
                  Controller_Set_Target_Position( &Right_Controller, dist_Right );
                  Time_t timeStart = Timing_Get_Time(); // get the current time
 
-                 if( Battery_Check( 0.0 ) ) {                 // if the battery is of an acceptable voltage
+                 if( Battery_Check( 0.0 ) ) { // if the battery is of an acceptable voltage
 
                      while( Timing_Seconds_Since( &timeStart ) <= ( data.Time * 0.001 ) ) { // for the time requested
                         USB_Send_Msg("cfff", 'B', &data, sizeof(data)); // send USB message
