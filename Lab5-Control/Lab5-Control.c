@@ -85,8 +85,8 @@ void Initialize_Modules(float unused)
     float numL[] = {2.057436, -1.928212};
     float denR[] = {1, -0.859936};
     float numR[] = {3.917527, -3.777463};
-    float kpL = 10.0;
-    float kpR = 10.0;
+    float kpL = 1.0;
+    float kpR = 1.0;
     Initialize_Controller( &Left_Controller,kpL,numL,denL,1,0.01 );
     Initialize_Controller( &Right_Controller,kpR,numR,denR,1,0.01 );
     Initialize_Task( &task_send_velocity, Send_Velocity );
