@@ -50,6 +50,15 @@ void Send_Command(float unused) {
     MotorPWM_Enable( true ); // enable motors
 }
 
+void Clear_Command(float unused) {
+    Initialize_Encoders(); // resets the encoders
+    Controller_SetTo( &Left_Controller, 0.0 ); // resets the filter in and out values
+    Controller_SetTo( &Right_Controller, 0.0 );
+    MotorPWM_Set_Left(0); // resets the PWM values
+    MotorPWM_Set_Right(0);
+    MotorPWM_Enable( false ); // shuts off the motors
+}
+
 /*
 float* Skid_Steer(float Lin, float Ang, uint8_t ID) {
 

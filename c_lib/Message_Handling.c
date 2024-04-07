@@ -328,6 +328,7 @@ void Task_Message_Handling( float _time_since_last )
 
                      Task_Activate( &task_send_command, Left_Controller.update_period * 1000 ); // update the controller and run the motors every 10 ms
                  }
+                 Task_Activate( &task_clear_command, -1); // clears all the control data and stops the motors
                  command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
@@ -360,6 +361,7 @@ void Task_Message_Handling( float _time_since_last )
                      }
                      Task_Cancel( &task_send_command); // disable motors
                  }
+                 Task_Activate( &task_clear_command, -1); // clears all the control data and stops the motors
                  command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
@@ -379,6 +381,7 @@ void Task_Message_Handling( float _time_since_last )
                      Controller_Set_Target_Velocity(&Right_Controller, vel_Right );
                      Task_Activate( &task_send_command, 10); // update the controller and run the motors every 10 ms
                  }
+                 Task_Activate( &task_clear_command, -1); // clears all the control data and stops the motors
                  command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
@@ -409,9 +412,10 @@ void Task_Message_Handling( float _time_since_last )
                      while( Timing_Seconds_Since(&timeStart) <= ( data.Time * 0.001 ) ) { // for the time requested
                         Task_Activate( &task_send_command, Left_Controller.update_period * 1000 );
                      }
-                     Task_Cancel( &task_send_command); // disable motors
+                     Task_Cancel( &task_send_command);
                  }
-                 command_processed = true;                           // reset the watchdog timer and activates task_message_handling_watchdog
+                 Task_Activate( &task_clear_command, -1); // clears all the control data and stops the motors
+                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
         default:                   // case for unknown command character (unknown operator)
