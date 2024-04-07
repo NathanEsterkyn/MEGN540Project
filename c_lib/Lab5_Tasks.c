@@ -57,6 +57,10 @@ void Clear_Command(float unused) {
     MotorPWM_Set_Left(0); // resets the PWM values
     MotorPWM_Set_Right(0);
     MotorPWM_Enable( false ); // shuts off the motors
+    //Task_Cancel( &task_send_command ); // cancel the task
+}
+
+void Cancel_Command(float unused) {
     Task_Cancel( &task_send_command ); // cancel the task
 }
 
