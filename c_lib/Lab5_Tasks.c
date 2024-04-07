@@ -18,32 +18,32 @@ void Send_Distance(float unused) {
 
     struct __attribute__( ( __packed__ ) ) {
         //float distance;
-        float error;
-        //float PWM;
+        //float error;
+        float PWM;
     } data_L;
     //data_L.distance = left_measurement;
-    data_L.error = Left_Controller.target_pos - left_measurement;
-    //data_L.PWM = new_left;
+    //data_L.error = Left_Controller.target_pos - left_measurement;
+    data_L.PWM = new_left;
 
     struct __attribute__( ( __packed__ ) ) {
         //float distance;
-        float error;
-        //float PWM;
+        //float error;
+        float PWM;
     } data_R;
     //data_R.distance = right_measurement;
-    data_R.error = Right_Controller.target_pos - right_measurement;
-    //data_R.PWM = new_right;
+    //data_R.error = Right_Controller.target_pos - right_measurement;
+    data_R.PWM = new_right;
 
     USB_Send_Msg("cf", 'L',  &data_L, sizeof( data_L ) );
     USB_Send_Msg("cf", 'R',  &data_R, sizeof( data_R ) );
 
     MotorPWM_Enable( true ); // enable motors
 }
-
+/*
 void Send_Velocity(float unused) {
 
 }
-/*
+
 float* Skid_Steer(float Lin, float Ang, uint8_t ID) {
 
     struct __attribute__( ( __packed__ ) ) {  // creates a struct for the received floats
