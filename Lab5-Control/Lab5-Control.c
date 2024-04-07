@@ -87,8 +87,8 @@ void Initialize_Modules(float unused)
     float numR[] = {3.917527, -3.777463};
     float kpL = 2.0;
     float kpR = 2.0;
-    Initialize_Controller( &Left_Controller,kpL,numL,denL,1,0.01 );
-    Initialize_Controller( &Right_Controller,kpR,numR,denR,1,0.01 );
+    Initialize_Controller( &Left_Controller,kpL,numL,denL,1,0.010 );
+    Initialize_Controller( &Right_Controller,kpR,numR,denR,1,0.010 );
     Initialize_Task( &task_send_command, Send_Command );
 
     // Set up task message handling watchdog
