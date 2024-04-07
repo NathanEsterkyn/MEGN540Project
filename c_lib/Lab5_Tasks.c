@@ -1,6 +1,6 @@
 #include "Lab5_Tasks.h"
 
-void Send_Distance(float unused) {
+void Send_Command(float unused) {
 
     // Left Motor
     float left_measurement = ( pi*Car_Wheel_Diameter ) * Encoder_Rad_Left()/2*pi; // get a measurement of left motor - radians
@@ -36,9 +36,6 @@ void Send_Distance(float unused) {
     MotorPWM_Enable( true ); // enable motors
 }
 
-void Send_Velocity(float unused) {
-
-}
 /*
 float* Skid_Steer(float Lin, float Ang, uint8_t ID) {
 

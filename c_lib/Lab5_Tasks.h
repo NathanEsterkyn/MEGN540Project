@@ -50,8 +50,7 @@
 
 // Put your lab-specific tasks here
 // e.g. Task_t task_restart;  ///<-- Lab 1: This flag indicates that the device received a restart command from the host. Default inactive.
-Task_t task_send_distance;
-Task_t task_send_velocity;
+Task_t task_send_command;
 Controller_t Left_Controller;
 Controller_t Right_Controller;
 
@@ -63,8 +62,6 @@ static const float Car_Wheel_Diameter = 0.039; // central distance between tread
 static const float Dead_Band_adj = 50.0;
 static const float MAX_PWM = 1000;
 static const float pi = 3.14159;
-void Send_Distance(float unused);
-void Send_Velocity(float unused);
-//float* Skid_Steer(float Lin, float Ang, uint8_t ID); // function to convert linear and angular values into tread-specific values
+void Send_Command(float unused);
 
 #endif  // ifndef LAB5_TASKS_H

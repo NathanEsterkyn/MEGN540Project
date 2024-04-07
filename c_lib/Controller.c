@@ -36,10 +36,12 @@ float Controller_Update( Controller_t* p_cont, float measurement, float dt ) {
     float output_this = Filter_Value( &p_cont->controller, measurement ); // use filter value to apply numerator and denominator values
 
     if (p_cont->target_pos == 0) { // if in velocity mode
-        p_cont->target_vel = p_cont->target_vel + p_cont->target_vel*dt;
+        //p_cont->target_vel = p_cont->target_vel + p_cont->target_vel*dt;
+        p_cont->target_pos = p_cont->target_pos + p_cont->target_vel*dt;
     }
     else { // else in position mode
         p_cont->target_pos = p_cont->target_pos;
+        //p_cont->target_pos = p_cont->target_pos + p_cont->target_vel*dt;
     }
 
     U = p_cont->kp*(p_cont->target_pos - output_this); // update final control law
