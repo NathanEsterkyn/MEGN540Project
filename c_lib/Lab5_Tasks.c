@@ -3,7 +3,7 @@
 void Send_Command(float unused) {
 
     // Left Motor
-    float left_measurement = ( pi*Car_Wheel_Diameter ) * Encoder_Rad_Left()/2*pi; // get a measurement of left motor - radians
+    float left_measurement = ( pi*Car_Wheel_Diameter ) * Encoder_Rad_Left()/2*pi; // get a measurement of left motor - mm
     float new_left = Controller_Update( &Left_Controller, left_measurement, Left_Controller.update_period ); // get a new control value from the controller
     new_left = Saturate(new_left,MAX_PWM) + Dead_Band_adj; // saturate the controller and adjust for dead band
     MotorPWM_Set_Left( new_left ); // set the new left motor PWM value
@@ -37,16 +37,16 @@ void Send_Command(float unused) {
 }
 
 void Clear_Command(float unused) {
-    Initialize_Encoders(); // resets the encoders
+    //Initialize_Encoders(); // resets the encoders
     Controller_SetTo( &Left_Controller, 0.0 ); // resets the filter in and out values
     Controller_SetTo( &Right_Controller, 0.0 );
     MotorPWM_Set_Left(0); // resets the PWM values
     MotorPWM_Set_Right(0);
     MotorPWM_Enable( false ); // shuts off the motors
-    //Task_Cancel( &task_send_command ); // cancel the task
 }
 
 void Cancel_Command(float unused) {
-    Initialize_Encoders(); // resets the encoders
+    //Initialize_Encoders(); // resets the encoders
     Task_Cancel( &task_send_command ); // cancel the task
+    Task_Cancel( &task_cancel_command ); // cancels itself
 }
