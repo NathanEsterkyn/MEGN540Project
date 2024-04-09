@@ -15,7 +15,7 @@ void Send_Command(float unused) {
     MotorPWM_Set_Right( new_right );
 
     // FOR TESTING PURPOSES:
-
+    /*
     struct __attribute__( ( __packed__ ) ) {
         float distance;
         float PWM;
@@ -32,12 +32,12 @@ void Send_Command(float unused) {
 
     USB_Send_Msg("c2f", 'L',  &data_L, sizeof( data_L ) );
     USB_Send_Msg("c2f", 'R',  &data_R, sizeof( data_R ) );
-
+    */
     MotorPWM_Enable( true ); // enable motors
 }
 
 void Clear_Command(float unused) {
-    //Initialize_Encoders(); // resets the encoders
+    Initialize_Encoders(); // resets the encoders
     Controller_SetTo( &Left_Controller, 0.0 ); // resets the filter in and out values
     Controller_SetTo( &Right_Controller, 0.0 );
     MotorPWM_Set_Left(0); // resets the PWM values
