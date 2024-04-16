@@ -45,6 +45,7 @@
 #include "Lab3_Tasks.h"
 #include "Lab4_Tasks.h"
 #include "Lab5_Tasks.h"
+#include "Project_Tasks.h"
 
 /**
  * Function Task_Message_Handling processes USB messages as necessary and sets status flags to control the flow of the program.

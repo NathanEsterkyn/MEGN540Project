@@ -48,10 +48,11 @@ int main()
     for(;;) {  // another way to do while(true)
         Task_USB_Upkeep();
 
+        // Sketching functions run through message handling
         Task_Run_If_Ready( &task_message_handling ); // run message handling if ready
         Task_Run_If_Ready( &task_restart ); // restart if ready
 
-        // Sandworm Control Functionality
+        // Sandworm base functions
         Task_Run_If_Ready( &task_home );
         Task_Run_If_Ready( &task_erase );
         Task_Run_If_Ready( &task_disable_motors );

@@ -416,6 +416,40 @@ void Task_Message_Handling( float _time_since_last )
                  command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
+        case 'Y':
+            if( USB_Msg_Length() == _Message_Length( 'Y' ) ) {
+                 USB_Msg_Get();                            // removes the first character from the received buffer
+                 Task_Activate( &task_erase, -1 );         // erases the sand table
+                 command_processed = true;
+            }
+            break;
+        case 'H':
+            if( USB_Msg_Length() == _Message_Length( 'H' ) ) {
+                 USB_Msg_Get();                            // removes the first character from the received buffer
+                 Task_Activate( &task_home, -1 );         // homes the sand table to (0,0)
+                 command_processed = true;
+            }
+            break;
+        case 'X':
+            if( USB_Msg_Length() >= _Message_Length( 'X' ) ) {
+
+                 USB_Msg_Get();                            // removes the first character from the received buffer
+                 struct __attribute__( ( __packed__ ) ) {  // creates a struct for the received floats
+                     float Lin;
+                     float Ang;
+                     float Dt;
+                 } data;
+                 USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
+
+                 if( data.Dt <= 0 ) {  // if the float received is <= 0, cancel the task
+                     Task_Cancel( &task_send_command );
+                     command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
+                     break;
+                 }
+                 // handle the time sketching stuff here
+                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
+            }
+            break;
         default:                   // case for unknown command character (unknown operator)
             USB_Msg_Get();         // clears the unknown operator
             USB_Send_Byte( '?' );  // sends a '?'
@@ -469,6 +503,9 @@ static uint8_t _Message_Length( char cmd )
         case 'D': return 13; break;
         case 'v': return 9; break;
         case 'V': return 13; break;
+        case 'Y': return 1; break;
+        case 'H': return 1; break;
+        case 'X': return 5; break;
         default: return 0; break;
     }
 }
