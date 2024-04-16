@@ -1,25 +1,36 @@
 /**
-* Sandworm
+* Sandworm.h/c defines functions specific to our sandworm robot, controlling both motors
 *
 *
 */
-#ifndef _MEGN540_CONTROLLER_H
-#define _MEGN540_CONTROLLER_H
+#ifndef SANDWORM_H
+#define SANDWORM_H
 
 #include "Filter.h"
 #include "Stepper.h"
 
-typedef struct { Filter_Data_t controller; float kp; float target_pos; float target_vel; float update_period;} Sandworm_t;
+typedef struct {
+    Stepper_t Linear;
+    Stepper_t Rotary;
+    float Lin_pos;
+    float Rot_pos;
+    float Lin_vel;
+    float Rot_vel;
+    float Dt;
+} Sandworm_t;
 
 /**
-* Function Saturate saturates a value to be within the range.
+* Function Initialize_Sandworm sets up the new robot object
+ * @param p_sw pointer to the sandworm object
+ * @param Lin_pos current linear position
+ * @param Rot_pos current rotational position
+ * @param Dt time step
 */
-inline float Saturate( float value, float ABS_MAX )
-{
-   return (value > ABS_MAX)?ABS_MAX:(value < -ABS_MAX)?-ABS_MAX:value;
-}
+void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float Dt );
 
 /**
-* Function Initialize_Controller sets up the z-transform based controller for the system.
-*/
-void Initialize_Controller(Controller_t* p_cont, float kp, float* num, float* den, uint8_t order, float update_period);
+ * Function Sandworm_Speed updates the speeds of both motors simultaneously to track a trajectory
+ * @param Lin_Vel The desired linear actuator velocity
+ * @param Rot_vel The desired Rotary actuator velocity
+ */
+void Sandworm_Speed( float Lin_Vel, float Rot_vel );

@@ -1,4 +1,3 @@
-
 #ifndef PROJECT_TASKS_H
 #define PROJECT_TASKS_H
 
@@ -14,6 +13,16 @@
 #include "Encoder.h"
 #include "Message_Handling.h"
 #include "Controller.h"
+#include "Sandworm.h"
+#include "Stepper.h"
 
+Task_t task_home;
+Task_t task_erase;
+Task_t task_disable_motors;
+Sandworm_t Sandworm_Robot;
 
+void Home(float unused);
+void Erase(float unused);
+void Disable_Motors(float unused);
 
+#endif
