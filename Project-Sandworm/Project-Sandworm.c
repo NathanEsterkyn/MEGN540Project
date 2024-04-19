@@ -26,7 +26,7 @@ void Initialize_Modules(float unused)
 
     // Set up Sandworm functionality
 
-    Initialize_Sandworm( &Sandworm_Robot, float Lin_pos, float Rot_pos, float Dt ); // FILL THESE IN
+    Initialize_Sandworm( &Sandworm_Robot, 0, 0, 0.010 );
     Initialize_Task( &task_home, Home );
     Initialize_Task( &task_erase, Erase );
     Initialize_Task( &task_disable_motors, Disable_Motors );

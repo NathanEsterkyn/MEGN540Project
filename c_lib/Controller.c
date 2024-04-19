@@ -14,7 +14,7 @@ void Initialize_Controller(Controller_t* p_cont, float kp, float* num, float* de
  */
 void Controller_Set_Target_Velocity( Controller_t* p_cont, float vel ) {
     p_cont->target_vel = vel;
-    //p_cont->target_pos = 0;
+    p_cont->target_pos = p_cont->target_vel;
 }
 
 /**
