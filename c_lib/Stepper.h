@@ -43,6 +43,3 @@ void Stepper_Speed( Stepper_t* p_step, uint16_t Value);
  * @param steps desired number of steps
  */
 void Stepper_Step( Stepper_t* p_step, int steps );
-
-
-void Stepper_Step_Motor(int thisStep);
