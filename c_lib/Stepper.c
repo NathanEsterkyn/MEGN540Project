@@ -34,7 +34,7 @@ void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, i
     p_step->last_step_time = 0.0;
     p_step->direction = 1;
     p_step->step_number = 0;
-    p_step->step_delay = 0.0
+    p_step->step_delay = 0.0;
 
     // Set registers for controlling the pins:
     if ( p_step->motor_pin_1 == 8 ) { // if the selected stepper is Motor 1
