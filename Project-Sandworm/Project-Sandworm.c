@@ -23,9 +23,6 @@ void Initialize_Modules(float unused)
 
     // Initialize all modules except USB (it can only be called once without messing things up)
     Initialize_Timing();
-    Initialize_Encoders();
-    Initialize_Battery_Monitor();
-    Initialize_MotorPWM(1000); // lower TOP value = higher PWM freq - 1000 = 8kHz
 
     // Set up task handling
     Initialize_Task( &task_restart, Initialize_Modules );

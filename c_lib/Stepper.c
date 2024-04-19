@@ -58,7 +58,8 @@ void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, i
 }
 
 void Stepper_Speed( Stepper_t* p_step, uint16_t Value) {
-    p_step->step_delay = Value * 0.016667 * ( 1 / p_step->number_of_steps ) * 1000;
+    //p_step->step_delay = Value * 0.016667 * ( 1 / p_step->number_of_steps ) * 1000;
+    p_step->step_delay = 5.0;
     USB_Send_Msg("cf", 'L', &p_step->step_delay, sizeof(p_step->step_delay));
     //p_step->step_delay = 60 * 1000 * 1000 / p_step->number_of_steps / Value; // takes in RPM
 }
@@ -74,8 +75,11 @@ void Stepper_Step( Stepper_t* p_step, int steps ) {
     }
 
     while (steps_remaining > 0) {
+
         Time_t timeNow = Timing_Get_Time(); // get the current time
+
         USB_Send_Msg("cf", 'T', &timeNow.millisec, sizeof(timeNow.millisec));
+
         if ( Timing_Seconds_Since(&timeNow) >= p_step->step_delay ) { // if it's time for another step...
             p_step->last_step_time = ( timeNow.millisec * 1000 ); // get the last step time in seconds
             // Iterate the step number based on direction

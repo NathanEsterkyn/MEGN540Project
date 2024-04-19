@@ -75,12 +75,6 @@ void Initialize_Modules(float unused)
     Initialize_Task( &task_time_loop, Send_Loop_Time );
     Initialize_Task( &task_send_time, Send_Time_Now );
 
-    // Set up Sandworm functionality
-    Initialize_Sandworm( &Sandworm_Robot, 0, 0, 0.010 );
-    Initialize_Task( &task_home, Home );
-    Initialize_Task( &task_erase, Erase );
-    Initialize_Task( &task_disable_motors, Disable_Motors );
-
     // Set up encoder and battery voltage functionality
     Initialize_Task( &task_send_encoder_value, Send_Encoder_Value );
     Initialize_Task( &task_check_battery_voltage, Check_Battery_Voltage );
@@ -126,11 +120,6 @@ int main()
         // Timing Functionality
         Task_Run_If_Ready( &task_send_time );
         Task_Run_If_Ready( &task_time_loop );
-
-        // Sandworm base functions
-        Task_Run_If_Ready( &task_home );
-        Task_Run_If_Ready( &task_erase );
-        Task_Run_If_Ready( &task_disable_motors );
 
         // Encoder and Voltage Functionality
         Task_Run_If_Ready( &task_send_encoder_value );
