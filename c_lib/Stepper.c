@@ -31,9 +31,10 @@ void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, i
     rb_push_back_F(&p_step->position,pos);
     p_step->number_of_steps = number_of_steps;
     p_step->motor_pin_1 = motor_pin_1;
-    p_step->last_step_time = 0;
+    p_step->last_step_time = 0.0;
     p_step->direction = 1;
     p_step->step_number = 0;
+    p_step->step_delay = 0.0
 
     // Set registers for controlling the pins:
     if ( p_step->motor_pin_1 == 8 ) { // if the selected stepper is Motor 1
@@ -69,7 +70,7 @@ void Stepper_Step( Stepper_t* p_step, int steps ) {
 
     while (steps_remaining > 0) {
         Time_t timeNow = Timing_Get_Time(); // get the current time
-        if ( timeNow - p_step->last_step_time >= p_step->step_delay ) { // if it's time for another step...
+        if ( Timing_Seconds_Since(&timeNow) >= p_step->step_delay ) { // if it's time for another step...
             p_step->last_step_time = timeNow; // get the last step time
             // Iterate the step number based on direction
             if ( p_step->direction == 1 ) {

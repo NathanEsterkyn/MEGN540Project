@@ -19,8 +19,8 @@ typedef struct {
    int direction; // current direction of the motor
    int motor_pin_1; // indicate which pins the motors are on - we only need one
    int step_number; // what number of steps the motor is currently on
-   Time_t last_step_time;
-   uint16_t step_delay; // parameter to control speed
+   float last_step_time;
+   float step_delay; // parameter to control speed
 } Stepper_t;
 
 /**
