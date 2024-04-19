@@ -34,3 +34,5 @@ void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float 
  * @param Rot_vel The desired Rotary actuator velocity
  */
 void Sandworm_Speed( Sandworm_t* p_sw, uint16_t Lin_Vel, int Rot_vel );
+
+#endif

@@ -5,7 +5,6 @@
 #define STEPPER_H
 #ifndef RB_LENGTH_F
 #define RB_LENGTH_F 8
-#endif
 #include "Ring_Buffer.h"
 #include "stdlib.h"
 #include "Timing.h"
@@ -43,3 +42,5 @@ void Stepper_Speed( Stepper_t* p_step, uint16_t Value);
  * @param steps desired number of steps
  */
 void Stepper_Step( Stepper_t* p_step, int steps );
+
+#endif
