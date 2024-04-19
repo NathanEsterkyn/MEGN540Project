@@ -59,7 +59,7 @@ void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, i
 
 void Stepper_Speed( Stepper_t* p_step, uint16_t Value) {
     p_step->step_delay = Value * 0.016667 * ( 1 / p_step->number_of_steps ) * 1000;
-    USB_Send_Msg("cf", 'S', &p_step->step_delay, sizeof(p_step->step_delay));
+    USB_Send_Msg("cf", 'L', &p_step->step_delay, sizeof(p_step->step_delay));
     //p_step->step_delay = 60 * 1000 * 1000 / p_step->number_of_steps / Value; // takes in RPM
 }
 

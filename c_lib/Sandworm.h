@@ -8,6 +8,7 @@
 
 #include "Filter.h"
 #include "Stepper.h"
+#include "SerialIO.h"
 
 typedef struct {
     Stepper_t Linear;
