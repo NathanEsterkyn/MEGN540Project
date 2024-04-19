@@ -23,6 +23,6 @@ Sandworm_t Sandworm_Robot;
 
 void Home(float unused);
 void Erase(float unused);
-void Disable_Motors(float unused);
+void Disable_Motors(float unused); // use the standby feature on our motor controllers
 
 #endif

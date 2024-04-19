@@ -68,8 +68,7 @@ void Stepper_Step( Stepper_t* p_step, int steps ) {
 
     while (steps_remaining > 0) {
         Time_t timeNow = Timing_Get_Time(); // get the current time
-        // Make a step if the correct delay has passed
-        if ( timeNow - p_step->last_step_time >= p_step->step_delay ) {
+        if ( timeNow - p_step->last_step_time >= p_step->step_delay ) { // if it's time for another step...
             p_step->last_step_time = timeNow; // get the last step time
             // Iterate the step number based on direction
             if ( p_step->direction == 1 ) {

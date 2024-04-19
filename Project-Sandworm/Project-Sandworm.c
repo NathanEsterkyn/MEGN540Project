@@ -36,9 +36,6 @@ void Initialize_Modules(float unused)
 
     // Activate message handling to run continuously
     Task_Activate( &task_message_handling, 0 );
-
-    // Activate battery check task to run continuously
-    Task_Activate( &task_check_battery_voltage, 0 );
 }
 
 int main()
