@@ -10,6 +10,12 @@
 #include "Sandworm.h"
 
 #include "Project_Tasks.h"
+#include "Lab1_Tasks.h"
+#include "Lab2_Tasks.h"
+#include "Lab3_Tasks.h"
+#include "Lab4_Tasks.h"
+#include "Lab5_Tasks.h"
+#include "Filter.h"
 
 void Initialize_Modules(float unused)
 {
@@ -17,6 +23,9 @@ void Initialize_Modules(float unused)
 
     // Initialize all modules except USB (it can only be called once without messing things up)
     Initialize_Timing();
+    Initialize_Encoders();
+    Initialize_Battery_Monitor();
+    Initialize_MotorPWM(1000); // lower TOP value = higher PWM freq - 1000 = 8kHz
 
     // Set up task handling
     Initialize_Task( &task_restart, Initialize_Modules );
@@ -24,8 +33,11 @@ void Initialize_Modules(float unused)
     // Set up message handling to get processed at some desired rate.
     Initialize_Task( &task_message_handling, Task_Message_Handling );
 
-    // Set up Sandworm functionality
+    // Set up timing functionality
+    Initialize_Task( &task_time_loop, Send_Loop_Time );
+    Initialize_Task( &task_send_time, Send_Time_Now );
 
+    // Set up Sandworm functionality
     Initialize_Sandworm( &Sandworm_Robot, 0, 0, 0.010 );
     Initialize_Task( &task_home, Home );
     Initialize_Task( &task_erase, Erase );
@@ -36,6 +48,9 @@ void Initialize_Modules(float unused)
 
     // Activate message handling to run continuously
     Task_Activate( &task_message_handling, 0 );
+
+    // Activate battery check task to run continuously
+    Task_Activate( &task_check_battery_voltage, 0 );
 }
 
 int main()
@@ -49,6 +64,10 @@ int main()
         // Sketching functions run through message handling
         Task_Run_If_Ready( &task_message_handling ); // run message handling if ready
         Task_Run_If_Ready( &task_restart ); // restart if ready
+
+        // Timing Functionality
+        Task_Run_If_Ready( &task_send_time );
+        Task_Run_If_Ready( &task_time_loop );
 
         // Sandworm base functions
         Task_Run_If_Ready( &task_home );
