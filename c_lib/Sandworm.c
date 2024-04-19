@@ -4,8 +4,8 @@ void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float 
     p_sw->Lin_pos = Lin_pos; // set linear position
     p_sw->Rot_pos = Rot_pos; // set rotary position
     p_sw->Dt = Dt; // set time step
-    Initialize_Stepper( &p_sw->Linear, 0, 200, 8 ); // create the linear stepper object - Motor 1
-    Initialize_Stepper( &p_sw->Rotary, 0, 200, 36 ); // create the rotary stepper object - Motor 2
+    Initialize_Stepper( &p_sw->Linear, 0, 200, 36 ); // create the linear stepper object - Motor 1
+    Initialize_Stepper( &p_sw->Rotary, 0, 200, 8 ); // create the rotary stepper object - Motor 2
 }
 
 void Sandworm_Speed( Sandworm_t* p_sw, uint16_t Lin_Vel, int Rot_vel ) { // for testing I am sending it Speed (Lin_Vel) then Steps (Rot_Vel)
