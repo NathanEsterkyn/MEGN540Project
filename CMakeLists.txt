@@ -188,4 +188,5 @@ add_subdirectory(Lab2-Timing)
 add_subdirectory(Lab3-Encoder)
 add_subdirectory(Lab4-MotorPWM)
 add_subdirectory(Lab5-Control)
+add_subdirectory(Project-Sandworm)
 
