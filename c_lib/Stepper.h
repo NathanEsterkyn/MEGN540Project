@@ -12,6 +12,7 @@
 #include "stdlib.h"
 #include "Timing.h"
 #include "Ring_Buffer.h"
+#include "SerialIO.h"  // USB interface for sending results back to user
 
 typedef struct {
    Ring_Buffer_Float_t position; // record of previous positions
