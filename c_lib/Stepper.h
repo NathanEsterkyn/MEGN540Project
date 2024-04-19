@@ -5,12 +5,13 @@
 #define _MEGN540_STEPPER_H
 
 #ifndef RB_LENGTH_F
-#define RB_LENGTH_F 8
+#define RB_LENGTH_F 16
 #endif
 
 #include "Ring_Buffer.h"
 #include "stdlib.h"
 #include "Timing.h"
+#include "Ring_Buffer.h"
 
 typedef struct {
    Ring_Buffer_Float_t position; // record of previous positions

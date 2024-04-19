@@ -27,7 +27,9 @@
 void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, int motor_pin_1 ) {
 
     // Fill stepper structure with relevant data
-    p_step->position = pos;
+    rb_initialize_F(&p_step->position);
+    rb_push_back_F(&p_step->position,pos);
+    p_step->position =  pos;
     p_step->number_of_steps = number_of_steps;
     p_step->motor_pin_1 = motor_pin_1;
     p_step->last_step_time = 0;
