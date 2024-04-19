@@ -1,10 +1,13 @@
 /**
 * Stepper.h/c defines functions to create stepper objects and control stepper motors
 */
-#ifndef STEPPER_H
-#define STEPPER_H
+#ifndef _MEGN540_STEPPER_H
+#define _MEGN540_STEPPER_H
+
 #ifndef RB_LENGTH_F
 #define RB_LENGTH_F 8
+#endif
+
 #include "Ring_Buffer.h"
 #include "stdlib.h"
 #include "Timing.h"

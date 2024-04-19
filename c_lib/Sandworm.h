@@ -3,8 +3,8 @@
 *
 *
 */
-#ifndef SANDWORM_H
-#define SANDWORM_H
+#ifndef _MEGN540_SANDWORM_H
+#define _MEGN540_SANDWORM_H
 
 #include "Filter.h"
 #include "Stepper.h"
