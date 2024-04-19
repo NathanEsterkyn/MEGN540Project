@@ -7,12 +7,17 @@
 #define RB_LENGTH_F 8
 #endif
 #include "Ring_Buffer.h"
+#include "stdlib.h"
+#include "Timing.h"
 
 typedef struct {
    Ring_Buffer_Float_t position; // record of previous positions
    int number_of_steps; // number of steps per revolution for motors
    int direction; // current direction of the motor
    int motor_pin_1; // indicate which pins the motors are on - we only need one
+   int step_number; // what number of steps the motor is currently on
+   Time_t last_step_time;
+   uint16_t step_delay; // parameter to control speed
 } Stepper_t;
 
 /**
@@ -28,10 +33,9 @@ void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, i
 /**
  * Function Stepper_Speed updates the speed of the desired stepper motor object
  * @param p_step pointer to the desired stepper object to manipulate
- * @param Value speed value to update the stepper to
- * @param dt time step
+ * @param Value speed value to update the stepper to (RPM)
  */
-void Stepper_Speed( Stepper_t* p_step, uint16_t Value, float dt );
+void Stepper_Speed( Stepper_t* p_step, uint16_t Value);
 
 /**
  * Function Stepper_Step takes an input of number of steps and moves the desired stepper motor
@@ -39,3 +43,6 @@ void Stepper_Speed( Stepper_t* p_step, uint16_t Value, float dt );
  * @param steps desired number of steps
  */
 void Stepper_Step( Stepper_t* p_step, int steps );
+
+
+void Stepper_Step_Motor(int thisStep);
