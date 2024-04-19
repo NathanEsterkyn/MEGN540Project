@@ -36,6 +36,9 @@
 #include "Battery_Monitor.h"
 #include "MotorPWM.h"
 #include "Controller.h"
+#include "Sandworm.h"
+#include "Stepper.h"
+
 
 // Include Lab Specific Functionality
 #include "Lab1_Tasks.h"
@@ -43,6 +46,7 @@
 #include "Lab3_Tasks.h"
 #include "Lab4_Tasks.h"
 #include "Lab5_Tasks.h"
+#include "Project_Tasks.h"
 #include "Filter.h"
 
 void Initialize_Modules(float unused)
@@ -70,6 +74,12 @@ void Initialize_Modules(float unused)
     // Set up timing functionality
     Initialize_Task( &task_time_loop, Send_Loop_Time );
     Initialize_Task( &task_send_time, Send_Time_Now );
+
+    // Set up Sandworm functionality
+    Initialize_Sandworm( &Sandworm_Robot, 0, 0, 0.010 );
+    Initialize_Task( &task_home, Home );
+    Initialize_Task( &task_erase, Erase );
+    Initialize_Task( &task_disable_motors, Disable_Motors );
 
     // Set up encoder and battery voltage functionality
     Initialize_Task( &task_send_encoder_value, Send_Encoder_Value );
@@ -116,6 +126,11 @@ int main()
         // Timing Functionality
         Task_Run_If_Ready( &task_send_time );
         Task_Run_If_Ready( &task_time_loop );
+
+        // Sandworm base functions
+        Task_Run_If_Ready( &task_home );
+        Task_Run_If_Ready( &task_erase );
+        Task_Run_If_Ready( &task_disable_motors );
 
         // Encoder and Voltage Functionality
         Task_Run_If_Ready( &task_send_encoder_value );
