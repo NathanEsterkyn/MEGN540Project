@@ -389,8 +389,10 @@ void Task_Message_Handling( float _time_since_last )
                      float Speed;
                  } data;
                  USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received floats
-                 USB_Send_Msg("cf", 'R', &data.Steps, sizeof(data.Steps));
-                 Multiply_And_Send( data.Steps, data.Speed );
+
+                 USB_Send_Byte('R');
+                 //Multiply_And_Send( data.Steps, data.Speed );
+                 
                  Sandworm_Speed( &Sandworm_Robot, data.Speed, data.Steps ); // tell the stepper to spin at Speed and travel Steps
                  command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
