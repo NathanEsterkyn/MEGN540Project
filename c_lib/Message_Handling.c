@@ -394,6 +394,7 @@ void Task_Message_Handling( float _time_since_last )
                  Sandworm_Speed( &Sandworm_Robot, data.Speed, data.Steps ); // tell the stepper to spin at Speed and travel Steps
                  command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
+            USB_Send_Byte('F');
             break;
         case 'Y':
             if( USB_Msg_Length() == _Message_Length( 'Y' ) ) {
