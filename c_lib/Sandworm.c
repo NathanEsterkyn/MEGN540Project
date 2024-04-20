@@ -11,6 +11,4 @@ void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float 
 void Sandworm_Speed( Sandworm_t* p_sw, int Lin_Vel, int Rot_vel ) { // for testing I am sending it Speed (Lin_Vel) then Steps (Rot_Vel)
     Stepper_Speed( &p_sw->Linear, Lin_Vel ); // sets the speed for the linear stepper - Motor 1
     Stepper_Step( &p_sw->Linear, Rot_vel ); // sets the steps to step for the linear stepper - Motor 1
-    uint8_t speed = 's';
-    USB_Send_Byte(speed);
 }
