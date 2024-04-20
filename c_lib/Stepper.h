@@ -46,6 +46,6 @@ void Stepper_Speed( Stepper_t* p_step, float Value);
  * @param p_step pointer to the desired stepper object
  * @param steps desired number of steps
  */
-void Stepper_Step( Stepper_t* p_step, float steps );
+void Stepper_Step( Stepper_t* p_step, int steps );
 
 #endif
