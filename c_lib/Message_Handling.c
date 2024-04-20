@@ -75,12 +75,12 @@ void Task_Message_Handling( float _time_since_last )
             if( USB_Msg_Length() >= _Message_Length( 'V' ) ) {
                  USB_Msg_Get(); // removes the first character from the received buffer
                  struct __attribute__( ( __packed__ ) ) { // creates a struct for the received floats
-                     float Steps;
+                     int Steps;
                      float Speed;
                  } data;
                  USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received floats
-                 //Multiply_And_Send( data.Speed, data.Steps );
-                 Stepper_Speed(&Sandworm_Robot.Linear, data.Speed);
+                 Stepper_Speed( &Sandworm_Robot.Linear, data.Speed ); // works
+                 Stepper_Step( &Sandworm_Robot.Linear, data.Steps );
                  //Sandworm_Speed( &Sandworm_Robot, data.Speed, data.Steps ); // tell the stepper to spin at Speed and travel Steps
                  command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }

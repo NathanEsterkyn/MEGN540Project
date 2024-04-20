@@ -82,11 +82,9 @@ return (_count_ms + TCNT0 * 0.004) * 0.001;
 Time_t Timing_Get_Time()
 {
 // *** MEGN540 Lab 2 ***
-Time_t time = {
-.millisec = _count_ms,
-.microsec = TCNT0 * 4 // YOU NEED TO REPLACE THIS WITH A CALL TO THE TIMER0 REGISTER AND MULTIPLY APPROPRIATELY
-};
-
+Time_t time;
+time.millisec = (_count_ms + TCNT0 * 0.004) * 0.001;
+time.microsec = TCNT0 * 4;  // YOU NEED TO REPLACE THIS WITH A CALL TO THE TIMER0 REGISTER AND MULTIPLY APPROPRIATELY
 return time;
 }
 
@@ -114,7 +112,7 @@ float Timing_Seconds_Since( const Time_t* time_start_p )
 {
 // *** MEGN540 Lab 2 ***
 float current_time = Timing_Get_Time_Sec(); // calculate seconds since start time
-float start_time = ((*time_start_p).millisec + ((*time_start_p).microsec * 0.001)) * 0.001;
+float start_time = time_start_p->millisec;
 float delta_time = current_time - start_time;
 return delta_time;
 }
