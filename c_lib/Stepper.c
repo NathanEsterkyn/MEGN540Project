@@ -68,15 +68,15 @@ void Stepper_Speed( Stepper_t* p_step, float Value) {
 
 void Stepper_Step( Stepper_t* p_step, int steps ) {
 
-    int steps_remaining = 0;
+    int steps_remaining = 10;
 
     if ( steps > 0 ) {
         p_step->direction = 1; // forwards direction
-        steps_remaining = steps;
+        //steps_remaining = steps;
     }
     if ( steps < 0 ) {
         p_step->direction = 0; // backwards direction
-        steps_remaining = -steps;
+        //steps_remaining = -steps;
     }
 
     float ret_val = steps_remaining; // FOR TESTING
