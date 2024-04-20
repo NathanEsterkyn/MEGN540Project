@@ -66,17 +66,18 @@ void Stepper_Speed( Stepper_t* p_step, float Value) {
 }
 
 void Stepper_Step( Stepper_t* p_step, int steps ) {
-    int steps_remaining = abs(steps); // how many steps to take
-
-    float ret_val = steps_remaining; // FOR TESTING
-    USB_Send_Msg( "cf", 'r', &ret_val, sizeof( ret_val ) ); // FOR TESTING
 
     if ( steps > 0 ) {
         p_step->direction = 1; // forwards direction
+        int steps_remaining = steps;
     }
     if ( steps < 0 ) {
         p_step->direction = 0; // backwards direction
+        int steps_remaining = -steps;
     }
+
+    float ret_val = steps_remaining; // FOR TESTING
+    USB_Send_Msg( "cf", 'r', &ret_val, sizeof( ret_val ) ); // FOR TESTING
 
     while (steps_remaining > 0) {
 
