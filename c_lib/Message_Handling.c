@@ -78,10 +78,10 @@ void Task_Message_Handling( float _time_since_last )
                      float Steps;
                      float Speed;
                  } data;
-                 //int stepies = data.Steps;
+                 int stepies = data.Steps;
                  USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received floats
                  Stepper_Speed( &Sandworm_Robot.Linear, data.Speed ); // works
-                 //Stepper_Step( &Sandworm_Robot.Linear, stepies );
+                 Stepper_Step( &Sandworm_Robot.Linear, stepies );
                  //Sandworm_Speed( &Sandworm_Robot, data.Speed, data.Steps ); // tell the stepper to spin at Speed and travel Steps
                  command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
