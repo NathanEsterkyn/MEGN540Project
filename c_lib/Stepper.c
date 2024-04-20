@@ -58,7 +58,8 @@ void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, i
 }
 
 void Stepper_Speed( Stepper_t* p_step, float Value) {
-    p_step->step_delay = Value * ( 1 / 60 ) * ( 1 / p_step->number_of_steps ) * 1000;
+    float steps = p_step->number_of_steps;
+    p_step->step_delay = ( ( Value / 60.0 ) / steps ) * 1000.0;
     //p_step->step_delay = 5.0;
 
     float ret_val = p_step->step_delay;
