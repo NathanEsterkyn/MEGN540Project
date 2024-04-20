@@ -9,12 +9,12 @@
 #include "Stepper.h"
 #include "Sandworm.h"
 
-#include "Project_Tasks.h"
 #include "Lab1_Tasks.h"
 #include "Lab2_Tasks.h"
 #include "Lab3_Tasks.h"
 #include "Lab4_Tasks.h"
 #include "Lab5_Tasks.h"
+#include "Project_Tasks.h"
 #include "Filter.h"
 
 void Initialize_Modules(float unused)
@@ -36,9 +36,9 @@ void Initialize_Modules(float unused)
 
     // Set up Sandworm functionality
     Initialize_Sandworm( &Sandworm_Robot, 0, 0, 0.010 );
-    Initialize_Task( &task_home, Home );
-    Initialize_Task( &task_erase, Erase );
-    Initialize_Task( &task_disable_motors, Disable_Motors );
+    //Initialize_Task( &task_home, Home );
+    //Initialize_Task( &task_erase, Erase );
+    //Initialize_Task( &task_disable_motors, Disable_Motors );
 
     // Set up task message handling watchdog
     Initialize_Task( &task_message_handling_watchdog, Task_Message_Handling_Watchdog );
@@ -67,9 +67,9 @@ int main()
         Task_Run_If_Ready( &task_time_loop );
 
         // Sandworm base functions
-        Task_Run_If_Ready( &task_home );
-        Task_Run_If_Ready( &task_erase );
-        Task_Run_If_Ready( &task_disable_motors );
+        //Task_Run_If_Ready( &task_home );
+        //Task_Run_If_Ready( &task_erase );
+        //Task_Run_If_Ready( &task_disable_motors );
 
         if (!task_message_handling_watchdog.is_active){ // if the message handling watchdog isn't active (message timeout functionality)
             Task_Activate( &task_message_handling_watchdog, 250 ); // activate message handling watchdog to run every 0.25 seconds (250 ms)

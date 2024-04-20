@@ -57,7 +57,7 @@ void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, i
     }
 }
 
-void Stepper_Speed( Stepper_t* p_step, uint16_t Value) {
+void Stepper_Speed( Stepper_t* p_step, int Value) {
     //p_step->step_delay = Value * 0.016667 * ( 1 / p_step->number_of_steps ) * 1000;
     p_step->step_delay = 5.0;
     USB_Send_Msg("cf", 'L', &p_step->step_delay, sizeof(p_step->step_delay));
@@ -66,6 +66,8 @@ void Stepper_Speed( Stepper_t* p_step, uint16_t Value) {
 
 void Stepper_Step( Stepper_t* p_step, int steps ) {
     int steps_remaining = abs(steps); // how many steps to take
+
+    USB_Send_Byte(steps_remaining);
 
     if ( steps > 0 ) {
         p_step->direction = 1; // forwards direction
