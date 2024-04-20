@@ -59,7 +59,8 @@ void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, i
 
 void Stepper_Speed( Stepper_t* p_step, float Value) {
     float steps = p_step->number_of_steps; // converts number of steps per revolution into float
-    p_step->step_delay = ( ( Value / 60.0 ) / steps ) * 1000.0; // returns milliseconds between steps to achieve desired speed in RPM
+    steps = ( Value / 60.0 ) * steps;
+    p_step->step_delay =  ( 1.0 / steps ) * 1000.0; // returns milliseconds between steps to achieve desired speed in RPM
 
     float ret_val = p_step->step_delay; // FOR TESTING
     USB_Send_Msg( "cf", 's', &ret_val, sizeof( ret_val ) ); // FOR TESTING
