@@ -85,11 +85,11 @@ void Task_Message_Handling( float _time_since_last )
 
                  if( Button_Check( 0.0 ) ) { // if the button is pressed
 
-                     USB_Send_Msg( "cff", 'b', &data, sizeof( data ) ); // FOR TESTING
+                     //USB_Send_Msg( "cff", 'b', &data, sizeof( data ) ); // FOR TESTING
 
-                     //Task_Activate( &task_step_linear, Sandworm_Robot.Linear.step_delay ); // steps linear motor every step delay
+                     Task_Activate( &task_step_linear, Sandworm_Robot.Linear.step_delay ); // steps linear motor every step delay
                      //Task_Activate( &task_step_rotary, Sandworm_Robot.Rotary.step_delay ); // steps rotary motor every step delay
-                     //Task_Activate( &task_stop_step, data.Time * 1000 ); // cancel the task after the specified time
+                     Task_Activate( &task_stop_step, data.Time * 1000 ); // cancel the task after the specified time
                  }
                  command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }

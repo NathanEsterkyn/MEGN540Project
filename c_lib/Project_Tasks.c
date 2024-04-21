@@ -3,6 +3,10 @@
 void Stop_Step(float unused) {
     Task_Cancel( &task_step_linear ); // cancels linear stepping
     Task_Cancel( &task_step_rotary ); // cancels rotary stepping
+
+    float ret_val = 5.0; // FOR TESTING
+    USB_Send_Msg( "cf", 'S', &ret_val, sizeof( ret_val ) ); // FOR TESTING
+
     Task_Cancel( &task_stop_step ); // cancels itself
 }
 
