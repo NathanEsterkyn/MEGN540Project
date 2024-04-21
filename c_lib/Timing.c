@@ -50,8 +50,6 @@ static volatile uint32_t _count_ms = 0;
  */
 void Initialize_Timing()
 {
-    // *** MEGN540 Lab 2 ***
-
     TCCR0B |= (1 << CS01) | (1 << CS00); // set up timer with pre-scalar of 64
 
     OCR0A = 249 ; // initialize compare value
@@ -65,7 +63,6 @@ void Initialize_Timing()
     sei();
 
     _count_ms = 0;
-
 }
 
 /**
@@ -74,10 +71,7 @@ void Initialize_Timing()
  */
 float Timing_Get_Time_Sec()
 {
-    // *** MEGN540 Lab 2 ***
-
     return (_count_ms + TCNT0 * 0.004) * 0.001;
-
 }
 Time_t Timing_Get_Time()
 {
@@ -128,7 +122,7 @@ ISR(TIMER0_COMPA_vect)
     // *** MEGN540 Lab 2 ***
     // YOUR CODE HERE
     // YOU NEED TO RESET THE Timer0 Value to 0 again!
-    // TCNT0 = 0;
     // take care of upticks of both our internal and external variables.
     _count_ms ++;
+    TCNT0 = 0;
 }
