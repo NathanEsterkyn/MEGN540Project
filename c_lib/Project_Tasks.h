@@ -24,6 +24,7 @@ Task_t task_erase;
 Task_t task_disable_motors;
 Sandworm_t Sandworm_Robot;
 
+static const float HOME_SPEED = 100.0;
 void Stop_Step(float unused);
 void Step_Linear(float unused);
 void Step_Rotary(float unused);

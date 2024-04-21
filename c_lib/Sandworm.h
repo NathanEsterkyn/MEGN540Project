@@ -31,9 +31,10 @@ void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float 
 
 /**
  * Function Sandworm_Speed updates the speeds of both motors simultaneously to track a trajectory
- * @param Lin_Vel The desired linear actuator velocity
- * @param Rot_vel The desired Rotary actuator velocity
+ * @param p_sw pointer to the SW object
  */
-void Sandworm_Speed( Sandworm_t* p_sw, int Lin_Vel, int Rot_vel );
+void Sandworm_Home( Sandworm_t* p_sw );
+
+bool Sandworm_Button( Sandworm_t* p_sw );
 
 #endif

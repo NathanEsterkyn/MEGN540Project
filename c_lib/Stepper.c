@@ -25,11 +25,9 @@
  *   MP4   -  BIN2  - Pin 39 - PF4(ADC4)
  */
 
-void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, int motor_pin_1 ) {
+void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1 ) {
 
     // Fill stepper structure with relevant data
-    rb_initialize_F(&p_step->position);
-    rb_push_back_F(&p_step->position,pos);
     p_step->number_of_steps = number_of_steps;
     p_step->motor_pin_1 = motor_pin_1;
     p_step->last_step_time = 0.0;
@@ -44,7 +42,6 @@ void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, i
         DDRB |= ( 1 << DDB1 );  // bit 1
         DDRB |= ( 1 << DDB2 );  // bit 2
         DDRB |= ( 1 << DDB3 );  // bit 3 - sets PB 0,1,2,and 3 to outputs
-        //DDRB = (DDRB & 0xF0) | (1<<DDB0) | (1<<DDB1) | (1<<DDB2) | (1<<DDB3); // sets PF 4,5,6,and 7 to outputs
     }
 
     if ( p_step->motor_pin_1 == 36 ) { // if the selected stepper is Motor 2
@@ -53,7 +50,6 @@ void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, i
         DDRF |= ( 1 << DDF6 );  // bit 6
         DDRF |= ( 1 << DDF5 );  // bit 5
         DDRF |= ( 1 << DDF4 );  // bit 4 - sets PF 4,5,6,and 7 to outputs
-        //DDRF = (DDRF & 0xF0) | (1<<DDF7) | (1<<DDF6) | (1<<DDF5) | (1<<DDF4); // sets PF 4,5,6,and 7 to outputs
     }
 }
 
