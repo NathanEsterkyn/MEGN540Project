@@ -56,7 +56,7 @@ void Task_Message_Handling( float _time_since_last )
             if( USB_Msg_Length() >= _Message_Length( 't' ) ) {  // then process your 't'...
 
                 USB_Msg_Get();             // removes the first character from the received buffer,
-                                           // we know it is 't' so it isn't saved as a variable
+                                           // we know it is a 't' so it isn't saved as a variable
                 char cmd = USB_Msg_Get();  // get the command character given after the 't' to determine behavior
                 switch( cmd ) {
                     case '0':                                  // if a '0' is sent after the 't' char

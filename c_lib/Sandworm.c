@@ -15,6 +15,6 @@ void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float 
 void Sandworm_Home( Sandworm_t* p_sw ) { // for testing I am sending it Speed (Lin_Vel) then Steps (Rot_Vel)
 }
 
-bool Sandworm_Button( Sandworm_t* p_sw ) {
+bool Sandworm_Limit( Sandworm_t* p_sw ) {
     // function to determine if button has been pressed
 }

@@ -25,7 +25,7 @@ void Home(float unused) {
     // Linear Homing
     float homeSpeed = Stepper_Speed( &Sandworm_Robot.Linear, HOME_SPEED_L ); // set homing speed
     Task_Activate( &task_step_linear, homeSpeed ); // move linear axis towards home
-    if( Sandworm_Button( &Sandworm_Robot ) == 1 ) { // if home button is pressed
+    if( Sandworm_Limit( &Sandworm_Robot ) == 1 ) { // if home button is pressed
         Task_Activate( &task_stop_step, -1 ); // stop the motors
         Sandworm_Robot.Lin_pos = 0.0; // set zero
     }
