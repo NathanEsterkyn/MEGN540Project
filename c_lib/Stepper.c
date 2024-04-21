@@ -107,6 +107,8 @@ void Stepper_Step( Stepper_t* p_step ) {
         }
     }
     if (p_step->motor_pin_1 == 36) { // if the selected stepper is Motor 2
+        float ret_val = p_step->step_number; // FOR TESTING
+        USB_Send_Msg( "cf", 'L', &ret_val, sizeof( ret_val ) ); // FOR TESTING
         switch (p_step->step_number % 4) {
             case 0:  // 1010
                 PORTF = (PORTF & 0xF0) | (1<<PORTF7) | (1<<PORTF5); // sets PF 4,5,6,and 7
@@ -123,6 +125,4 @@ void Stepper_Step( Stepper_t* p_step ) {
         }
     }
 
-    float ret_val = p_step->step_number; // FOR TESTING
-    USB_Send_Msg( "cf", 'm', &ret_val, sizeof( ret_val ) ); // FOR TESTING
 }
