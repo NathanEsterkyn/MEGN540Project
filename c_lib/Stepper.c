@@ -112,30 +112,27 @@ void Stepper_Step( Stepper_t* p_step ) {
 
         switch (p_step->step_number % 4) {
             case 0:  // 1010
-                //ORTF = (1<<PORTF7) | (1<<PORTF5) & ~(1<<PORTF4);
-                //PORTF = |0xA0 &~0x10;
-                PORTF = 0xA0;
-                //PORTF = (PORTF & 0xF0) | (1<<PORTF7) | (1<<PORTF5); // sets PF 4,5,6,and 7
+                PORTF = 0xA0; // sets PF5 and PF7 to HIGH and all others to LOW
                 break;
             case 1:  // 0110
-                //PORTF = (1<<PORTF6) | (1<<PORTF5) & ~(1<<PORTF7);
-                //PORTF = |0x60 &~0x80;
-                PORTF = 0x60;
-                //PORTF = (PORTF & 0xF0) | (1<<PORTF6) | (1<<PORTF5); // sets PF 4,5,6,and 7
+                PORTF = 0x60; // sets PF5 and PF6 to HIGH and all others to LOW
                 break;
             case 2:  //0101
-                //PORTF = (1<<PORTF6) | (1<<PORTF4) & ~(1<<PORTF5);
-                //PORTF = |0x50 &~0x20;
-                PORTF = 0x50;
-                //PORTF = (PORTF & 0xF0) | (1<<PORTF6) | (1<<PORTF4); // sets PF 4,5,6,and 7
+                PORTF = 0x50; // sets PF4 and PF6 to HIGH and all others to LOW
                 break;
             case 3:  //1001
-                //PORTF = (1<<PORTF7) | (1<<PORTF7) & ~(1<<PORTF6);
-                //PORTF = |0x90 &~0x40;
-                PORTF = 0x90;
-                //PORTF = (PORTF & 0xF0) | (1<<PORTF7) | (1<<PORTF4); // sets PF 4,5,6,and 7
+                PORTF = 0x90; // sets PF4 and PF7 to HIGH and all others to LOW
                 break;
         }
     }
 
+}
+
+void Stepper_Disable( Stepper_t* p_step ) {
+    if (p_step->motor_pin_1 == 8) { // if the selected stepper is Motor 1
+        PORTB = 0x00; // set entire PB register to LOW
+    }
+    if (p_step->motor_pin_1 == 36) { // if the selected stepper is Motor 2
+        PORTF = 0x00; // set entire PF register to LOW
+    }
 }

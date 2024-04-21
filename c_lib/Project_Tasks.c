@@ -3,10 +3,7 @@
 void Stop_Step(float unused) {
     Task_Cancel( &task_step_linear ); // cancels linear stepping
     Task_Cancel( &task_step_rotary ); // cancels rotary stepping
-
-   // float ret_val = 5.0; // FOR TESTING
-    //USB_Send_Msg( "cf", 'S', &ret_val, sizeof( ret_val ) ); // FOR TESTING
-
+    Task_Activate( &task_disable_motors, -1 ); // disables motors
     Task_Cancel( &task_stop_step ); // cancels itself
 }
 
@@ -27,7 +24,9 @@ void Erase(float unused) {
 }
 
 void Disable_Motors(float unused) {
-    // activate standby function on motor driver
+    // activate standby function on motor driver or just set the register to low
+    Stepper_Disable( &Sandworm_Robot.Linear );
+    Stepper_Disable( &Sandworm_Robot.Rotary );
 }
 
 bool Button_Check(float unused) {

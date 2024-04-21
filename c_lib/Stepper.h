@@ -47,4 +47,6 @@ void Stepper_Speed( Stepper_t* p_step, float Value );
  */
 void Stepper_Step( Stepper_t* p_step );
 
+void Stepper_Disable( Stepper_t* p_step );
+
 #endif
