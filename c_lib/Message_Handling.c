@@ -89,7 +89,7 @@ void Task_Message_Handling( float _time_since_last )
 
                      Task_Activate( &task_step_linear, Sandworm_Robot.Linear.step_delay ); // steps linear motor every step delay
                      //Task_Activate( &task_step_rotary, Sandworm_Robot.Rotary.step_delay ); // steps rotary motor every step delay
-                     Task_Activate( &task_stop_step, data.Time * 1000 ); // cancel the task after the specified time
+                     Task_Activate( &task_stop_step, data.Time ); // cancel the task after the specified time ( ms )
                  }
                  command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
