@@ -40,20 +40,20 @@ void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, i
     // Set registers for controlling the pins:
     if ( p_step->motor_pin_1 == 8 ) { // if the selected stepper is Motor 1
         // Set Data Direction Registers (DDR) for Port B
-        //DDRB |= ( 1 << DDB0 );  // bit 0
-        //DDRB |= ( 1 << DDB1 );  // bit 1
-        //DDRB |= ( 1 << DDB2 );  // bit 2
-        //DDRB |= ( 1 << DDB3 );  // bit 3 - sets PB 0,1,2,and 3 to outputs
-        DDRB = (DDRB & 0xF0) | (1<<DDB0) | (1<<DDB1) | (1<<DDB2) | (1<<DDB3); // sets PF 4,5,6,and 7 to outputs
+        DDRB |= ( 1 << DDB0 );  // bit 0
+        DDRB |= ( 1 << DDB1 );  // bit 1
+        DDRB |= ( 1 << DDB2 );  // bit 2
+        DDRB |= ( 1 << DDB3 );  // bit 3 - sets PB 0,1,2,and 3 to outputs
+        //DDRB = (DDRB & 0xF0) | (1<<DDB0) | (1<<DDB1) | (1<<DDB2) | (1<<DDB3); // sets PF 4,5,6,and 7 to outputs
     }
 
     if ( p_step->motor_pin_1 == 36 ) { // if the selected stepper is Motor 2
         // Set Data Direction Registers (DDR) for Port F
-        //DDRF |= ( 1 << DDF7 );  // bit 7
-        //DDRF |= ( 1 << DDF6 );  // bit 6
-        //DDRF |= ( 1 << DDF5 );  // bit 5
-        //DDRF |= ( 1 << DDF4 );  // bit 4 - sets PF 4,5,6,and 7 to outputs
-        DDRF = (DDRF & 0xF0) | (1<<DDF7) | (1<<DDF6) | (1<<DDF5) | (1<<DDF4); // sets PF 4,5,6,and 7 to outputs
+        DDRF |= ( 1 << DDF7 );  // bit 7
+        DDRF |= ( 1 << DDF6 );  // bit 6
+        DDRF |= ( 1 << DDF5 );  // bit 5
+        DDRF |= ( 1 << DDF4 );  // bit 4 - sets PF 4,5,6,and 7 to outputs
+        //DDRF = (DDRF & 0xF0) | (1<<DDF7) | (1<<DDF6) | (1<<DDF5) | (1<<DDF4); // sets PF 4,5,6,and 7 to outputs
     }
 }
 
