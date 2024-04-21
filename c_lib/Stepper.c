@@ -109,18 +109,23 @@ void Stepper_Step( Stepper_t* p_step ) {
     if (p_step->motor_pin_1 == 36) { // if the selected stepper is Motor 2
         float ret_val = p_step->step_number; // FOR TESTING
         USB_Send_Msg( "cf", 'L', &ret_val, sizeof( ret_val ) ); // FOR TESTING
+        PORTF = 0x00; // turns off all ports
         switch (p_step->step_number % 4) {
             case 0:  // 1010
-                PORTF = (PORTF & 0xF0) | (1<<PORTF7) | (1<<PORTF5); // sets PF 4,5,6,and 7
+                PORTF |= 0xA0;
+                //PORTF = (PORTF & 0xF0) | (1<<PORTF7) | (1<<PORTF5); // sets PF 4,5,6,and 7
                 break;
             case 1:  // 0110
-                PORTF = (PORTF & 0xF0) | (1<<PORTF6) | (1<<PORTF5); // sets PF 4,5,6,and 7
+                PORTF |= 0x60;
+                //PORTF = (PORTF & 0xF0) | (1<<PORTF6) | (1<<PORTF5); // sets PF 4,5,6,and 7
                 break;
             case 2:  //0101
-                PORTF = (PORTF & 0xF0) | (1<<PORTF6) | (1<<PORTF4); // sets PF 4,5,6,and 7
+                PORTF |= 0x50;
+                //PORTF = (PORTF & 0xF0) | (1<<PORTF6) | (1<<PORTF4); // sets PF 4,5,6,and 7
                 break;
             case 3:  //1001
-                PORTF = (PORTF & 0xF0) | (1<<PORTF7) | (1<<PORTF4); // sets PF 4,5,6,and 7
+                PORTF |= 0x90;
+                //PORTF = (PORTF & 0xF0) | (1<<PORTF7) | (1<<PORTF4); // sets PF 4,5,6,and 7
                 break;
         }
     }
