@@ -86,7 +86,7 @@ void Task_Message_Handling( float _time_since_last )
                  if( Button_Check( 0.0 ) ) { // if the button is pressed
                      USB_Send_Msg( "cf", 's', &delay, sizeof( delay ) ); // FOR TESTING
 
-                     Task_Activate( &task_step_linear, 100.0 ); // steps linear motor every step delay
+                     Task_Activate( &task_step_linear, 1.0 ); // steps linear motor every step delay
                      //Task_Activate( &task_step_rotary, Sandworm_Robot.Rotary.step_delay ); // steps rotary motor every step delay
                      Task_Activate( &task_stop_step, data.Time ); // cancel the task after the specified time ( ms )
                  }
