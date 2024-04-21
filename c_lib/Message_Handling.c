@@ -82,12 +82,11 @@ void Task_Message_Handling( float _time_since_last )
 
                  Stepper_Speed( &Sandworm_Robot.Linear, data.Speed ); // set the speed for each motor based on input - works
                  //Stepper_Speed( &Sandworm_Robot.Rotary, data.Speed );
-
+                 float delay = Sandworm_Robot.Linear.step_delay;
                  if( Button_Check( 0.0 ) ) { // if the button is pressed
+                     USB_Send_Msg( "cf", 's', &delay, sizeof( delay ) ); // FOR TESTING
 
-                     USB_Send_Msg( "cf", 's', &Sandworm_Robot.Linear.step_delay, sizeof( Sandworm_Robot.Linear.step_delay ) ); // FOR TESTING
-
-                     Task_Activate( &task_step_linear, Sandworm_Robot.Linear.step_delay ); // steps linear motor every step delay
+                     Task_Activate( &task_step_linear, 100.0 ); // steps linear motor every step delay
                      //Task_Activate( &task_step_rotary, Sandworm_Robot.Rotary.step_delay ); // steps rotary motor every step delay
                      Task_Activate( &task_stop_step, data.Time ); // cancel the task after the specified time ( ms )
                  }
