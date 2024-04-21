@@ -18,6 +18,7 @@ typedef struct {
     float Lin_vel;
     float Rot_vel;
     float Dt;
+    float Radius;
 } Sandworm_t;
 
 /**
@@ -27,7 +28,7 @@ typedef struct {
  * @param Rot_pos current rotational position
  * @param Dt time step
 */
-void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float Dt );
+void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float Radius );
 
 /**
  * Function Sandworm_Speed updates the speeds of both motors simultaneously to track a trajectory
