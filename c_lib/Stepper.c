@@ -58,6 +58,15 @@ void Initialize_Stepper( Stepper_t* p_step, uint16_t pos, int number_of_steps, i
 }
 
 float Stepper_Speed( Stepper_t* p_step, float Value) {
+
+    if ( Value > 0.0 ) { // if the motor is moving positive direction
+        p_step->direction = 1;
+    }
+    if ( Value < 0.0 ) {
+        p_step->direction = 0;
+        Value = -Value;
+    }
+
     float steps = p_step->number_of_steps; // converts number of steps per revolution into float
     steps = ( Value / 60.0 ) * steps;
     p_step->step_delay =  ( 1.0 / steps ) * 1000.0; // returns milliseconds between steps to achieve desired speed in RPM
@@ -70,7 +79,6 @@ float Stepper_Speed( Stepper_t* p_step, float Value) {
 void Stepper_Step( Stepper_t* p_step ) {
 
     // Determine stepper direction
-    /*
     if ( p_step->direction == 1 ) {
         p_step->step_number++;
         if ( p_step->step_number == p_step->number_of_steps) {
@@ -82,12 +90,6 @@ void Stepper_Step( Stepper_t* p_step ) {
             p_step->step_number = p_step->number_of_steps;
         }
         p_step->step_number--;
-    }
-    */
-
-    p_step->step_number++;
-    if ( p_step->step_number == p_step->number_of_steps) {
-        p_step->step_number = 0; // for rolling over
     }
 
     // Step motor

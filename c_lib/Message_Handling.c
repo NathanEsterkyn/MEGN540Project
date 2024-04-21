@@ -80,14 +80,12 @@ void Task_Message_Handling( float _time_since_last )
                  } data;
                  USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received floats
 
-                 float delay = Stepper_Speed( &Sandworm_Robot.Linear, data.Speed ); // set the speed for each motor based on input - works
-                 //Stepper_Speed( &Sandworm_Robot.Rotary, data.Speed );
+                 float LinSpeed = Stepper_Speed( &Sandworm_Robot.Linear, data.Speed ); // set the speed for each motor based on input - works
+                 //float RotSpeed = Stepper_Speed( &Sandworm_Robot.Rotary, data.Speed );
 
                  if( Button_Check( 0.0 ) ) { // if the button is pressed
-                     USB_Send_Msg( "cf", 's', &delay, sizeof( delay ) ); // FOR TESTING
-
-                     Task_Activate( &task_step_linear, 1.0 ); // steps linear motor every step delay
-                     //Task_Activate( &task_step_rotary, Sandworm_Robot.Rotary.step_delay ); // steps rotary motor every step delay
+                     Task_Activate( &task_step_linear, LinSpeed ); // steps linear motor every step delay
+                     //Task_Activate( &task_step_rotary, RotSpeed ); // steps rotary motor every step delay
                      Task_Activate( &task_stop_step, data.Time ); // cancel the task after the specified time ( ms )
                  }
                  command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
