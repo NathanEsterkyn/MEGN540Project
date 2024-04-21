@@ -33,7 +33,7 @@ SOFTWARE.
 /** These define the internal counters that will be updated in the ISR to keep track of the time
 *  The volatile keyword is because they are changing in an ISR, the static means they are not
 *  visible (not global) outside of this file.
-*/
+ */
 static volatile uint32_t _count_ms = 0;
 
 /**
@@ -47,86 +47,88 @@ static volatile uint32_t _count_ms = 0;
 *
 *  Since Timer 0 will be triggering at a kHz, we may want other things to be updated at 1kHz too.
 *
-*/
+ */
 void Initialize_Timing()
 {
-// *** MEGN540 Lab 2 ***
+    // *** MEGN540 Lab 2 ***
 
-TCCR0B |= (1 << CS01) | (1 << CS00); // set up timer with pre-scalar of 64
+    TCCR0B |= (1 << CS01) | (1 << CS00); // set up timer with pre-scalar of 64
 
-OCR0A = 249 ; // initialize compare value
+    OCR0A = 249 ; // initialize compare value
 
-TIMSK0 |= (1 << OCIE0A); // initialize compare feature for OCR0A
+    TIMSK0 |= (1 << OCIE0A); // initialize compare feature for OCR0A
 
-TCNT0 = 0; // initialize counter
+    TCNT0 = 0; // initialize counter
 
-TCCR0A |= (1 << WGM01); //initialize CTC
+    TCCR0A |= (1 << WGM01); //initialize CTC
 
-sei();
+    sei();
 
-_count_ms = 0;
+    _count_ms = 0;
 
 }
 
 /**
 * This function gets the current time and returns it in a Time_t structure.
 * @return
-*/
+ */
 float Timing_Get_Time_Sec()
 {
-// *** MEGN540 Lab 2 ***
+    // *** MEGN540 Lab 2 ***
 
-return (_count_ms + TCNT0 * 0.004) * 0.001;
+    return (_count_ms + TCNT0 * 0.004) * 0.001;
 
 }
 Time_t Timing_Get_Time()
 {
-// *** MEGN540 Lab 2 ***
-Time_t time;
-time.millisec = (_count_ms + TCNT0 * 0.004) * 0.001;
-time.microsec = TCNT0 * 4;  // YOU NEED TO REPLACE THIS WITH A CALL TO THE TIMER0 REGISTER AND MULTIPLY APPROPRIATELY
-return time;
+    // *** MEGN540 Lab 2 ***
+    Time_t time = {
+        .millisec = _count_ms,
+        .microsec = TCNT0 * 4 // YOU NEED TO REPLACE THIS WITH A CALL TO THE TIMER0 REGISTER AND MULTIPLY APPROPRIATELY
+    };
+
+    return time;
 }
 
 /**
 * These functions return the individual parts of the Time_t struct, useful if you only care about
 * things on second or millisecond resolution.
 * @return
-*/
+ */
 uint32_t Timing_Get_Milli()
 {
-return _count_ms;
+    return _count_ms;
 }
 uint16_t Timing_Get_Micro()
 {
-// *** MEGN540 Lab 2 ***
-return TCNT0 * 4;  // YOU NEED TO REPLACE THIS WITH A CALL TO THE TIMER0 REGISTER AND MULTIPLY APPROPRIATELY
+    // *** MEGN540 Lab 2 ***
+    return TCNT0 * 4;  // YOU NEED TO REPLACE THIS WITH A CALL TO THE TIMER0 REGISTER AND MULTIPLY APPROPRIATELY
 }
 
 /**
 * This function takes a start time and calculates the time since that time, it returns it in the Time struct.
 * @param p_time_start a pointer to a start time struct
 * @return (Time_t) Time since the other time.
-*/
+ */
 float Timing_Seconds_Since( const Time_t* time_start_p )
 {
-// *** MEGN540 Lab 2 ***
-float current_time = Timing_Get_Time_Sec(); // calculate seconds since start time
-float start_time = time_start_p->millisec;
-float delta_time = current_time - start_time;
-return delta_time;
+    // *** MEGN540 Lab 2 ***
+    float current_time = Timing_Get_Time_Sec(); // calculate seconds since start time
+    float start_time = ((*time_start_p).millisec + ((*time_start_p).microsec * 0.001)) * 0.001;
+    float delta_time = current_time - start_time;
+    return delta_time;
 }
 
 /** This is the Interrupt Service Routine for the Timer0 Compare A feature.
 * You'll need to set the compare flags properly for it to work.
-*/
+ */
 
 ISR(TIMER0_COMPA_vect)
 {
-// *** MEGN540 Lab 2 ***
-// YOUR CODE HERE
-// YOU NEED TO RESET THE Timer0 Value to 0 again!
-// TCNT0 = 0;
-// take care of upticks of both our internal and external variables.
-_count_ms ++;
+    // *** MEGN540 Lab 2 ***
+    // YOUR CODE HERE
+    // YOU NEED TO RESET THE Timer0 Value to 0 again!
+    // TCNT0 = 0;
+    // take care of upticks of both our internal and external variables.
+    _count_ms ++;
 }

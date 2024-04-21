@@ -66,79 +66,63 @@ void Stepper_Speed( Stepper_t* p_step, float Value) {
     USB_Send_Msg( "cf", 's', &ret_val, sizeof( ret_val ) ); // FOR TESTING
 }
 
-void Stepper_Step( Stepper_t* p_step, int steps ) {
+void Stepper_Step( Stepper_t* p_step ) {
 
-    int steps_remaining = 10;
-
-    if ( steps > 0 ) {
-        p_step->direction = 1; // forwards direction
-        //steps_remaining = steps;
-    }
-    if ( steps < 0 ) {
-        p_step->direction = 0; // backwards direction
-        //steps_remaining = -steps;
-    }
-
-    float ret_val = steps_remaining; // FOR TESTING
-    USB_Send_Msg( "cf", 'r', &ret_val, sizeof( ret_val ) ); // FOR TESTING
-
-    while (steps_remaining > 0) {
-
-       Time_t timeNow = Timing_Get_Time(); // get the current time
-
-        float reval = timeNow.millisec; // FOR TESTING
-        USB_Send_Msg("cf", 'T', &reval, sizeof( reval )); // FOR TESTING
-
-        if ( (Timing_Seconds_Since(&timeNow)) >= p_step->step_delay ) { // if it's time for another step...
-            p_step->last_step_time = ( timeNow.millisec * 1000 ); // get the last step time in seconds
-            // Iterate the step number based on direction
-            if ( p_step->direction == 1 ) {
-                p_step->step_number++;
-                if ( p_step->step_number == p_step->number_of_steps) {
-                    p_step->step_number = 0; // for rolling over
-                }
-            }
-            else {
-                if ( p_step->step_number == 0 ) {
-                    p_step->step_number = p_step->number_of_steps;
-                }
-                p_step->step_number--;
-            }
-            steps_remaining--; // subtract from steps left
-
-            // Call stepping function
-            if (p_step->motor_pin_1 == 8) { // if the selected stepper is Motor 1
-                switch (p_step->step_number % 4) {
-                    case 0:  // 1010
-                        PORTB = (PORTB & 0xF0) | (1<<PORTB0) | (1<<PORTB2); // sets PB 0,1,2,and 3
-                        break;
-                    case 1:  // 0110
-                        PORTB = (PORTB & 0xF0) | (1<<PORTB1) | (1<<PORTB2); // sets PB 0,1,2,and 3
-                        break;
-                    case 2:  //0101
-                        PORTB = (PORTB & 0xF0) | (1<<PORTB1) | (1<<PORTB3); // sets PB 0,1,2,and 3
-                        break;
-                    case 3:  //1001
-                        PORTB = (PORTB & 0xF0) | (1<<PORTB0) | (1<<PORTB3); // sets PB 0,1,2,and 3
-                        break;
-                }
-            }
-            if (p_step->motor_pin_1 == 36) { // if the selected stepper is Motor 2
-                switch (p_step->step_number % 4) {
-                    case 0:  // 1010
-                        PORTF = (PORTF & 0xF0) | (1<<PORTF7) | (1<<PORTF5); // sets PF 4,5,6,and 7
-                        break;
-                    case 1:  // 0110
-                        PORTF = (PORTF & 0xF0) | (1<<PORTF6) | (1<<PORTF5); // sets PF 4,5,6,and 7
-                        break;
-                    case 2:  //0101
-                        PORTF = (PORTF & 0xF0) | (1<<PORTF6) | (1<<PORTF4); // sets PF 4,5,6,and 7
-                        break;
-                    case 3:  //1001
-                        PORTF = (PORTF & 0xF0) | (1<<PORTF7) | (1<<PORTF4); // sets PF 4,5,6,and 7
-                        break;
-                }
-            }
+    // Determine stepper direction
+    /*
+    if ( p_step->direction == 1 ) {
+        p_step->step_number++;
+        if ( p_step->step_number == p_step->number_of_steps) {
+            p_step->step_number = 0; // for rolling over
         }
     }
+    else {
+        if ( p_step->step_number == 0 ) {
+            p_step->step_number = p_step->number_of_steps;
+        }
+        p_step->step_number--;
+    }
+    */
+
+    p_step->step_number++;
+    if ( p_step->step_number == p_step->number_of_steps) {
+        p_step->step_number = 0; // for rolling over
+    }
+
+    // Step motor
+    if (p_step->motor_pin_1 == 8) { // if the selected stepper is Motor 1
+        switch (p_step->step_number % 4) {
+            case 0:  // 1010
+                PORTB = (PORTB & 0xF0) | (1<<PORTB0) | (1<<PORTB2); // sets PB 0,1,2,and 3
+                break;
+            case 1:  // 0110
+                PORTB = (PORTB & 0xF0) | (1<<PORTB1) | (1<<PORTB2); // sets PB 0,1,2,and 3
+                break;
+            case 2:  //0101
+                PORTB = (PORTB & 0xF0) | (1<<PORTB1) | (1<<PORTB3); // sets PB 0,1,2,and 3
+                break;
+            case 3:  //1001
+                PORTB = (PORTB & 0xF0) | (1<<PORTB0) | (1<<PORTB3); // sets PB 0,1,2,and 3
+                break;
+        }
+    }
+    if (p_step->motor_pin_1 == 36) { // if the selected stepper is Motor 2
+        switch (p_step->step_number % 4) {
+            case 0:  // 1010
+                PORTF = (PORTF & 0xF0) | (1<<PORTF7) | (1<<PORTF5); // sets PF 4,5,6,and 7
+                break;
+            case 1:  // 0110
+                PORTF = (PORTF & 0xF0) | (1<<PORTF6) | (1<<PORTF5); // sets PF 4,5,6,and 7
+                break;
+            case 2:  //0101
+                PORTF = (PORTF & 0xF0) | (1<<PORTF6) | (1<<PORTF4); // sets PF 4,5,6,and 7
+                break;
+            case 3:  //1001
+                PORTF = (PORTF & 0xF0) | (1<<PORTF7) | (1<<PORTF4); // sets PF 4,5,6,and 7
+                break;
+        }
+    }
+
+    float ret_val = p_step->step_number; // FOR TESTING
+    USB_Send_Msg( "cf", 'm', &ret_val, sizeof( ret_val ) ); // FOR TESTING
 }

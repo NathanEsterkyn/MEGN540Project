@@ -75,14 +75,22 @@ void Task_Message_Handling( float _time_since_last )
             if( USB_Msg_Length() >= _Message_Length( 'V' ) ) {
                  USB_Msg_Get(); // removes the first character from the received buffer
                  struct __attribute__( ( __packed__ ) ) { // creates a struct for the received floats
-                     float Steps;
+                     float Time;
                      float Speed;
                  } data;
-                 int stepies = data.Steps;
                  USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received floats
-                 Stepper_Speed( &Sandworm_Robot.Linear, data.Speed ); // works
-                 Stepper_Step( &Sandworm_Robot.Linear, stepies );
-                 //Sandworm_Speed( &Sandworm_Robot, data.Speed, data.Steps ); // tell the stepper to spin at Speed and travel Steps
+
+                 Stepper_Speed( &Sandworm_Robot.Linear, data.Speed ); // set the speed for each motor based on input - works
+                 //Stepper_Speed( &Sandworm_Robot.Rotary, data.Speed );
+
+                 if( Button_Check( 0.0 ) ) { // if the button is pressed
+
+                     USB_Send_Msg( "cff", 'b', &data, sizeof( data ) ); // FOR TESTING
+
+                     //Task_Activate( &task_step_linear, Sandworm_Robot.Linear.step_delay ); // steps linear motor every step delay
+                     //Task_Activate( &task_step_rotary, Sandworm_Robot.Rotary.step_delay ); // steps rotary motor every step delay
+                     //Task_Activate( &task_stop_step, data.Time * 1000 ); // cancel the task after the specified time
+                 }
                  command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;

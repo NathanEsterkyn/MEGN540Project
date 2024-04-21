@@ -36,6 +36,9 @@ void Initialize_Modules(float unused)
 
     // Set up Sandworm functionality
     Initialize_Sandworm( &Sandworm_Robot, 0, 0, 0.010 );
+    Initialize_Task( &task_stop_step, Stop_Step );
+    Initialize_Task( &task_step_linear, Step_Linear );
+    Initialize_Task( &task_step_rotary, Step_Rotary );
     //Initialize_Task( &task_home, Home );
     //Initialize_Task( &task_erase, Erase );
     //Initialize_Task( &task_disable_motors, Disable_Motors );
@@ -67,6 +70,9 @@ int main()
         Task_Run_If_Ready( &task_time_loop );
 
         // Sandworm base functions
+        Task_Run_If_Ready( &task_stop_step );
+        Task_Run_If_Ready( &task_step_linear );
+        Task_Run_If_Ready( &task_step_rotary );
         //Task_Run_If_Ready( &task_home );
         //Task_Run_If_Ready( &task_erase );
         //Task_Run_If_Ready( &task_disable_motors );

@@ -16,13 +16,20 @@
 #include "Sandworm.h"
 #include "Stepper.h"
 
+Task_t task_stop_step;
+Task_t task_step_linear;
+Task_t task_step_rotary;
 Task_t task_home;
 Task_t task_erase;
 Task_t task_disable_motors;
 Sandworm_t Sandworm_Robot;
 
+void Stop_Step(float unused);
+void Step_Linear(float unused);
+void Step_Rotary(float unused);
 void Home(float unused);
 void Erase(float unused);
 void Disable_Motors(float unused); // use the standby feature on our motor controllers
+bool Button_Check(float unused); // function to determine if the button is pressed or not
 
 #endif
