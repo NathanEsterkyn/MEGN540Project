@@ -80,9 +80,9 @@ void Task_Message_Handling( float _time_since_last )
                  } data;
                  USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received floats
 
-                 Stepper_Speed( &Sandworm_Robot.Linear, data.Speed ); // set the speed for each motor based on input - works
+                 float delay = Stepper_Speed( &Sandworm_Robot.Linear, data.Speed ); // set the speed for each motor based on input - works
                  //Stepper_Speed( &Sandworm_Robot.Rotary, data.Speed );
-                 float delay = Sandworm_Robot.Linear.step_delay;
+
                  if( Button_Check( 0.0 ) ) { // if the button is pressed
                      USB_Send_Msg( "cf", 's', &delay, sizeof( delay ) ); // FOR TESTING
 
