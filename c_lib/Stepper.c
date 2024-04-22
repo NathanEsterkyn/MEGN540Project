@@ -42,6 +42,7 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
         DDRB |= ( 1 << DDB1 );  // bit 1
         DDRB |= ( 1 << DDB2 );  // bit 2
         DDRB |= ( 1 << DDB3 );  // bit 3 - sets PB 0,1,2,and 3 to outputs
+        // DDRB |= 0xF; // another way to do it
     }
 
     if ( p_step->motor_pin_1 == 36 ) { // if the selected stepper is Motor 2
@@ -50,6 +51,7 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
         DDRF |= ( 1 << DDF6 );  // bit 6
         DDRF |= ( 1 << DDF5 );  // bit 5
         DDRF |= ( 1 << DDF4 );  // bit 4 - sets PF 4,5,6,and 7 to outputs
+        // DDRF |= 0xF0; // another way to do it.
     }
 }
 
@@ -92,16 +94,16 @@ void Stepper_Step( Stepper_t* p_step ) {
     if (p_step->motor_pin_1 == 8) { // if the selected stepper is Motor 1
         switch (p_step->step_number % 4) {
             case 0:  // 1010
-                PORTB = (PORTB & 0xF0) | (1<<PORTB0) | (1<<PORTB2); // sets PB 0,1,2,and 3
+                PORTB = 0xA0; // sets PB 0,1,2,and 3
                 break;
             case 1:  // 0110
-                PORTB = (PORTB & 0xF0) | (1<<PORTB1) | (1<<PORTB2); // sets PB 0,1,2,and 3
+                PORTB = 0x60; // sets PB 0,1,2,and 3
                 break;
             case 2:  //0101
-                PORTB = (PORTB & 0xF0) | (1<<PORTB1) | (1<<PORTB3); // sets PB 0,1,2,and 3
+                PORTB = 0x50; // sets PB 0,1,2,and 3
                 break;
             case 3:  //1001
-                PORTB = (PORTB & 0xF0) | (1<<PORTB0) | (1<<PORTB3); // sets PB 0,1,2,and 3
+                PORTB = 0x90; // sets PB 0,1,2,and 3
                 break;
         }
     }
