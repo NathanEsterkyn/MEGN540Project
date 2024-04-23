@@ -22,6 +22,7 @@ void Step_Rotary(float unused) {
 }
 
 void Home(float unused) {
+    /*
     // Linear Homing
     float homeSpeed = Stepper_Speed( &Sandworm_Robot.Linear, HOME_SPEED_L ); // set homing speed
     Task_Activate( &task_step_linear, homeSpeed ); // move linear axis towards home
@@ -29,9 +30,11 @@ void Home(float unused) {
         Task_Activate( &task_stop_step, -1 ); // stop the motors
         Sandworm_Robot.Lin_pos = 0.0; // set zero
     }
+     */
 }
 
 void Erase(float unused) {
+    /*
     Task_Activate( &task_home, -1 ); // spiral function: home, travel to outside, spiral inwards to 0,0
     float spiralSpeedL = Stepper_Speed( &Sandworm_Robot.Linear, ERASE_SPEED_L ); // set spiral speed
     float spiralSpeedR = Stepper_Speed( &Sandworm_Robot.Rotary, ERASE_SPEED_R ); // set homing speed
@@ -40,6 +43,7 @@ void Erase(float unused) {
     if ( Sandworm_Robot->Lin_pos >= Sandworm_Robot->Radius ) { // if the position of the linear actuator has reached the radius
         Task_Activate( &task_stop_step, -1 ); // stop the motors
     }
+    */
 }
 
 void Disable_Motors(float unused) {
