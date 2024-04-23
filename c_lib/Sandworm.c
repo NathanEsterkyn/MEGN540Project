@@ -16,5 +16,6 @@ void Sandworm_Home( Sandworm_t* p_sw ) { // for testing I am sending it Speed (L
 }
 
 bool Sandworm_Limit( Sandworm_t* p_sw ) {
+    return true;
     // function to determine if button has been pressed
 }
