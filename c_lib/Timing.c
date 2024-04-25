@@ -123,8 +123,6 @@ ISR(TIMER0_COMPA_vect)
     // YOUR CODE HERE
     // YOU NEED TO RESET THE Timer0 Value to 0 again!
     // take care of upticks of both our internal and external variables.
-    //float ret_val = 1.505; // FOR TESTING
-    //USB_Send_Msg( "cf", 'T', &ret_val, sizeof( ret_val ) ); // FOR TESTING
     _count_ms ++;
     TCNT0 = 0;
 }

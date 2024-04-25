@@ -69,6 +69,8 @@ else(DEFINED ENV{AVR_FIND_ROOT_PATH})
       set(CMAKE_FIND_ROOT_PATH "/usr/lib/avr")
     elseif(EXISTS "/usr/local/CrossPack-AVR")
       set(CMAKE_FIND_ROOT_PATH "/usr/local/CrossPack-AVR")
+    elseif(EXISTS "/usr/local/bin") # Added for Mac
+        set(CMAKE_FIND_ROOT_PATH "/usr/local/bin") # Added for mac
     else(EXISTS "/opt/local/avr")
       message(FATAL_ERROR "Please set AVR_FIND_ROOT_PATH in your environment.")
     endif(EXISTS "/opt/local/avr")

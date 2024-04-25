@@ -13,6 +13,9 @@
 #include "Timing.h"
 #include "Ring_Buffer.h"
 #include "SerialIO.h"  // USB interface for sending results back to user
+#include <avr/io.h>         // Board Specific pin definations
+#include <avr/interrupt.h>  // for interrupt service routine use
+#include <ctype.h>
 
 typedef struct {
    int number_of_steps; // number of steps per revolution for motors

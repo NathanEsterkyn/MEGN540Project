@@ -53,6 +53,16 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
         DDRF |= ( 1 << DDF4 );  // bit 4 - sets PF 4,5,6,and 7 to outputs
         // DDRF |= 0xF0; // another way to do it.
     }
+
+    // Interrupts on Timer/Counter3 will trigger each step, setup timer3:
+
+    TCCR3A = 0x00; // sets bits to zero - Normal port operation, OC1A and OC1B disconnected (no output to ports)
+    TCCR3B |= ( 1 << WGM32 ); // select mode 4 - clear timer on compare match
+    TCCR3B |= ( 1 << CS31 ); // select a prescalar of 8 - 2000 pulses per millisecond
+    TIMSK3 |= ( 1 << OCIE3A ); // enables output compare match with the OCR3A register
+
+    OCR3A = 2000 * 30; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
+    sei(); // finalize write by enabling interrupts
 }
 
 float Stepper_Speed( Stepper_t* p_step, float Value) {
@@ -136,4 +146,10 @@ void Stepper_Disable( Stepper_t* p_step ) {
     if (p_step->motor_pin_1 == 36) { // if the selected stepper is Motor 2
         PORTF = 0x00; // set entire PF register to LOW
     }
+}
+
+ISR( TIMER3_COMPA_vect )
+{
+    PORTF ^= _B(PORTF5); // xor PORTF5 (if it was 1 its now 0 if it was 0 its now 1)
+    // mode is set to clear counter on compare match so no need to reset counter value here
 }
