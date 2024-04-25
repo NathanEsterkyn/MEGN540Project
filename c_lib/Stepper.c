@@ -61,7 +61,7 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
     TCCR3B |= ( 1 << CS31 ); // select a prescalar of 8 - 2000 pulses per millisecond
     TIMSK3 |= ( 1 << OCIE3A ); // enables output compare match with the OCR3A register
 
-    OCR3A = 2000 * 30; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
+    OCR3A = 60000 ; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
     sei(); // finalize write by enabling interrupts
 }
 
@@ -150,6 +150,6 @@ void Stepper_Disable( Stepper_t* p_step ) {
 
 ISR( TIMER3_COMPA_vect )
 {
-    PORTF ^= _B(PORTF5); // xor PORTF5 (if it was 1 its now 0 if it was 0 its now 1)
+    PORTF ^= ( 1 << PORTF5); // xor PORTF5 (if it was 1 its now 0 if it was 0 its now 1)
     // mode is set to clear counter on compare match so no need to reset counter value here
 }
