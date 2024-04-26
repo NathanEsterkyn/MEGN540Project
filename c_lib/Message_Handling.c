@@ -111,11 +111,37 @@ void Task_Message_Handling( float _time_since_last )
                  command_processed = true;
             }
             break;
+<<<<<<< HEAD
         case 'X':
             if( USB_Msg_Length() == _Message_Length( 'H' ) ) {
                  USB_Msg_Get();                            // removes the first character from the received buffer
                  Task_Activate( &task_disable_motors, 0.0 );
                  command_processed = true;
+=======
+        case 'w':
+            if (USB_Msg_Length() >= _Message_Length('w')) {
+                USB_Msg_Get();
+
+                Send_Switch_Message('w');
+                command_processed = true;
+            }
+            break;
+        case 'W':
+            if (USB_Msg_Length() >= _Message_Length('W')) {
+                USB_Msg_Get();
+
+                float repetition_time;
+
+                USB_Msg_Read_Into(&repetition_time, sizeof(repetition_time));
+
+                if (repetition_time > 0) {
+                    Task_Activate(&task_send_switch_status, repetition_time);
+                } else {
+                    Task_Cancel(&task_send_switch_status);
+                }
+
+                command_processed = true;
+>>>>>>> 1ee190164dc2e34e09052726d08f783957ac2651
             }
             break;
         default:                   // case for unknown command character (unknown operator)
@@ -155,6 +181,8 @@ static uint8_t _Message_Length( char cmd )
         case 'Y': return 1; break;
         case 'H': return 1; break;
         case 'X': return 5; break;
+        case 'w': return 1; break;
+        case 'W': return 5; break;
         default: return 0; break;
     }
 }

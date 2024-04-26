@@ -62,6 +62,18 @@ void Button_Check(float unused) {
     }
 }
 
+void Send_Switch_Status(float _time_since_last) { Send_Switch_Message('W'); }
+
+void Send_Switch_Message(char message_type) {
+  struct __attribute__((__packed__)) {
+    bool status;
+  } data;
+
+  data.status = Sandworm_Robot.limitState;
+
+  USB_Send_Msg("cb", message_type, &data, sizeof(data));
+}
+
 // Timing ISRs:
 
 ISR( TIMER1_COMPA_vect ) // performs steps for motor 1 (rotary on PORTB)
@@ -79,7 +91,7 @@ ISR( TIMER3_COMPA_vect ) // performs steps for motor 2 (Linear on PORTF)
 }
 ISR( INT0_vect ) // ISR for handling a limit switch press
 {
-    Sandworm_Robot.limitState = !Sandworm_Robot.limitState;
+    Sandworm_Robot.limitState = PIND & (1 << PIND0);
     // ADD A METHOD FOR DEBOUNCING!!
 }
 
