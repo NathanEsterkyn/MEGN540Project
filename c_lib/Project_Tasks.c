@@ -68,11 +68,27 @@ ISR( TIMER3_COMPA_vect ) // performs steps for motor 2 (Linear on PORTF)
 ISR( INT0_vect ) // ISR for handling a limit switch press
 {
     Sandworm_Robot.limitState ^= Sandworm_Robot.limitState;
-    Sandworm_Limit( Sandworm_Robot );
+    if ( Sandworm_Robot.buttonState == 1 ) {
+        PORTD |= ( 1 << PORTD1 );
+    }
+    if ( Sandworm_Robot.limitState == 1 ) {
+        PORTD |= ( 1 << PORTD1 );
+    }
+    else {
+        PORTD &= ~( 1 << PORTD1 );
+    }
 }
 
 ISR( INT2_vect ) // ISR for handling a power button press
 {
     Sandworm_Robot.buttonState ^= Sandworm_Robot.buttonState;
-    Sandworm_Robot( Sandworm_Robot );
+    if ( Sandworm_Robot.buttonState == 1 ) {
+        PORTD |= ( 1 << PORTD1 );
+    }
+    if ( Sandworm_Robot.limitState == 1 ) {
+        PORTD |= ( 1 << PORTD1 );
+    }
+    else {
+        PORTD &= ~( 1 << PORTD1 );
+    }
 }
