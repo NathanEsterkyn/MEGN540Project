@@ -92,7 +92,7 @@ void Task_Message_Handling( float _time_since_last )
                     float shit = 0.1;
                     USB_Send_Msg( "cf", 'V', &shit, sizeof( shit ) );  // print out the command and the time
                     Task_Activate( &task_enable_motors, -1 );          // enable the motors
-                    // Task_Activate( &task_stop_step, data.Time ); // disable the motors after the specified time ( ms )
+                    Task_Activate( &task_stop_step, data.Time );       // disable the motors after the specified time ( ms )
                 }
                 command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
             }
@@ -112,46 +112,48 @@ void Task_Message_Handling( float _time_since_last )
             }
             break;
         case 'X':
-            if( USB_Msg_Length() == _Message_Length( 'H' ) ) {
+            if( USB_Msg_Length() == _Message_Length( 'X' ) ) {
                 USB_Msg_Get();  // removes the first character from the received buffer
                 Task_Activate( &task_disable_motors, 0.0 );
                 command_processed = true;
-                case 'w':
-                    if( USB_Msg_Length() >= _Message_Length( 'w' ) ) {
-                        USB_Msg_Get();
-
-                        Send_Switch_Message( 'w' );
-                        command_processed = true;
-                    }
-                    break;
-                case 'W':
-                    if( USB_Msg_Length() >= _Message_Length( 'W' ) ) {
-                        USB_Msg_Get();
-
-                        float repetition_time;
-
-                        USB_Msg_Read_Into( &repetition_time, sizeof( repetition_time ) );
-
-                        if( repetition_time > 0 ) {
-                            Task_Activate( &task_send_switch_status, repetition_time );
-                        } else {
-                            Task_Cancel( &task_send_switch_status );
-                        }
-
-                        command_processed = true;
-                    }
-                    break;
-                default:                   // case for unknown command character (unknown operator)
-                    USB_Msg_Get();         // clears the unknown operator
-                    USB_Send_Byte( '?' );  // sends a '?'
-                    break;
             }
+            break;
 
-            //********* MEGN540 -- LAB 2 ************//
-            if( command_processed ) {                                  // if the task has been completed
-                Task_Activate( &task_message_handling_watchdog, -1 );  // reset the watchdog timer
+        case 'w':
+            if( USB_Msg_Length() >= _Message_Length( 'w' ) ) {
+                USB_Msg_Get();
+
+                Send_Switch_Message( 'w' );
+                command_processed = true;
             }
+            break;
+        case 'W':
+            if( USB_Msg_Length() >= _Message_Length( 'W' ) ) {
+                USB_Msg_Get();
+
+                float repetition_time;
+
+                USB_Msg_Read_Into( &repetition_time, sizeof( repetition_time ) );
+
+                if( repetition_time > 0 ) {
+                    Task_Activate( &task_send_switch_status, repetition_time );
+                } else {
+                    Task_Cancel( &task_send_switch_status );
+                }
+
+                command_processed = true;
+            }
+        default:                   // case for unknown command character (unknown operator)
+            USB_Msg_Get();         // clears the unknown operator
+            USB_Send_Byte( '?' );  // sends a '?'
+            break;
     }
+
+    //********* MEGN540 -- LAB 2 ************//
+    if( command_processed ) {                                  // if the task has been completed
+        Task_Activate( &task_message_handling_watchdog, -1 );  // reset the watchdog timer
+    }
+}
 }
 
 /**
@@ -175,10 +177,10 @@ static uint8_t _Message_Length( char cmd )
 {
     switch( cmd ) {
         case 't': return 2; break;
-        case 'V': return 9; break;
+        case 'V': return 13; break;
         case 'Y': return 1; break;
         case 'H': return 1; break;
-        case 'X': return 5; break;
+        case 'X': return 1; break;
         case 'w': return 1; break;
         case 'W': return 5; break;
         default: return 0; break;
