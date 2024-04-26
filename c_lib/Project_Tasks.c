@@ -47,7 +47,7 @@ void Stop_Step(float unused) {
     Task_Cancel( &task_stop_step ); // cancels itself
 }
 
-bool Button_Check(float unused) {
+void Button_Check(float unused) {
 
     if ( Sandworm_Robot.buttonState == 1 ) { // checks if the power button is on
         PORTD |= ( 1 << PORTD1 ); // turns on the power LED

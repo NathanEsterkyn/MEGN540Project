@@ -85,7 +85,7 @@ void Task_Message_Handling( float _time_since_last )
                  Stepper_Speed( &Sandworm_Robot.Linear, data.Speed_L ); // set the speed for each motor based on input
                  Stepper_Speed( &Sandworm_Robot.Rotary, data.Speed_R );
 
-                 if( Button_Check( 0.0 ) ) { // if the button is pressed
+                 if( Sandworm_Robot.buttonState == 1 ) { // if the button is pressed
                      Task_Activate( &task_enable_motors, -1 ); // enable the motors
                      Task_Activate( &task_stop_step, data.Time ); // disable the motors after the specified time ( ms )
                  }

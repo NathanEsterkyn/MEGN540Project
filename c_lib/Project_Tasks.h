@@ -39,6 +39,6 @@ void Enable_Motors(float unused);
 void Home(float unused);
 void Erase(float unused);
 void Disable_Motors(float unused); // use the standby feature on our motor controllers
-bool Button_Check(float unused); // function to determine if the button is pressed or not
+void Button_Check(float unused); // function to determine if the button is pressed or not
 
 #endif
