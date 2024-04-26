@@ -35,23 +35,15 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
     p_step->step_number = 0;
     p_step->step_delay = 0.0;
 
-    // Set registers for controlling the pins:
+    // Set data direction registers for controlling the pins:
     if ( p_step->motor_pin_1 == 8 ) { // if the selected stepper is Motor 1
         // Set Data Direction Registers (DDR) for Port B
-        DDRB |= ( 1 << DDB0 );  // bit 0
-        DDRB |= ( 1 << DDB1 );  // bit 1
-        DDRB |= ( 1 << DDB2 );  // bit 2
-        DDRB |= ( 1 << DDB3 );  // bit 3 - sets PB 0,1,2,and 3 to outputs
-        // DDRB |= 0xF; // another way to do it
+        DDRB |= 0xF; // sets PB 0,1,2,and 3 to outputs
     }
 
     if ( p_step->motor_pin_1 == 36 ) { // if the selected stepper is Motor 2
         // Set Data Direction Registers (DDR) for Port F
-        DDRF |= ( 1 << DDF7 );  // bit 7
-        DDRF |= ( 1 << DDF6 );  // bit 6
-        DDRF |= ( 1 << DDF5 );  // bit 5
-        DDRF |= ( 1 << DDF4 );  // bit 4 - sets PF 4,5,6,and 7 to outputs
-        // DDRF |= 0xF0; // another way to do it.
+        DDRF |= 0xF0; // sets PF 4,5,6,and 7 to outputs
     }
 
     // Interrupts on Timer/Counter3 will trigger each step, setup timer3:
@@ -60,8 +52,10 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
     TCCR3B |= ( 1 << WGM32 ); // select mode 4 - clear timer on compare match
     TCCR3B |= ( 1 << CS31 ); // select a prescalar of 8 - 2000 pulses per millisecond
     TIMSK3 |= ( 1 << OCIE3A ); // enables output compare match with the OCR3A register
+    TIMSK3 |= ( 1 << OCIE3B ); // enables output compare match with the OCR3A register
 
     OCR3A = 60000 ; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
+    OCR3B = 30000 ; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
     sei(); // finalize write by enabling interrupts
 }
 
@@ -150,6 +144,11 @@ void Stepper_Disable( Stepper_t* p_step ) {
 
 ISR( TIMER3_COMPA_vect )
 {
-    PORTF ^= ( 1 << PORTF5); // xor PORTF5 (if it was 1 its now 0 if it was 0 its now 1)
+    PORTF ^= ( 1 << PORTF5 ); // xor PORTF5 (if it was 1 its now 0 if it was 0 its now 1)
     // mode is set to clear counter on compare match so no need to reset counter value here
+}
+
+ISR( TIMER3_COMPB_vect )
+{
+    PORTF ^= ( 1 << PORTF7 );
 }
