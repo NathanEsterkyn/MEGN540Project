@@ -154,7 +154,6 @@ void Task_Message_Handling( float _time_since_last )
         Task_Activate( &task_message_handling_watchdog, -1 );  // reset the watchdog timer
     }
 }
-}
 
 /**
  * @brief Function Task_Message_Handling_Watchdog clears the USB recieve (deleting all messages) to flush the buffer if a complete message is not recieved
