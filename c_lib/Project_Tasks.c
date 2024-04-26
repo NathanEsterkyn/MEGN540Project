@@ -31,8 +31,6 @@ void Enable_Motors(float unused) {
     if ( Sandworm_Robot.Rot_vel != 0 ) {
         Stepper_Enable( &Sandworm_Robot.Rotary );
     }
-    float linval = 0.0;
-    USB_Send_Msg("cff", 'E' , &linval , sizeof(linval)); // print out the command and the time
 }
 
 void Disable_Motors(float unused) {

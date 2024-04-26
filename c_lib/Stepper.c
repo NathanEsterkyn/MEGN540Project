@@ -52,8 +52,6 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
 
     OCR1A = 0; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
     OCR3A = 0; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
-
-    sei(); // finalize write by enabling interrupts
 }
 
 void Stepper_Speed( Stepper_t* p_step, float Value) {
@@ -146,10 +144,12 @@ void Stepper_Disable( Stepper_t* p_step ) {
 }
 
 void Stepper_Enable( Stepper_t* p_step ) {
+    cli();
     if (p_step->motor_pin_1 == 8) { // if the selected stepper is Motor 1
         TIMSK1 |= ( 1 << OCIE1A ); // disables output compare match with the OCR1A register
     }
     if (p_step->motor_pin_1 == 36) { // if the selected stepper is Motor 2
         TIMSK3 |= ( 1 << OCIE3A ); // disables output compare match with the OCR1A register
     }
+    sei();
 }
