@@ -10,7 +10,8 @@ set(F_CPU 16000000UL)
 ##########################################################################
 set(AVR_UPLOADTOOL avrdude)
 set(AVR_PROGRAMMER avr109)
-set(AVR_UPLOADTOOL_PORT /dev/ttyZumoCarAVR)
+#set(AVR_UPLOADTOOL_PORT /dev/ttyZumoCarAVR)
+set(AVR_UPLOADTOOL_PORT /dev/tty.usbmodem14401) # added for my mac
 
 ##########################################################################
 # AVR and fuses needs to be set

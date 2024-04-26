@@ -35,16 +35,20 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
     p_step->step_number = 0;
     p_step->step_delay = 0.0;
 
+    // Set DDR for both motors
+    if ( p_step->motor_pin_1 == 8 ) { DDRB |= 0xF; } // sets PB 0,1,2,and 3 to outputs
+    if ( p_step->motor_pin_1 == 36 ) { DDRF |= 0xF0; } // sets PF 4,5,6,and 7 to outputs
+
     // Interrupts on Timer/Counter3 will trigger each step, setup timer1 and timer3:
     TCCR1A = 0x00; // sets bits to zero - Normal port operation, OC1A and OC1B disconnected (no output to ports)
     TCCR1B |= ( 1 << WGM12 ); // select mode 4 - clear timer on compare match
     TCCR1B |= ( 1 << CS11 ); // select a prescalar of 8 - 2000 pulses per millisecond
-    TIMSK1 |= ( 1 << OCIE1A ); // enables output compare match with the OCR3A register
+    TIMSK1 &= ~( 1 << OCIE1A ); // disables output compare match with the OCR1A register
 
     TCCR3A = 0x00; // sets bits to zero - Normal port operation, OC1A and OC1B disconnected (no output to ports)
     TCCR3B |= ( 1 << WGM32 ); // select mode 4 - clear timer on compare match
     TCCR3B |= ( 1 << CS31 ); // select a prescalar of 8 - 2000 pulses per millisecond
-    TIMSK3 |= ( 1 << OCIE3A ); // enables output compare match with the OCR3A register
+    TIMSK3 &= ~( 1 << OCIE3A ); // disables output compare match with the OCR3A register
 
     OCR1A = 0; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
     OCR3A = 0; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
@@ -132,20 +136,20 @@ void Stepper_Step( Stepper_t* p_step ) {
 
 void Stepper_Disable( Stepper_t* p_step ) {
     if (p_step->motor_pin_1 == 8) { // if the selected stepper is Motor 1
-        PORTB = 0x00; // set entire PB register to LOW
-        DDRB = 0x00; // sets PB 0,1,2,and 3 to inputs
+        TIMSK1 &= ~( 1 << OCIE1A ); // disables output compare match with the OCR1A register
+        PORTB = 0x00;
     }
     if (p_step->motor_pin_1 == 36) { // if the selected stepper is Motor 2
-        PORTF = 0x00; // set entire PF register to LOW
-        DDRF = 0x00; // sets PF 4,5,6,and 7 to inputs
+        TIMSK3 &= ~( 1 << OCIE3A ); // disables output compare match with the OCR1A register
+        PORTF = 0x00;
     }
 }
 
 void Stepper_Enable( Stepper_t* p_step ) {
     if (p_step->motor_pin_1 == 8) { // if the selected stepper is Motor 1
-        DDRB |= 0xF; // sets PB 0,1,2,and 3 to outputs
+        TIMSK1 |= ( 1 << OCIE1A ); // disables output compare match with the OCR1A register
     }
     if (p_step->motor_pin_1 == 36) { // if the selected stepper is Motor 2
-        DDRF |= 0xF0; // sets PF 4,5,6,and 7 to outputs
+        TIMSK3 |= ( 1 << OCIE3A ); // disables output compare match with the OCR1A register
     }
 }

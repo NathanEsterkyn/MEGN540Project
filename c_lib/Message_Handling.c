@@ -85,9 +85,14 @@ void Task_Message_Handling( float _time_since_last )
                  Stepper_Speed( &Sandworm_Robot.Linear, data.Speed_L ); // set the speed for each motor based on input
                  Stepper_Speed( &Sandworm_Robot.Rotary, data.Speed_R );
 
-                 if( Sandworm_Robot.buttonState == 1 ) { // if the button is pressed
+                 float shitty = 0.2;
+                 USB_Send_Msg("cf", 'V' , &shitty , sizeof(shitty)); // print out the command and the time
+
+                 if( true /*Sandworm_Robot.buttonState == 1*/ ) { // if the button is pressed
+                     float shit = 0.1;
+                     USB_Send_Msg("cf", 'V' , &shit , sizeof(shit)); // print out the command and the time
                      Task_Activate( &task_enable_motors, -1 ); // enable the motors
-                     Task_Activate( &task_stop_step, data.Time ); // disable the motors after the specified time ( ms )
+                     //Task_Activate( &task_stop_step, data.Time ); // disable the motors after the specified time ( ms )
                  }
                  command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
@@ -103,6 +108,13 @@ void Task_Message_Handling( float _time_since_last )
             if( USB_Msg_Length() == _Message_Length( 'H' ) ) {
                  USB_Msg_Get();                            // removes the first character from the received buffer
                  Task_Activate( &task_home, -1 );         // homes the sand table to (0,0)
+                 command_processed = true;
+            }
+            break;
+        case 'X':
+            if( USB_Msg_Length() == _Message_Length( 'H' ) ) {
+                 USB_Msg_Get();                            // removes the first character from the received buffer
+                 Task_Activate( &task_disable_motors, 0.0 );
                  command_processed = true;
             }
             break;

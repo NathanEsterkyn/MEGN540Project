@@ -6,7 +6,7 @@ void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float 
     p_sw->Lin_pos = Lin_pos; // set linear position
     p_sw->Rot_pos = Rot_pos; // set rotary position
     p_sw->Radius = Radius; // set radius of table
-    p_sw->buttonState = 0;
+    p_sw->buttonState = 1;
     p_sw->limitState = 0;
     p_sw->ledState = 0;
 
