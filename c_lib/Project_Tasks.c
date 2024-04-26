@@ -51,11 +51,9 @@ void Button_Check(float unused) {
 
     if ( Sandworm_Robot.buttonState == 1 ) { // checks if the power button is on
         PORTD |= ( 1 << PORTD1 ); // turns on the power LED
-        return true;
     }
     else {
         PORTD &= ~( 1 << PORTD1 );
-        return false;
     }
 }
 
