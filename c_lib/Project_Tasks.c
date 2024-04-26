@@ -19,7 +19,7 @@ void Erase(float unused) {
     Stepper_Speed( &Sandworm_Robot.Linear, ERASE_SPEED_L );
     Stepper_Speed( &Sandworm_Robot.Rotary, ERASE_SPEED_R ); // set spiral speeds
     Task_Activate( &task_enable_motors, -1 );
-    if ( Sandworm_Robot->Lin_pos >= Sandworm_Robot->Radius ) { // if the position of the linear actuator has reached the radius
+    if ( Sandworm_Robot.Lin_pos >= Sandworm_Robot.Radius ) { // if the position of the linear actuator has reached the radius
         Task_Activate( &task_stop_step, -1 ); // stop the motors
     }
 }
