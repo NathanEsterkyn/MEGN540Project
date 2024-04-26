@@ -55,7 +55,7 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
     TIMSK3 |= ( 1 << OCIE3B ); // enables output compare match with the OCR3A register
 
     OCR3A = 60000 ; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
-    OCR3B = 30000 ; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
+    OCR3B = 3000 ; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
     sei(); // finalize write by enabling interrupts
 }
 
