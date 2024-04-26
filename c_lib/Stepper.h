@@ -40,7 +40,7 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
  * @param p_step pointer to the desired stepper object to manipulate
  * @param Value speed value to update the stepper to (RPM)
  */
-float Stepper_Speed( Stepper_t* p_step, float Value );
+void Stepper_Speed( Stepper_t* p_step, float Value );
 
 /**
  * Function Stepper_Step moves the desired stepper motor one step
@@ -49,5 +49,7 @@ float Stepper_Speed( Stepper_t* p_step, float Value );
 void Stepper_Step( Stepper_t* p_step );
 
 void Stepper_Disable( Stepper_t* p_step );
+
+void Stepper_Enable( Stepper_t* p_step );
 
 #endif

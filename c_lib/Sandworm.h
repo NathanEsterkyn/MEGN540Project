@@ -9,6 +9,9 @@
 #include "Filter.h"
 #include "Stepper.h"
 #include "SerialIO.h"
+#include <avr/io.h>         // Board Specific pin definations
+#include <avr/interrupt.h>  // for interrupt service routine use
+#include <ctype.h>
 
 typedef struct {
     Stepper_t Linear;
@@ -19,6 +22,9 @@ typedef struct {
     float Rot_vel;
     float Dt;
     float Radius;
+    bool buttonState;
+    bool limitState;
+    bool ledState;
 } Sandworm_t;
 
 /**

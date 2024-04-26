@@ -41,6 +41,7 @@ void Initialize_Modules(float unused)
     Initialize_Task( &task_step_rotary, Step_Rotary );
     //Initialize_Task( &task_home, Home );
     //Initialize_Task( &task_erase, Erase );
+    Initialize_Task( &task_enable_motors, Enable_Motors );
     Initialize_Task( &task_disable_motors, Disable_Motors );
 
     // Set up task message handling watchdog
@@ -75,6 +76,7 @@ int main()
         Task_Run_If_Ready( &task_step_rotary );
         //Task_Run_If_Ready( &task_home );
         //Task_Run_If_Ready( &task_erase );
+        Task_Run_If_Ready( &task_enable_motors );
         Task_Run_If_Ready( &task_disable_motors );
 
         if (!task_message_handling_watchdog.is_active){ // if the message handling watchdog isn't active (message timeout functionality)

@@ -35,17 +35,6 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
     p_step->step_number = 0;
     p_step->step_delay = 0.0;
 
-    // Set data direction registers for controlling the pins:
-    if ( p_step->motor_pin_1 == 8 ) { // if the selected stepper is Motor 1
-        // Set Data Direction Registers (DDR) for Port B
-        DDRB |= 0xF; // sets PB 0,1,2,and 3 to outputs
-    }
-
-    if ( p_step->motor_pin_1 == 36 ) { // if the selected stepper is Motor 2
-        // Set Data Direction Registers (DDR) for Port F
-        DDRF |= 0xF0; // sets PF 4,5,6,and 7 to outputs
-    }
-
     // Interrupts on Timer/Counter3 will trigger each step, setup timer1 and timer3:
     TCCR1A = 0x00; // sets bits to zero - Normal port operation, OC1A and OC1B disconnected (no output to ports)
     TCCR1B |= ( 1 << WGM12 ); // select mode 4 - clear timer on compare match
@@ -63,7 +52,7 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
     sei(); // finalize write by enabling interrupts
 }
 
-float Stepper_Speed( Stepper_t* p_step, float Value) {
+void Stepper_Speed( Stepper_t* p_step, float Value) {
 
     if ( Value > 0.0 ) { // if the motor is moving positive direction
         p_step->direction = 1;
@@ -77,11 +66,14 @@ float Stepper_Speed( Stepper_t* p_step, float Value) {
     steps = ( Value / 60.0 ) * steps;
     p_step->step_delay =  ( 1.0 / steps ) * 1000.0; // returns milliseconds between steps to achieve desired speed in RPM
 
-    float ret_val = p_step->step_delay; // FOR TESTING
-    USB_Send_Msg( "cf", 's', &ret_val, sizeof( ret_val ) ); // FOR TESTING
-    return ret_val;
+    uint32_t delay_time = 2000 * p_step->step_delay; // converts to a 16 bit int to set registers
 
-    // plug this ( value * 2000 ) into the correct OCRnA register to trigger interrupts every X milliseconds
+    if ( p_step->motor_pin_1 == 8 ) { // motor 1 is on timer1
+        OCR1A = delay_time;
+    }
+    if ( p_step->motor_pin_1 == 36 ) { // motor 2 is on timer3
+        OCR3A = delay_time;
+    }
 }
 
 void Stepper_Step( Stepper_t* p_step ) {
@@ -141,8 +133,19 @@ void Stepper_Step( Stepper_t* p_step ) {
 void Stepper_Disable( Stepper_t* p_step ) {
     if (p_step->motor_pin_1 == 8) { // if the selected stepper is Motor 1
         PORTB = 0x00; // set entire PB register to LOW
+        DDRB = 0x00; // sets PB 0,1,2,and 3 to inputs
     }
     if (p_step->motor_pin_1 == 36) { // if the selected stepper is Motor 2
         PORTF = 0x00; // set entire PF register to LOW
+        DDRF = 0x00; // sets PF 4,5,6,and 7 to inputs
+    }
+}
+
+void Stepper_Enable( Stepper_t* p_step ) {
+    if (p_step->motor_pin_1 == 8) { // if the selected stepper is Motor 1
+        DDRB |= 0xF; // sets PB 0,1,2,and 3 to outputs
+    }
+    if (p_step->motor_pin_1 == 36) { // if the selected stepper is Motor 2
+        DDRF |= 0xF0; // sets PF 4,5,6,and 7 to outputs
     }
 }

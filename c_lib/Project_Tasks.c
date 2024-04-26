@@ -1,38 +1,5 @@
 #include "Project_Tasks.h"
 
-void Stop_Step(float unused) {
-    Task_Cancel( &task_step_linear ); // cancels linear stepping
-    Task_Cancel( &task_step_rotary ); // cancels rotary stepping
-    Task_Activate( &task_disable_motors, -1 ); // disables motors
-    Sandworm_Robot.Lin_vel = 0.0; // set the velocity to zero
-    Sandworm_Robot.Rot_vel = 0.0;
-    Task_Cancel( &task_stop_step ); // cancels itself
-}
-
-ISR( TIMER1_COMPA_vect ) // performs steps for motor 1 (rotary on PORTB)
-{
-    PORTF ^= ( 1 << PORTF5 );  // xor PORTF5 (if it was 1 its now 0 if it was 0 its now 1)
-    // mode is set to clear counter on compare match so no need to reset counter value here
-}
-
-ISR( TIMER3_COMPA_vect ) // performs steps for motor 2 (Linear on PORTF)
-{
-    PORTF ^= ( 1 << PORTF7 ); // xor PORTF5 (if it was 1 its now 0 if it was 0 its now 1)
-    // mode is set to clear counter on compare match so no need to reset counter value here
-}
-
-void Step_Linear(float unused) {
-    Stepper_Step( &Sandworm_Robot.Linear ); // steps linear motor once
-    if ( Sandworm_Robot.Linear.direction == 1 ) { Sandworm_Robot.Lin_pos ++; } // increment position depending on direction
-    if ( Sandworm_Robot.Linear.direction == 0 ) { Sandworm_Robot.Lin_pos --; }
-}
-
-void Step_Rotary(float unused) {
-    Stepper_Step( &Sandworm_Robot.Rotary ); // steps rotary motor once
-    if ( Sandworm_Robot.Rotary.direction == 1 ) { Sandworm_Robot.Rot_pos ++; } // increment position depending on direction
-    if ( Sandworm_Robot.Rotary.direction == 0 ) { Sandworm_Robot.Rot_pos --; }
-}
-
 void Home(float unused) {
     /*
     // Linear Homing
@@ -58,14 +25,42 @@ void Erase(float unused) {
     */
 }
 
+void Enable_Motors(float unused) {
+    Stepper_Enable( &Sandworm_Robot.Linear );
+    Stepper_Enable( &Sandworm_Robot.Rotary );
+}
+
 void Disable_Motors(float unused) {
     // activate standby function on motor driver or just set the register to low
     Stepper_Disable( &Sandworm_Robot.Linear );
     Stepper_Disable( &Sandworm_Robot.Rotary );
 }
 
+void Stop_Step(float unused) {
+    Task_Cancel( &task_step_linear ); // cancels linear stepping
+    Task_Cancel( &task_step_rotary ); // cancels rotary stepping
+    Task_Activate( &task_disable_motors, -1 ); // disables motors
+    Sandworm_Robot.Lin_vel = 0.0; // set the velocity to zero
+    Sandworm_Robot.Rot_vel = 0.0;
+    Task_Cancel( &task_stop_step ); // cancels itself
+}
+
 bool Button_Check(float unused) {
     return true;
     // check if main power button is pressed
     // turn on button LED
+}
+
+ISR( TIMER1_COMPA_vect ) // performs steps for motor 1 (rotary on PORTB)
+{
+    Stepper_Step( &Sandworm_Robot.Rotary ); // steps rotary motor once
+    if ( Sandworm_Robot.Rotary.direction == 1 ) { Sandworm_Robot.Rot_pos ++; } // increment position depending on direction
+    if ( Sandworm_Robot.Rotary.direction == 0 ) { Sandworm_Robot.Rot_pos --; }// mode is set to clear counter on compare match so no need to reset counter value here
+}
+
+ISR( TIMER3_COMPA_vect ) // performs steps for motor 2 (Linear on PORTF)
+{
+    Stepper_Step( &Sandworm_Robot.Linear ); // steps linear motor once
+    if ( Sandworm_Robot.Linear.direction == 1 ) { Sandworm_Robot.Lin_pos ++; } // increment position depending on direction
+    if ( Sandworm_Robot.Linear.direction == 0 ) { Sandworm_Robot.Lin_pos --; }
 }

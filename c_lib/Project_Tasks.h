@@ -24,6 +24,7 @@ Task_t task_step_linear;
 Task_t task_step_rotary;
 Task_t task_home;
 Task_t task_erase;
+Task_t task_enable_motors;
 Task_t task_disable_motors;
 Sandworm_t Sandworm_Robot;
 
@@ -33,8 +34,7 @@ static const float ERASE_SPEED_L = 300.0;
 static const float ERASE_SPEED_R = 30.0;
 
 void Stop_Step(float unused);
-void Step_Linear(float unused);
-void Step_Rotary(float unused);
+void Enable_Motors(float unused);
 void Home(float unused);
 void Erase(float unused);
 void Disable_Motors(float unused); // use the standby feature on our motor controllers
