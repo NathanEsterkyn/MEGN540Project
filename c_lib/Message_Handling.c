@@ -152,34 +152,35 @@ void Task_Message_Handling( float _time_since_last )
                 Task_Activate( &task_message_handling_watchdog, -1 );  // reset the watchdog timer
             }
     }
+}
 
-    /**
-     * @brief Function Task_Message_Handling_Watchdog clears the USB recieve (deleting all messages) to flush the buffer if a complete message is not recieved
-     * whithin an appropriate amount of time (say 250ms)
-     *
-     * @param _unused_
-     */
-    void Task_Message_Handling_Watchdog( float unused )
-    {
-        USB_Flush_Input_Buffer();  // re-initializes the receive ring buffer
-    }
+/**
+ * @brief Function Task_Message_Handling_Watchdog clears the USB recieve (deleting all messages) to flush the buffer if a complete message is not recieved
+ * whithin an appropriate amount of time (say 250ms)
+ *
+ * @param _unused_
+ */
+void Task_Message_Handling_Watchdog( float unused )
+{
+    USB_Flush_Input_Buffer();  // re-initializes the receive ring buffer
+}
 
-    /**
-     * Function _Message_Length returns the number of bytes associated with a
-     * command string per the class documentation;
-     * @param cmd
-     * @return Size of expected string. Returns 0 if unreconized.
-     */
-    static uint8_t _Message_Length( char cmd )
-    {
-        switch( cmd ) {
-            case 't': return 2; break;
-            case 'V': return 9; break;
-            case 'Y': return 1; break;
-            case 'H': return 1; break;
-            case 'X': return 5; break;
-            case 'w': return 1; break;
-            case 'W': return 5; break;
-            default: return 0; break;
-        }
+/**
+ * Function _Message_Length returns the number of bytes associated with a
+ * command string per the class documentation;
+ * @param cmd
+ * @return Size of expected string. Returns 0 if unreconized.
+ */
+static uint8_t _Message_Length( char cmd )
+{
+    switch( cmd ) {
+        case 't': return 2; break;
+        case 'V': return 9; break;
+        case 'Y': return 1; break;
+        case 'H': return 1; break;
+        case 'X': return 5; break;
+        case 'w': return 1; break;
+        case 'W': return 5; break;
+        default: return 0; break;
     }
+}
