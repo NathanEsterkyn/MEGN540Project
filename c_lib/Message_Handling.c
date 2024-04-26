@@ -85,14 +85,9 @@ void Task_Message_Handling( float _time_since_last )
                 Stepper_Speed( &Sandworm_Robot.Linear, data.Speed_L );  // set the speed for each motor based on input
                 Stepper_Speed( &Sandworm_Robot.Rotary, data.Speed_R );
 
-                float shitty = 0.2;
-                USB_Send_Msg( "cf", 'V', &shitty, sizeof( shitty ) );  // print out the command and the time
-
                 if( true /*Sandworm_Robot.buttonState == 1*/ ) {  // if the button is pressed
-                    float shit = 0.1;
-                    USB_Send_Msg( "cf", 'V', &shit, sizeof( shit ) );  // print out the command and the time
-                    Task_Activate( &task_enable_motors, -1 );          // enable the motors
-                    Task_Activate( &task_stop_step, data.Time );       // disable the motors after the specified time ( ms )
+                    Task_Activate( &task_enable_motors, -1 );     // enable the motors
+                    Task_Activate( &task_stop_step, data.Time );  // disable the motors after the specified time ( ms )
                 }
                 command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
             }
@@ -143,9 +138,9 @@ void Task_Message_Handling( float _time_since_last )
 
                 command_processed = true;
             }
-        default:                   // case for unknown command character (unknown operator)
-            USB_Msg_Get();         // clears the unknown operator
-            USB_Send_Byte( '?' );  // sends a '?'
+        default:                                                     // case for unknown command character (unknown operator)
+            USB_Msg_Get();                                           // clears the unknown operator
+            USB_Send_Msg( "cc", '?', &command, sizeof( command ) );  // sends a '?'
             break;
     }
 
