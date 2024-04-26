@@ -80,9 +80,9 @@ ISR( INT2_vect ) // ISR for handling a power button press
 {
     Sandworm_Robot.buttonState = !Sandworm_Robot.buttonState;
     if ( Sandworm_Robot.buttonState == 1 ) {
-        PORTD |= ( 1 << PORTD1 );
+        //PORTD |= ( 1 << PORTD1 );
     }
     else {
-        PORTD &= ~( 1 << PORTD1 );
+        //PORTD &= ~( 1 << PORTD1 );
     }
 }
