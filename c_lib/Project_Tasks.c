@@ -29,10 +29,10 @@ void Erase( float unused )
 void Enable_Motors( float unused )
 {
     if( Sandworm_Robot.Lin_vel != 0 ) {
-        // Stepper_Enable( &Sandworm_Robot.Linear );  // enables motors if their speed is not 0
+        Stepper_Enable( &Sandworm_Robot.Linear );  // enables motors if their speed is not 0
     }
     if( Sandworm_Robot.Rot_vel != 0 ) {
-        // Stepper_Enable( &Sandworm_Robot.Rotary );
+        Stepper_Enable( &Sandworm_Robot.Rotary );
     }
 }
 

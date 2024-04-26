@@ -109,7 +109,7 @@ void Task_Message_Handling( float _time_since_last )
         case 'X':
             if( USB_Msg_Length() == _Message_Length( 'X' ) ) {
                 USB_Msg_Get();  // removes the first character from the received buffer
-                Task_Activate( &task_disable_motors, 0.0 );
+                Task_Activate( &task_disable_motors, -1 );
                 command_processed = true;
             }
             break;
