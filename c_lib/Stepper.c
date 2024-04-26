@@ -46,16 +46,20 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
         DDRF |= 0xF0; // sets PF 4,5,6,and 7 to outputs
     }
 
-    // Interrupts on Timer/Counter3 will trigger each step, setup timer3:
+    // Interrupts on Timer/Counter3 will trigger each step, setup timer1 and timer3:
+    TCCR1A = 0x00; // sets bits to zero - Normal port operation, OC1A and OC1B disconnected (no output to ports)
+    TCCR1B |= ( 1 << WGM12 ); // select mode 4 - clear timer on compare match
+    TCCR1B |= ( 1 << CS12 ); // select a prescalar of 256 - 62.5 pulses per millisecond
+    TIMSK1 |= ( 1 << OCIE1A ); // enables output compare match with the OCR3A register
 
     TCCR3A = 0x00; // sets bits to zero - Normal port operation, OC1A and OC1B disconnected (no output to ports)
     TCCR3B |= ( 1 << WGM32 ); // select mode 4 - clear timer on compare match
     TCCR3B |= ( 1 << CS32 ); // select a prescalar of 256 - 62.5 pulses per millisecond
     TIMSK3 |= ( 1 << OCIE3A ); // enables output compare match with the OCR3A register
-    TIMSK3 |= ( 1 << OCIE3B ); // enables output compare match with the OCR3A register
 
-    OCR3A = 60000 ; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
-    OCR3B = 3000 ; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
+    OCR1A = 62500 ; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
+    OCR3A = 31250 ; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
+
     sei(); // finalize write by enabling interrupts
 }
 
@@ -142,13 +146,13 @@ void Stepper_Disable( Stepper_t* p_step ) {
     }
 }
 
-ISR( TIMER3_COMPA_vect )
+ISR( TIMER1_COMPA_vect )
 {
     PORTF ^= ( 1 << PORTF5 ); // xor PORTF5 (if it was 1 its now 0 if it was 0 its now 1)
     // mode is set to clear counter on compare match so no need to reset counter value here
 }
 
-ISR( TIMER3_COMPB_vect )
+ISR( TIMER3_COMPA_vect )
 {
     PORTF ^= ( 1 << PORTF7 );
 }
