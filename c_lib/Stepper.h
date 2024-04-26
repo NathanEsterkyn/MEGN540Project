@@ -48,8 +48,16 @@ void Stepper_Speed( Stepper_t* p_step, float Value );
  */
 void Stepper_Step( Stepper_t* p_step );
 
+/**
+ * Function Stepper_Disable disables the desired stepper
+ * @param p_step The desired stepper to disable
+ */
 void Stepper_Disable( Stepper_t* p_step );
 
+/**
+ * Function Stepper_Enable enables the desired stepper
+ * @param p_step The desired stepper to enable
+ */
 void Stepper_Enable( Stepper_t* p_step );
 
 #endif

@@ -26,6 +26,7 @@ Task_t task_home;
 Task_t task_erase;
 Task_t task_enable_motors;
 Task_t task_disable_motors;
+Task_t task_button_check;
 Sandworm_t Sandworm_Robot;
 
 static const float HOME_SPEED_L = 100.0;

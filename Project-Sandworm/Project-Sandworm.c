@@ -41,6 +41,7 @@ void Initialize_Modules(float unused)
     Initialize_Task( &task_erase, Erase );
     Initialize_Task( &task_enable_motors, Enable_Motors );
     Initialize_Task( &task_disable_motors, Disable_Motors );
+    Initialize_Task( &task_button_check, Button_Check );
 
     // Set up task message handling watchdog
     Initialize_Task( &task_message_handling_watchdog, Task_Message_Handling_Watchdog );
@@ -48,8 +49,8 @@ void Initialize_Modules(float unused)
     // Activate message handling to run continuously
     Task_Activate( &task_message_handling, 0 );
 
-    // Activate battery check task to run continuously
-    Task_Activate( &task_check_battery_voltage, 0 );
+    // Activate button check task to run continuously
+    Task_Activate( &task_button_check, 0 );
 }
 
 int main()
