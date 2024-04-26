@@ -42,6 +42,6 @@ void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float 
  */
 void Sandworm_Home( Sandworm_t* p_sw );
 
-bool Sandworm_Limit( Sandworm_t* p_sw );
+void Sandworm_Limit( Sandworm_t* p_sw );
 
 #endif

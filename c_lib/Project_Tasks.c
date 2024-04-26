@@ -46,6 +46,7 @@ void Stop_Step(float unused) {
 }
 
 bool Button_Check(float unused) {
+
     return true;
     // check if main power button is pressed
     // turn on button LED
@@ -63,4 +64,15 @@ ISR( TIMER3_COMPA_vect ) // performs steps for motor 2 (Linear on PORTF)
     Stepper_Step( &Sandworm_Robot.Linear ); // steps linear motor once
     if ( Sandworm_Robot.Linear.direction == 1 ) { Sandworm_Robot.Lin_pos ++; } // increment position depending on direction
     if ( Sandworm_Robot.Linear.direction == 0 ) { Sandworm_Robot.Lin_pos --; }
+}
+ISR( INT0_vect ) // ISR for handling a limit switch press
+{
+    Sandworm_Robot.limitState ^= Sandworm_Robot.limitState;
+    Sandworm_Limit( &Sandworm_Robot );
+}
+
+ISR( INT2_vect ) // ISR for handling a power button press
+{
+    Sandworm_Robot.buttonState ^= Sandworm_Robot.buttonState;
+    Sandworm_Robot( &Sandworm_Robot );
 }

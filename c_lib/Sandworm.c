@@ -30,16 +30,15 @@ void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float 
 void Sandworm_Home( Sandworm_t* p_sw ) { // for testing I am sending it Speed (Lin_Vel) then Steps (Rot_Vel)
 }
 
-bool Sandworm_Limit( Sandworm_t* p_sw ) {
-    return true;
+void Sandworm_Limit( Sandworm_t* p_sw ) {
+    if ( p_sw->buttonState == 1 ) {
+        PORTD |= ( 1 << PORTD1 );
+    }
+    if ( p_sw->limitState == 1 ) {
+        PORTD |= ( 1 << PORTD1 );
+    }
+    else {
+        PORTD &= ~( 1 << PORTD1 );
+    }
     // function to determine if button has been pressed
-}
-ISR( INT0_vect ) // ISR for handling a limit switch press
-{
-    PORTF ^= ( 1 << PORTF5 );
-}
-
-ISR( INT2_vect ) // ISR for handling a power button press
-{
-    PORTF ^= ( 1 << PORTF7 );
 }
