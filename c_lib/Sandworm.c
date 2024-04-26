@@ -26,19 +26,3 @@ void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float 
     PCMSK0 |= ( 1 << PCINT0 ); // enable pin change interrupt on pin 2
     PCMSK0 |= ( 1 << PCINT2 ); // enable pin change interrupt on pin 0
 }
-
-void Sandworm_Home( Sandworm_t* p_sw ) { // for testing I am sending it Speed (Lin_Vel) then Steps (Rot_Vel)
-}
-
-void Sandworm_Limit( Sandworm_t* p_sw ) {
-    if ( p_sw->buttonState == 1 ) {
-        PORTD |= ( 1 << PORTD1 );
-    }
-    if ( p_sw->limitState == 1 ) {
-        PORTD |= ( 1 << PORTD1 );
-    }
-    else {
-        PORTD &= ~( 1 << PORTD1 );
-    }
-    // function to determine if button has been pressed
-}

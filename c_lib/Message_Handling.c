@@ -80,13 +80,12 @@ void Task_Message_Handling( float _time_since_last )
                      float Time;
                  } data;
                  USB_Msg_Read_Into( &data, sizeof( data ) ); // fills the struct with the received floats
-
+                 Sandworm_Robot.Lin_vel = data.Speed_L; // set velocities in sandworm object
+                 Sandworm_Robot.Rot_vel = data.Speed_R;
                  Stepper_Speed( &Sandworm_Robot.Linear, data.Speed_L ); // set the speed for each motor based on input
                  Stepper_Speed( &Sandworm_Robot.Rotary, data.Speed_R );
 
                  if( Button_Check( 0.0 ) ) { // if the button is pressed
-                     Sandworm_Robot.Lin_vel = data.Speed_L; // set velocities in sandworm object
-                     Sandworm_Robot.Rot_vel = data.Speed_R;
                      Task_Activate( &task_enable_motors, -1 ); // enable the motors
                      Task_Activate( &task_stop_step, data.Time ); // disable the motors after the specified time ( ms )
                  }
@@ -105,26 +104,6 @@ void Task_Message_Handling( float _time_since_last )
                  USB_Msg_Get();                            // removes the first character from the received buffer
                  Task_Activate( &task_home, -1 );         // homes the sand table to (0,0)
                  command_processed = true;
-            }
-            break;
-        case 'X':
-            if( USB_Msg_Length() >= _Message_Length( 'X' ) ) {
-
-                 USB_Msg_Get();                            // removes the first character from the received buffer
-                 struct __attribute__( ( __packed__ ) ) {  // creates a struct for the received floats
-                     float Lin;
-                     float Ang;
-                     float Dt;
-                 } data;
-                 USB_Msg_Read_Into( &data, sizeof( data ) );  // fills the struct with the received floats
-
-                 if( data.Dt <= 0 ) {  // if the float received is <= 0, cancel the task
-                     Task_Cancel( &task_send_command );
-                     command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog
-                     break;
-                 }
-                 // handle the time sketching stuff here
-                 command_processed = true; // reset the watchdog timer and activates task_message_handling_watchdog
             }
             break;
         default:                   // case for unknown command character (unknown operator)

@@ -36,12 +36,4 @@ typedef struct {
 */
 void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float Radius );
 
-/**
- * Function Sandworm_Speed updates the speeds of both motors simultaneously to track a trajectory
- * @param p_sw pointer to the SW object
- */
-void Sandworm_Home( Sandworm_t* p_sw );
-
-void Sandworm_Limit( Sandworm_t* p_sw );
-
 #endif

@@ -1,38 +1,40 @@
 #include "Project_Tasks.h"
 
 void Home(float unused) {
-    /*
     // Linear Homing
-    float homeSpeed = Stepper_Speed( &Sandworm_Robot.Linear, HOME_SPEED_L ); // set homing speed
-    Task_Activate( &task_step_linear, homeSpeed ); // move linear axis towards home
-    if( Sandworm_Limit( &Sandworm_Robot ) == 1 ) { // if home button is pressed
+    Sandworm_Robot.Lin_vel = HOME_SPEED_L;
+    Stepper_Speed( &Sandworm_Robot.Linear, HOME_SPEED_L ); // set homing speed
+    Task_Activate( &task_enable_motors, -1 ); // move linear axis towards home
+    if( Sandworm_Robot.limitState == 1 ) { // if home button is pressed
         Task_Activate( &task_stop_step, -1 ); // stop the motors
         Sandworm_Robot.Lin_pos = 0.0; // set zero
     }
-     */
 }
 
 void Erase(float unused) {
-    /*
+
     Task_Activate( &task_home, -1 ); // spiral function: home, travel to outside, spiral inwards to 0,0
-    float spiralSpeedL = Stepper_Speed( &Sandworm_Robot.Linear, ERASE_SPEED_L ); // set spiral speed
-    float spiralSpeedR = Stepper_Speed( &Sandworm_Robot.Rotary, ERASE_SPEED_R ); // set homing speed
-    Task_Activate( &task_step_linear, spiralSpeedL );
-    Task_Activate( &task_step_rotary, spiralSpeedR ); // step motors in spiral motion
+    Sandworm_Robot.Lin_vel = ERASE_SPEED_L;
+    Sandworm_Robot.Rot_vel = ERASE_SPEED_R;
+    Stepper_Speed( &Sandworm_Robot.Linear, ERASE_SPEED_L );
+    Stepper_Speed( &Sandworm_Robot.Rotary, ERASE_SPEED_R ); // set spiral speeds
+    Task_Activate( &task_enable_motors, -1 );
     if ( Sandworm_Robot->Lin_pos >= Sandworm_Robot->Radius ) { // if the position of the linear actuator has reached the radius
         Task_Activate( &task_stop_step, -1 ); // stop the motors
     }
-    */
 }
 
 void Enable_Motors(float unused) {
-    Stepper_Enable( &Sandworm_Robot.Linear );
-    Stepper_Enable( &Sandworm_Robot.Rotary );
+    if ( Sandworm_Robot.Lin_vel != 0 ) {
+        Stepper_Enable( &Sandworm_Robot.Linear ); // enables motors if their speed is not 0
+    }
+    if ( Sandworm_Robot.Rot_vel != 0 ) {
+        Stepper_Enable( &Sandworm_Robot.Rotary );
+    }
 }
 
 void Disable_Motors(float unused) {
-    // activate standby function on motor driver or just set the register to low
-    Stepper_Disable( &Sandworm_Robot.Linear );
+    Stepper_Disable( &Sandworm_Robot.Linear ); // disables both motors
     Stepper_Disable( &Sandworm_Robot.Rotary );
 }
 
@@ -47,10 +49,17 @@ void Stop_Step(float unused) {
 
 bool Button_Check(float unused) {
 
-    return true;
-    // check if main power button is pressed
-    // turn on button LED
+    if ( Sandworm_Robot.buttonState == 1 ) { // checks if the power button is on
+        PORTD |= ( 1 << PORTD1 ); // turns on the power LED
+        return true;
+    }
+    else {
+        PORTD &= ~( 1 << PORTD1 );
+        return false;
+    }
 }
+
+// Timing ISRs:
 
 ISR( TIMER1_COMPA_vect ) // performs steps for motor 1 (rotary on PORTB)
 {
@@ -68,21 +77,11 @@ ISR( TIMER3_COMPA_vect ) // performs steps for motor 2 (Linear on PORTF)
 ISR( INT0_vect ) // ISR for handling a limit switch press
 {
     Sandworm_Robot.limitState = !Sandworm_Robot.limitState;
-    if ( Sandworm_Robot.limitState == 1 ) {
-        PORTD |= ( 1 << PORTD1 );
-    }
-    else {
-        PORTD &= ~( 1 << PORTD1 );
-    }
+    // ADD A METHOD FOR DEBOUNCING!!
 }
 
 ISR( INT2_vect ) // ISR for handling a power button press
 {
     Sandworm_Robot.buttonState = !Sandworm_Robot.buttonState;
-    if ( Sandworm_Robot.buttonState == 1 ) {
-        //PORTD |= ( 1 << PORTD1 );
-    }
-    else {
-        //PORTD &= ~( 1 << PORTD1 );
-    }
+    // ADD A METHOD FOR DEBOUNCING!!
 }
