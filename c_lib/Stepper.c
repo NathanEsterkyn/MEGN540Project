@@ -50,7 +50,7 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
 
     TCCR3A = 0x00; // sets bits to zero - Normal port operation, OC1A and OC1B disconnected (no output to ports)
     TCCR3B |= ( 1 << WGM32 ); // select mode 4 - clear timer on compare match
-    TCCR3B |= ( 1 << CS31 ); // select a prescalar of 8 - 2000 pulses per millisecond
+    TCCR3B |= ( 1 << CS32 ); // select a prescalar of 256 - 62.5 pulses per millisecond
     TIMSK3 |= ( 1 << OCIE3A ); // enables output compare match with the OCR3A register
     TIMSK3 |= ( 1 << OCIE3B ); // enables output compare match with the OCR3A register
 
