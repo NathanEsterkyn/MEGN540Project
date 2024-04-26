@@ -29,31 +29,25 @@ void Erase( float unused )
 void Enable_Motors( float unused )
 {
     if( Sandworm_Robot.Lin_vel != 0 ) {
-        Stepper_Enable( &Sandworm_Robot.Linear );  // enables motors if their speed is not 0
+        //Stepper_Enable( &Sandworm_Robot.Linear );  // enables motors if their speed is not 0
     }
     if( Sandworm_Robot.Rot_vel != 0 ) {
-        Stepper_Enable( &Sandworm_Robot.Rotary );
+        //Stepper_Enable( &Sandworm_Robot.Rotary );
     }
-    float linval = 0.0;
-    USB_Send_Msg( "cff", 'E', &linval, sizeof( linval ) );  // print out the command and the time
 }
 
 void Disable_Motors( float unused )
 {
-    float linval = 2.0;
-    USB_Send_Msg( "cff", 'D', &linval, sizeof( linval ) );  // print out the command and the time
     Stepper_Disable( &Sandworm_Robot.Linear );              // disables both motors
     Stepper_Disable( &Sandworm_Robot.Rotary );
 }
 
 void Stop_Step( float unused )
 {
-    Task_Cancel( &task_enable_motors );
-    Task_Activate( &task_disable_motors, -1 );  // disables motors
+    //Task_Cancel( &task_enable_motors );
+    //Task_Activate( &task_disable_motors, -1 );  // disables motors
     Sandworm_Robot.Lin_vel = 0.0;               // set the velocity to zero
     Sandworm_Robot.Rot_vel = 0.0;
-    float linval           = 1.0;
-    USB_Send_Msg( "cff", 'S', &linval, sizeof( linval ) );  // print out the command and the time
     Task_Cancel( &task_stop_step );                         // cancels itself
 }
 
