@@ -16,8 +16,8 @@ void Initialize_Sandworm( Sandworm_t* p_sw, float Lin_pos, float Rot_pos, float 
 
     // Set up pin change interrupts for power button and limit switch
     DDRD |= ( 1 << PORTD1 ); // data direction register for LED pin to output
-    EICRA |= ( 1 << ISC20 );
-    EICRA |= ( 1 << ISC21 ); // sets INT2 (power button) to trigger an interrupt on a rising edge
+    EICRA &= ~( 1 << ISC20 );
+    EICRA &= ~( 1 << ISC21 ); // sets INT2 (power button) to trigger an interrupt on low
     EICRA &= ~( 1 << ISC01 );
     EICRA &= ~( 1 << ISC01 ); // sets INT0 (limit switch) to trigger on low - when its grounded
     EIMSK |= ( 1 << INT2 );  // enables interrupt on INT2
