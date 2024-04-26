@@ -15,6 +15,9 @@
 #include "Controller.h"
 #include "Sandworm.h"
 #include "Stepper.h"
+#include <avr/io.h>         // Board Specific pin definations
+#include <avr/interrupt.h>  // for interrupt service routine use
+#include <ctype.h>
 
 Task_t task_stop_step;
 Task_t task_step_linear;

@@ -9,6 +9,18 @@ void Stop_Step(float unused) {
     Task_Cancel( &task_stop_step ); // cancels itself
 }
 
+ISR( TIMER1_COMPA_vect ) // performs steps for motor 1 (rotary on PORTB)
+{
+    PORTF ^= ( 1 << PORTF5 );  // xor PORTF5 (if it was 1 its now 0 if it was 0 its now 1)
+    // mode is set to clear counter on compare match so no need to reset counter value here
+}
+
+ISR( TIMER3_COMPA_vect ) // performs steps for motor 2 (Linear on PORTF)
+{
+    PORTF ^= ( 1 << PORTF7 ); // xor PORTF5 (if it was 1 its now 0 if it was 0 its now 1)
+    // mode is set to clear counter on compare match so no need to reset counter value here
+}
+
 void Step_Linear(float unused) {
     Stepper_Step( &Sandworm_Robot.Linear ); // steps linear motor once
     if ( Sandworm_Robot.Linear.direction == 1 ) { Sandworm_Robot.Lin_pos ++; } // increment position depending on direction
