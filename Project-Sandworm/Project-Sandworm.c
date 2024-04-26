@@ -34,6 +34,9 @@ void Initialize_Modules(float unused)
     Initialize_Task( &task_time_loop, Send_Loop_Time );
     Initialize_Task( &task_send_time, Send_Time_Now );
 
+    // Set up debug functionality
+    Initialize_Task(&task_send_switch_status, &Send_Switch_Status);
+
     // Set up Sandworm functionality
     Initialize_Sandworm( &Sandworm_Robot, 0, 0, 22860.0 );
     Initialize_Task( &task_stop_step, Stop_Step );

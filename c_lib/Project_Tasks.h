@@ -27,6 +27,7 @@ Task_t task_erase;
 Task_t task_enable_motors;
 Task_t task_disable_motors;
 Task_t task_button_check;
+Task_t task_send_switch_status;
 Sandworm_t Sandworm_Robot;
 
 static const float HOME_SPEED_L = 100.0;
@@ -40,5 +41,7 @@ void Home(float unused);
 void Erase(float unused);
 void Disable_Motors(float unused); // use the standby feature on our motor controllers
 void Button_Check(float unused); // function to determine if the button is pressed or not
+void Send_Switch_Status(float _time_since_last);
+void Send_Switch_Message(char message_type);
 
 #endif
