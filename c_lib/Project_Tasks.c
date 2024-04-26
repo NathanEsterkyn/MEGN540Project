@@ -46,8 +46,8 @@ void Disable_Motors( float unused )
 
 void Stop_Step( float unused )
 {
-    // Task_Cancel( &task_enable_motors );
-    // Task_Activate( &task_disable_motors, -1 );  // disables motors
+    Task_Cancel( &task_enable_motors );
+    Disable_Motors( 0.0 );
     Sandworm_Robot.Lin_vel = 0.0;  // set the velocity to zero
     Sandworm_Robot.Rot_vel = 0.0;
     float linval           = 1.0;
@@ -79,6 +79,23 @@ void Send_Switch_Message( char message_type )
     data.status = Sandworm_Robot.limitState;
 
     USB_Send_Msg( "cb", message_type, &data, sizeof( data ) );
+}
+
+// Encoders:
+void Send_Encoder_Message( char message_type )
+{
+    struct __attribute__( ( __packed__ ) ) {
+        float count;
+    } data;
+
+    data.count = (float)Encoder_Counts();
+
+    USB_Send_Msg( "cff", message_type, &data, sizeof( data ) );
+}
+
+void Send_Encoder_Counts( float _time_since_last )
+{
+    Send_Encoder_Message( 'E' );
 }
 
 // Timing ISRs:

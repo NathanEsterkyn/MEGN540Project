@@ -1,25 +1,20 @@
-#include "Message_Handling.h"  // for translating USB messages to microcontroller tasks
-#include "SerialIO.h"          // for USB communication
-#include "Task_Management.h"   // for clean task management with functors
-#include "Timing.h"            // for Time understanding
-#include "Encoder.h"
 #include "Battery_Monitor.h"
-#include "MotorPWM.h"
 #include "Controller.h"
-#include "Stepper.h"
-#include "Sandworm.h"
-
+#include "Encoder.h"
+#include "Filter.h"
 #include "Lab1_Tasks.h"
 #include "Lab2_Tasks.h"
-#include "Lab3_Tasks.h"
-#include "Lab4_Tasks.h"
-#include "Lab5_Tasks.h"
+#include "Message_Handling.h"  // for translating USB messages to microcontroller tasks
 #include "Project_Tasks.h"
-#include "Filter.h"
+#include "Sandworm.h"
+#include "SerialIO.h"  // for USB communication
+#include "Stepper.h"
+#include "Task_Management.h"  // for clean task management with functors
+#include "Timing.h"           // for Time understanding
 
-void Initialize_Modules(float unused)
+void Initialize_Modules( float unused )
 {
-    USB_Flush_Input_Buffer(); // reset USB input buffers
+    USB_Flush_Input_Buffer();  // reset USB input buffers
 
     // Initialize all modules except USB (it can only be called once without messing things up)
     Initialize_Timing();
@@ -35,7 +30,11 @@ void Initialize_Modules(float unused)
     Initialize_Task( &task_send_time, Send_Time_Now );
 
     // Set up debug functionality
-    Initialize_Task(&task_send_switch_status, &Send_Switch_Status);
+    Initialize_Task( &task_send_switch_status, &Send_Switch_Status );
+
+    // Set up encoders
+    Initialize_Encoders();
+    Initialize_Task( &task_send_encoder_counts, &Send_Encoder_Counts );
 
     // Set up Sandworm functionality
     Initialize_Sandworm( &Sandworm_Robot, 0, 0, 22860.0 );
@@ -58,15 +57,15 @@ void Initialize_Modules(float unused)
 
 int main()
 {
-    Initialize_USB(); // must only initialize USB once so its excluded from the modules
-    Initialize_Modules(0.0); // runs module initialization function
+    Initialize_USB();           // must only initialize USB once so its excluded from the modules
+    Initialize_Modules( 0.0 );  // runs module initialization function
 
-    for(;;) {  // another way to do while(true)
+    for( ;; ) {  // another way to do while(true)
         Task_USB_Upkeep();
 
         // Sketching functions run through message handling
-        Task_Run_If_Ready( &task_message_handling ); // run message handling if ready
-        Task_Run_If_Ready( &task_restart ); // restart if ready
+        Task_Run_If_Ready( &task_message_handling );  // run message handling if ready
+        Task_Run_If_Ready( &task_restart );           // restart if ready
 
         // Timing Functionality
         Task_Run_If_Ready( &task_send_time );
@@ -79,10 +78,10 @@ int main()
         Task_Run_If_Ready( &task_enable_motors );
         Task_Run_If_Ready( &task_disable_motors );
 
-        if (!task_message_handling_watchdog.is_active){ // if the message handling watchdog isn't active (message timeout functionality)
-            Task_Activate( &task_message_handling_watchdog, 250 ); // activate message handling watchdog to run every 0.25 seconds (250 ms)
+        if( !task_message_handling_watchdog.is_active ) {           // if the message handling watchdog isn't active (message timeout functionality)
+            Task_Activate( &task_message_handling_watchdog, 250 );  // activate message handling watchdog to run every 0.25 seconds (250 ms)
         }
-        Task_Run_If_Ready( &task_message_handling_watchdog ); // run watchdog if ready
+        Task_Run_If_Ready( &task_message_handling_watchdog );  // run watchdog if ready
     }
     return 0;
 }

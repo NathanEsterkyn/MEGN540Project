@@ -10,8 +10,8 @@ set(F_CPU 16000000UL)
 ##########################################################################
 set(AVR_UPLOADTOOL avrdude)
 set(AVR_PROGRAMMER avr109)
-#set(AVR_UPLOADTOOL_PORT /dev/ttyZumoCarAVR)
-set(AVR_UPLOADTOOL_PORT /dev/tty.usbmodem14401) # added for my mac
+set(AVR_UPLOADTOOL_PORT /dev/ttyZumoCarAVR)
+# set(AVR_UPLOADTOOL_PORT /dev/tty.usbmodem14401) # added for my mac
 
 ##########################################################################
 # AVR and fuses needs to be set
@@ -187,11 +187,5 @@ add_avr_library( MEGN540 ${MEG540_C_LIB_SRC_FILES} )
 avr_target_link_libraries(MEGN540 LUFA_USB)
 
 # Add Lab Subdirectories
-add_subdirectory(Lab0-Blink)
-add_subdirectory(Lab1-Serial)
-add_subdirectory(Lab2-Timing)
-add_subdirectory(Lab3-Encoder)
-add_subdirectory(Lab4-MotorPWM)
-add_subdirectory(Lab5-Control)
 add_subdirectory(Project-Sandworm)
 

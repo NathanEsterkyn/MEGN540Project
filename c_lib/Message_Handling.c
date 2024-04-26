@@ -86,7 +86,7 @@ void Task_Message_Handling( float _time_since_last )
                 Stepper_Speed( &Sandworm_Robot.Rotary, data.Speed_R );
 
                 if( true /*Sandworm_Robot.buttonState == 1*/ ) {  // if the button is pressed
-                    Task_Activate( &task_enable_motors, -1 );     // enable the motors
+                    Enable_Motors( 0.0 );
                     Task_Activate( &task_stop_step, data.Time );  // disable the motors after the specified time ( ms )
                 }
                 command_processed = true;  // reset the watchdog timer and activates task_message_handling_watchdog

@@ -55,6 +55,9 @@ void Initialize_Stepper( Stepper_t* p_step, int number_of_steps, int motor_pin_1
     TCCR3B |= ( 1 << CS31 );     // select a prescalar of 8 - 2000 pulses per millisecond
     TIMSK3 &= ~( 1 << OCIE3A );  // disables output compare match with the OCR3A register
 
+    PORTB = 0x00;
+    PORTF = 0x00;
+
     OCR1A = 0;  // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
     OCR3A = 0;  // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
 }
@@ -101,7 +104,9 @@ void Stepper_Step( Stepper_t* p_step )
     }
 
     // Step motor
-    if( p_step->motor_pin_1 == 8 ) {  // if the selected stepper is Motor 1
+    if( p_step->motor_pin_1 == 8 ) {                             // if the selected stepper is Motor 1
+        float ret_val = p_step->step_number;                     // FOR TESTING
+        USB_Send_Msg( "cf", 'L', &ret_val, sizeof( ret_val ) );  // FOR TESTING
         switch( p_step->step_number % 4 ) {
             case 0:            // 1010
                 PORTB = 0xA0;  // sets PB 0,1,2,and 3

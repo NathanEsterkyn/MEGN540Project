@@ -38,13 +38,9 @@
 // Include realted interfaces
 #include "SerialIO.h"
 
-
 // Include Lab Specific Task Definitions
 #include "Lab1_Tasks.h"
 #include "Lab2_Tasks.h"
-#include "Lab3_Tasks.h"
-#include "Lab4_Tasks.h"
-#include "Lab5_Tasks.h"
 #include "Project_Tasks.h"
 
 /**
