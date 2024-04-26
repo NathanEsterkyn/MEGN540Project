@@ -263,15 +263,6 @@ function(add_avr_executable EXECUTABLE_NAME)
 endfunction(add_avr_executable)
 
 
-# erase program - with avrdude
-add_custom_target(
-   erase_program
-   ${AVR_UPLOADTOOL} ${AVR_UPLOADTOOL_BASE_OPTIONS} ${AVR_UPLOADTOOL_OPTIONS}
-      -P ${AVR_UPLOADTOOL_PORT}
-      -u -e
-   COMMENT "Erasing Program on ${AVR_MCU} using ${AVR_PROGRAMMER}"
-)
-
 ##########################################################################
 # add_avr_library
 # - IN_VAR: LIBRARY_NAME
@@ -322,7 +313,6 @@ endfunction(add_avr_library)
 # Calls target_link_libraries with AVR target names (concatenation,
 # extensions and so on.
 ##########################################################################
-message(STATUS "Defining custom function: avr_target_link_libraries")
 function(avr_target_link_libraries EXECUTABLE_TARGET)
    if(NOT ARGN)
       message(FATAL_ERROR "Nothing to link to ${EXECUTABLE_TARGET}.")
