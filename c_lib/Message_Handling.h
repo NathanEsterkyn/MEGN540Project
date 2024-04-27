@@ -32,16 +32,14 @@
  * This file defines the incomming message length and other details.
  */
 
-#ifndef MESAGE_HANDLING_H
-#define MESAGE_HANDLING_H
+#ifndef MESAGE_HANDELING_H
+#define MESAGE_HANDELING_H
 
 // Include realted interfaces
 #include "SerialIO.h"
 
 // Include Lab Specific Task Definitions
-#include "Lab1_Tasks.h"
-#include "Lab2_Tasks.h"
-#include "Project_Tasks.h"
+#include "Final_Tasks.h"
 
 /**
  * Function Task_Message_Handling processes USB messages as necessary and sets status flags to control the flow of the program.

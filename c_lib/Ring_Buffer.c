@@ -43,7 +43,7 @@ void rb_initialize_F( Ring_Buffer_Float_t* p_buf )
     // set start and end indicies to 0
     // no point changing data
     p_buf->start_index = 0;
-    p_buf->end_index = 0;
+    p_buf->end_index   = 0;
 }
 
 void rb_initialize_B( Ring_Buffer_Byte_t* p_buf )
@@ -52,7 +52,7 @@ void rb_initialize_B( Ring_Buffer_Byte_t* p_buf )
     // no point changing data
 
     p_buf->start_index = 0;
-    p_buf->end_index = 0;
+    p_buf->end_index   = 0;
 }
 
 /* Return active Length of Buffer */

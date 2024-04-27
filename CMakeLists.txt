@@ -1,5 +1,5 @@
 # I target a recent cmake, it shouldn't be a problem on a dev machine
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 ## AVR Chip Configuration
 # 16Mhz, this should match the crystal on your board,
@@ -11,7 +11,6 @@ set(F_CPU 16000000UL)
 set(AVR_UPLOADTOOL avrdude)
 set(AVR_PROGRAMMER avr109)
 set(AVR_UPLOADTOOL_PORT /dev/ttyZumoCarAVR)
-# set(AVR_UPLOADTOOL_PORT /dev/tty.usbmodem14401) # added for my mac
 
 ##########################################################################
 # AVR and fuses needs to be set
@@ -34,7 +33,7 @@ set(F_USB ${F_CPU})
 
 
 # Project name
-project("MEGN 540 Tank Control Lab")
+project("MEGN 540 Final")
 
 ##########################################################################
 # status messages
@@ -72,8 +71,6 @@ else(DEFINED ENV{AVR_FIND_ROOT_PATH})
       set(CMAKE_FIND_ROOT_PATH "/usr/lib/avr")
     elseif(EXISTS "/usr/local/CrossPack-AVR")
       set(CMAKE_FIND_ROOT_PATH "/usr/local/CrossPack-AVR")
-    elseif(EXISTS "/usr/local/bin") # Added for Mac
-        set(CMAKE_FIND_ROOT_PATH "/usr/local/bin") # Added for mac
     else(EXISTS "/opt/avr8-gnu-toolchain-linux_x86_64/avr")
       message(FATAL_ERROR "Please set AVR_FIND_ROOT_PATH in your environment.")
     endif(EXISTS "/opt/avr8-gnu-toolchain-linux_x86_64/avr")
@@ -186,6 +183,5 @@ file(GLOB MEG540_C_LIB_SRC_FILES "${MEG540_C_LIB_PATH}/*.c") # Load all files in
 add_avr_library( MEGN540 ${MEG540_C_LIB_SRC_FILES} )
 avr_target_link_libraries(MEGN540 LUFA_USB)
 
-# Add Lab Subdirectories
-add_subdirectory(Project-Sandworm)
-
+# Add Final Subdirectory
+add_subdirectory(FinalProject)
