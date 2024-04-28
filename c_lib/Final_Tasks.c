@@ -35,64 +35,57 @@ void Send_Switch_Message(char message_type) {
 
   data.status = Limit_Switch_Status();
 
-  USB_Send_Msg("cb", message_type, &data, sizeof(data));
+  USB_Send_Msg( "cb", message_type, &data, sizeof(data) );
 }
 
 void Home(float unused) {
   // Linear Homing
-  if (Sandworm_Robot.limitState == 1) {
+  if ( Sandworm_Robot.limitState == 1 ) {
     return;
   }
   Sandworm_Robot.Lin_vel = HOME_SPEED_L;
-  Stepper_Speed(&Sandworm_Robot.Linear, HOME_SPEED_L); // set homing speed
-  Task_Activate(&task_enable_motors, -1); // move linear axis towards home
+  Stepper_Speed( &Sandworm_Robot.Linear, HOME_SPEED_L ); // set homing speed
+  Task_Activate( &task_enable_motors, -1 ); // move linear axis towards home
 }
 
 void Erase(float unused) {
-  Task_Activate(
-      &task_home,
-      -1); // spiral function: home, travel to outside, spiral inwards to 0,0
-  if (Sandworm_Robot.limitState == 0) {
+  Task_Activate( &task_home, -1 ); // spiral function: home, travel to outside, spiral inwards to 0,0
+  if ( Sandworm_Robot.limitState == 0 ) {
     return;
   }
   Sandworm_Robot.Lin_vel = ERASE_SPEED_L;
   Sandworm_Robot.Rot_vel = ERASE_SPEED_R;
-  Stepper_Speed(&Sandworm_Robot.Linear, ERASE_SPEED_L);
-  Stepper_Speed(&Sandworm_Robot.Rotary, ERASE_SPEED_R); // set spiral speeds
-  Task_Activate(&task_enable_motors, -1);
-  if (Sandworm_Robot.Lin_pos >=
-      Sandworm_Robot.Radius) { // if the position of the linear actuator has
-                               // reached the radius
-    Task_Activate(&task_stop_step, -1); // stop the motors
-  }
-  Task_Cancel(&task_erase);
+  Stepper_Speed( &Sandworm_Robot.Linear, ERASE_SPEED_L );
+  Stepper_Speed( &Sandworm_Robot.Rotary, ERASE_SPEED_R ); // set spiral speeds
+  Task_Activate( &task_enable_motors, -1 );
+  Task_Activate( &task_stop_step, ERASE_TIME );
+  Task_Cancel( &task_erase );
 }
 
 void Enable_Motors(float unused) {
-  if (Sandworm_Robot.Lin_vel < 0 && Limit_Switch_Status()) {
-  } else if (Sandworm_Robot.Lin_vel != 0) {
-    Stepper_Enable(
-        &Sandworm_Robot.Linear); // enables motors if their speed is not 0
+  if ( Sandworm_Robot.Lin_vel < 0 && Limit_Switch_Status() ) {
+  } else if ( Sandworm_Robot.Lin_vel != 0 ) {
+    Stepper_Enable( &Sandworm_Robot.Linear ); // enables motors if their speed is not 0
   }
-  if (Sandworm_Robot.Rot_vel != 0) {
-    Stepper_Enable(&Sandworm_Robot.Rotary);
+  if ( Sandworm_Robot.Rot_vel != 0 ) {
+    Stepper_Enable( &Sandworm_Robot.Rotary );
   }
 }
 
 void Disable_Motors(float unused) {
   cli();
-  Stepper_Disable(&Sandworm_Robot.Linear); // disables both motors
-  Stepper_Disable(&Sandworm_Robot.Rotary);
-  Task_Cancel(&task_disable_motors);
+  Stepper_Disable( &Sandworm_Robot.Linear ); // disables both motors
+  Stepper_Disable( &Sandworm_Robot.Rotary );
+  Task_Cancel( &task_disable_motors );
   sei();
 }
 
 void Stop_Step(float unused) {
   cli();
-  Task_Cancel(&task_enable_motors);
-  Disable_Motors(0.0);
+  Task_Cancel( &task_enable_motors );
+  Disable_Motors( 0.0 );
   Sandworm_Robot.Lin_vel = 0.0; // set the velocity to zero
   Sandworm_Robot.Rot_vel = 0.0;
-  Task_Cancel(&task_stop_step); // cancels itself
+  Task_Cancel( &task_stop_step ); // cancels itself
   sei();
 }
