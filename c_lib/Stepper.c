@@ -51,7 +51,7 @@ void Initialize_Stepper(Stepper_t *p_step, int number_of_steps,
 
   TCCR1A = 0x00; // sets bits to zero - Normal port operation, OC1A and OC1B disconnected (no output to ports)
   TCCR1B |= (1 << WGM12); // select mode 4 - clear timer on compare match
-  TCCR1B |= (1 << CS11); // select a prescalar of 8 - 2000 pulses per millisecond
+  TCCR1B |= (1 << CS12); // select a prescalar of 256 - 62.5 pulses per millisecond
   TIMSK1 &= ~(1 << OCIE1A); // disables output compare match with the OCR1A register
 
   TCCR3A = 0x00; // sets bits to zero - Normal port operation, OC1A and OC1B disconnected (no output to ports)
@@ -76,20 +76,17 @@ void Stepper_Speed(Stepper_t *p_step, float Value) {
     Value = -Value;
   }
 
-  float steps = p_step->number_of_steps; // converts number of steps per
-                                         // revolution into float
+  float steps = p_step->number_of_steps; // converts number of steps per revolution into float
   steps = (Value / 60.0) * steps;
   p_step->step_delay =
-      (1.0 / steps) * 1000.0; // returns milliseconds between steps to achieve
-                              // desired speed in RPM
+      (1.0 / steps) * 1000.0; // returns milliseconds between steps to achieve desired speed in RPM
 
-  uint32_t delay_time =
-      2000 * p_step->step_delay; // converts to a 16 bit int to set registers
-
-  if (p_step->motor_pin_1 == 8) { // motor 1 is on timer1
+  if (p_step->motor_pin_1 == 8) { // motor 1 is on timer1 (rotary)
+    uint32_t delay_time = 62.5 * p_step->step_delay; // converts to a 16 bit int to set registers
     OCR1A = delay_time;
   }
-  if (p_step->motor_pin_1 == 36) { // motor 2 is on timer3
+  if (p_step->motor_pin_1 == 36) { // motor 2 is on timer3 (linear)
+    uint32_t delay_time = 2000 * p_step->step_delay; // converts to a 16 bit int to set registers
     OCR3A = delay_time;
   }
 }

@@ -45,7 +45,7 @@ static const float HOME_SPEED_L = -250.0;
 static const float HOME_SPEED_R = 20.0;
 static const float ERASE_SPEED_L = 36.0;
 static const float ERASE_SPEED_R = 30.0;
-static const float ERASE_TIME = 190000;
+static const float ERASE_TIME = 192.0;
 
 void Stop_Step(float unused);
 void Enable_Motors(float unused);
