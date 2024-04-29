@@ -14,7 +14,7 @@ void Initialize_Sandworm(Sandworm_t *p_sw, float Lin_pos, float Rot_pos,
   p_sw->ledState = 0;
 
   // Set up pin change interrupts for power button and limit switch
-  //   DDRD |= (1 << PORTD1); // data direction register for LED pin to output
+  //DDRD |= (1 << PORTD1); // data direction register for LED pin to output
   DDRD &= ~(1 << DDD0); // data direction register for Limit Switch to input
   PORTD |= (1 << PD0);  // activate port d pullup resistor on pd0
 

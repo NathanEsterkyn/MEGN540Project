@@ -44,6 +44,7 @@ void Home(float unused) {
     return;
   }
   Sandworm_Robot.Lin_vel = HOME_SPEED_L;
+  Sandworm_Robot.Rot_vel = 0.0; // prevents rotational from moving while homing
   Stepper_Speed( &Sandworm_Robot.Linear, HOME_SPEED_L ); // set homing speed
   Task_Activate( &task_enable_motors, -1 ); // move linear axis towards home
 }
