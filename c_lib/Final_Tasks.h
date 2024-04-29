@@ -22,8 +22,11 @@ Task_t task_send_encoder_counts;
 void Send_Encoder_Counts(float _time_since_last);
 void Send_Encoder_Message(char message_type);
 
-// Limit Switch
+// Limit Switch and power button
 Task_t task_send_switch_status;
+Task_t task_send_button_status;
+void Send_Button_Status(float _time_since_last);
+void Send_Button_Message(char message_type);
 void Send_Switch_Status(float _time_since_last);
 void Send_Switch_Message(char message_type);
 
@@ -42,13 +45,12 @@ static const float HOME_SPEED_L = -250.0;
 static const float HOME_SPEED_R = 20.0;
 static const float ERASE_SPEED_L = 36.0;
 static const float ERASE_SPEED_R = 30.0;
-static const float ERASE_TIME = 192000;
+static const float ERASE_TIME = 190000;
 
 void Stop_Step(float unused);
 void Enable_Motors(float unused);
 void Home(float unused);
 void Erase(float unused);
-void Disable_Motors(
-    float unused); // use the standby feature on our motor controllers
+void Disable_Motors(float unused); // use the standby feature on our motor controllers
 
 #endif

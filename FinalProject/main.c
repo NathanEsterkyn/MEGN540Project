@@ -10,11 +10,10 @@ void Initialize_Modules(float _time_not_used_) {
   // reset USB input buffers
   USB_Flush_Input_Buffer();
 
-  // Initialize all modules except USB (it can only be called once without
-  // messing things up)
+  // Initialize all modules except USB (it can only be called once without messing things up)
   Initialize_Timing(0.0);
   Initialize_Limit_Switch();
-  //   Initialize_Encoders();
+  Initialize_Power_Button();
 
   // Setup task handling
   Initialize_Task(&task_restart, &Initialize_Modules);
@@ -27,17 +26,13 @@ void Initialize_Modules(float _time_not_used_) {
   Initialize_Task(&task_send_time, &Send_Time_Now);
 
   // Message Handling
-  Initialize_Task(&task_message_handling_watchdog,
-                  Task_Message_Handling_Watchdog);
-
+  Initialize_Task(&task_message_handling_watchdog,Task_Message_Handling_Watchdog);
   Task_Activate(&task_message_handling_watchdog, 0.25f);
   Task_Activate(&task_message_handling, 0.f);
 
-  // Encoder
-  // Initialize_Task(&task_send_encoder_counts, &Send_Encoder_Counts);
-
   // Limit Switch
   Initialize_Task(&task_send_switch_status, &Send_Switch_Status);
+  Initialize_Task(&task_send_button_status, &Send_Button_Status);
 
   // Sandworm
   Initialize_Sandworm(&Sandworm_Robot, 0, 0, 22860.0);
@@ -55,9 +50,6 @@ int main(int argc, char **argv) {
   Task_Activate(&task_message_handling_watchdog, 0.25f);
   Task_Activate(&task_message_handling, 0.f);
 
-  // always erase the board on first boot
-  // Task_Activate(&task_erase, -1);
-
   // DISABLE JTAG
   MCUCR |= (1 << JTD);
   MCUCR |= (1 << JTD);
@@ -70,11 +62,11 @@ int main(int argc, char **argv) {
     // USB
     Task_USB_Upkeep();
 
-    // // Timing
+    // Timing
     Task_Run_If_Ready(&task_time_loop);
     Task_Run_If_Ready(&task_send_time);
 
-    // // Task Management
+    // Task Management
     Task_Run_If_Ready(&task_message_handling);
     Task_Run_If_Ready(&task_restart);
     Task_Run_If_Ready(&task_message_handling_watchdog);
@@ -82,8 +74,9 @@ int main(int argc, char **argv) {
     // Encoder
     Task_Run_If_Ready(&task_send_encoder_counts);
 
-    // Limit Switch
+    // Limit Switch and Power Button
     Task_Run_If_Ready(&task_send_switch_status);
+    Task_Run_If_Ready(&task_send_button_status);
 
     // Sandworm base functions
     Task_Run_If_Ready(&task_stop_step);

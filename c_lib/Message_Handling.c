@@ -103,7 +103,7 @@ void Task_Message_Handling(float _time_since_last) {
   case 'w':
     if (USB_Msg_Length() >= _Message_Length('w')) {
       USB_Msg_Get();
-
+      Send_Button_Message('b');
       Send_Switch_Message('w');
     }
     break;

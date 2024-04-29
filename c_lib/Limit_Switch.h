@@ -8,4 +8,8 @@ void Initialize_Limit_Switch();
 
 bool Limit_Switch_Status();
 
+void Initialize_Power_Button();
+
+bool Power_Button_Status();
+
 #endif

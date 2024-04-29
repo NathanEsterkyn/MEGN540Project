@@ -47,28 +47,20 @@ void Initialize_Stepper(Stepper_t *p_step, int number_of_steps,
     PORTF = 0x00;
   } // sets PF 4,5,6,and 7 to outputs
 
-  // Interrupts on Timer/Counter3 will trigger each step, setup timer1 and
-  // timer3:
-  TCCR1A = 0x00; // sets bits to zero - Normal port operation, OC1A and OC1B
-                 // disconnected (no output to ports)
+  // Interrupts on Timer/Counter3 will trigger each step, setup timer1 and timer3:
+
+  TCCR1A = 0x00; // sets bits to zero - Normal port operation, OC1A and OC1B disconnected (no output to ports)
   TCCR1B |= (1 << WGM12); // select mode 4 - clear timer on compare match
-  TCCR1B |=
-      (1 << CS11); // select a prescalar of 8 - 2000 pulses per millisecond
-  TIMSK1 &=
-      ~(1 << OCIE1A); // disables output compare match with the OCR1A register
+  TCCR1B |= (1 << CS11); // select a prescalar of 8 - 2000 pulses per millisecond
+  TIMSK1 &= ~(1 << OCIE1A); // disables output compare match with the OCR1A register
 
-  TCCR3A = 0x00; // sets bits to zero - Normal port operation, OC1A and OC1B
-                 // disconnected (no output to ports)
+  TCCR3A = 0x00; // sets bits to zero - Normal port operation, OC1A and OC1B disconnected (no output to ports)
   TCCR3B |= (1 << WGM32); // select mode 4 - clear timer on compare match
-  TCCR3B |=
-      (1 << CS31); // select a prescalar of 8 - 2000 pulses per millisecond
-  TIMSK3 &=
-      ~(1 << OCIE3A); // disables output compare match with the OCR3A register
+  TCCR3B |= (1 << CS31); // select a prescalar of 8 - 2000 pulses per millisecond
+  TIMSK3 &= ~(1 << OCIE3A); // disables output compare match with the OCR3A register
 
-  OCR1A = 0; // initialize compare value: 2000 means the clock will clear and
-             // the ISR will run each millisecond
-  OCR3A = 0; // initialize compare value: 2000 means the clock will clear and
-             // the ISR will run each millisecond
+  OCR1A = 0; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
+  OCR3A = 0; // initialize compare value: 2000 means the clock will clear and the ISR will run each millisecond
 
   PORTB = 0x00;
   PORTF = 0x00;

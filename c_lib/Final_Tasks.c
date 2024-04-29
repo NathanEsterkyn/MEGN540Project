@@ -18,9 +18,7 @@ void Send_Encoder_Message(char message_type) {
   struct __attribute__((__packed__)) {
     float count;
   } data;
-
   data.count = (float)Encoder_Counts();
-
   USB_Send_Msg("cff", message_type, &data, sizeof(data));
 }
 
@@ -28,13 +26,21 @@ void Send_Encoder_Counts(float _time_since_last) { Send_Encoder_Message('E'); }
 
 void Send_Switch_Status(float _time_since_last) { Send_Switch_Message('W'); }
 
+void Send_Button_Status(float _time_since_last) { Send_Button_Message('B'); }
+
 void Send_Switch_Message(char message_type) {
   struct __attribute__((__packed__)) {
     bool status;
   } data;
-
   data.status = Limit_Switch_Status();
+  USB_Send_Msg( "cb", message_type, &data, sizeof(data) );
+}
 
+void Send_Button_Message(char message_type) {
+  struct __attribute__((__packed__)) {
+    bool status;
+  } data;
+  data.status = Power_Button_Status();
   USB_Send_Msg( "cb", message_type, &data, sizeof(data) );
 }
 
@@ -64,12 +70,15 @@ void Erase(float unused) {
 }
 
 void Enable_Motors(float unused) {
-  if ( Sandworm_Robot.Lin_vel < 0 && Limit_Switch_Status() ) {
-  } else if ( Sandworm_Robot.Lin_vel != 0 ) {
-    Stepper_Enable( &Sandworm_Robot.Linear ); // enables motors if their speed is not 0
+  if ( Sandworm_Robot.Lin_vel < 0 && Limit_Switch_Status() ) { // prevents the linear motor from crashing
   }
-  if ( Sandworm_Robot.Rot_vel != 0 ) {
-    Stepper_Enable( &Sandworm_Robot.Rotary );
+  else if ( Sandworm_Robot.buttonState == 0 ) { // only activates if button is on
+    if( Sandworm_Robot.Lin_vel != 0 ) {
+        Stepper_Enable( &Sandworm_Robot.Linear );  // enables motors if their speed is not 0
+    }
+    if( Sandworm_Robot.Rot_vel != 0 ) {
+        Stepper_Enable( &Sandworm_Robot.Rotary );
+    }
   }
 }
 
