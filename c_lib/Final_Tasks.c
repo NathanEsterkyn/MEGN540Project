@@ -58,14 +58,14 @@ void Home(float unused) {
 void Erase(float unused) {
   Task_Activate( &task_home, -1 ); // spiral function: home, travel to outside, spiral inwards to 0,0
   if ( Sandworm_Robot.limitState == 0 ) {
-    return;
+    return; // wait until home is reached
   }
   Sandworm_Robot.Lin_vel = ERASE_SPEED_L;
-  Sandworm_Robot.Rot_vel = ERASE_SPEED_R;
+  Sandworm_Robot.Rot_vel = ERASE_SPEED_R; // set vel values
   Stepper_Speed( &Sandworm_Robot.Linear, ERASE_SPEED_L );
   Stepper_Speed( &Sandworm_Robot.Rotary, ERASE_SPEED_R ); // set spiral speeds
-  Task_Activate( &task_enable_motors, -1 );
-  Task_Activate( &task_stop_step, ERASE_TIME );
+  Task_Activate( &task_enable_motors, -1 ); // enable motors
+  Task_Activate( &task_stop_step, ERASE_TIME ); // disable after 192 sec
   Task_Cancel( &task_erase );
 }
 

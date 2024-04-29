@@ -2,8 +2,7 @@
 
 #include <avr/io.h>
 
-void Initialize_Sandworm(Sandworm_t *p_sw, float Lin_pos, float Rot_pos,
-                         float Radius) {
+void Initialize_Sandworm(Sandworm_t *p_sw, float Lin_pos, float Rot_pos,float Radius) {
 
   // Fill stepper structure with relevant data
   p_sw->Lin_pos = Lin_pos; // set linear position
@@ -16,7 +15,7 @@ void Initialize_Sandworm(Sandworm_t *p_sw, float Lin_pos, float Rot_pos,
   // Set up pin change interrupts for power button and limit switch
   DDRD |= (1 << PORTD1); // data direction register for LED pin to output // ADDED
   DDRD &= ~(1 << DDD0); // data direction register for Limit Switch to input
-  PORTD |= (1 << PD0);  // activate port d pullup resistor on pd0
+  PORTD |= (1 << PD0);  // activate port d pull-up resistor on pd0
 
   // sets INT2 (power button) to trigger an interrupt on low // ADDED
   EICRA |= (1 << ISC20);
@@ -28,13 +27,7 @@ void Initialize_Sandworm(Sandworm_t *p_sw, float Lin_pos, float Rot_pos,
   EICRA &= ~(1 << ISC01);
   EIMSK |= (1 << INT0); // enables interrupt on INT0
 
-  //   PCICR |= (1 << PCIE0);  // enable pin change interrupt on any pin
-  //   PCMSK0 |= (1 << PCINT0); // enable pin change interrupt on pin 2
-  //   PCMSK0 |= (1 << PCINT2); // enable pin change interrupt on pin 0
-
   // Initialize Stepper motors on given pins
-  Initialize_Stepper(&p_sw->Linear, 200, 36);
-  // create the linear stepper object - Motor 1
-  Initialize_Stepper(&p_sw->Rotary, 200, 8);
-  // create the rotary stepper object - Motor 2
+  Initialize_Stepper(&p_sw->Linear, 200, 36); // create the linear stepper object - Motor 1
+  Initialize_Stepper(&p_sw->Rotary, 200, 8); // create the rotary stepper object - Motor 2
 }

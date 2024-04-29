@@ -44,6 +44,7 @@ void Initialize_Modules(float _time_not_used_) {
 }
 
 int main(int argc, char **argv) {
+
   // call initialization stuff
   Initialize_Modules(0.0);
   Initialize_USB();
@@ -85,6 +86,5 @@ int main(int argc, char **argv) {
     Task_Run_If_Ready(&task_enable_motors);
     Task_Run_If_Ready(&task_disable_motors);
   }
-
   return 0;
 }
